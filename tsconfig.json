@@ -1,0 +1,32 @@
+{
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"importHelpers": true,
+		"alwaysStrict": true,
+		"downlevelIteration": true,
+		"skipDefaultLibCheck": true,
+		"outDir": "build",
+		"module": "ESNext",
+		"target": "es5",
+		"lib": [
+			"DOM",
+			"ESNext"
+		],
+		"sourceMap": false,
+		"allowJs": false,
+		"jsx": "react",
+		"declaration": true,
+		"moduleResolution": "node",
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true
+	},
+	"include": [
+		"src"
+	]
+}

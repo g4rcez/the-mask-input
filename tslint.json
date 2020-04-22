@@ -1,0 +1,133 @@
+{
+	"extends": [
+		"tslint-react",
+		"tslint-immutable"
+	],
+	"defaultSeverity": "error",
+	"linterOptions": {
+		"exclude": [
+			"*.js",
+			"*.d.ts",
+			"tslint/",
+			"src/serviceWorker.ts"
+		]
+	},
+	"rules": {
+		"align": {
+			"options": [
+				"parameters",
+				"statements"
+			],
+			"severity": "warn"
+		},
+		"array-type": {
+			"options": "array-simple"
+		},
+		"arrow-parens": true,
+		"arrow-return-shorthand": true,
+		"await-promise": true,
+		"class-name": true,
+		"curly": true,
+		"cyclomatic-complexity": {
+			"options": 15,
+			"severity": "warn"
+		},
+		"deprecation": {
+			"severity": "error"
+		},
+		"encoding": true,
+		"interface-name": false,
+		"interface-over-type-literal": false,
+		"no-string-throw": true,
+		"max-line-length": {
+			"options": [
+				150
+			],
+			"severity": "warn"
+		},
+		"jsx-boolean-value": false,
+		"jsx-wrap-multiline": false,
+		"cyclomatic-complexity": false,
+		"jsx-no-multiline-js": false,
+		"member-access": true,
+		"new-parens": true,
+		"newline-before-return": false,
+		"newline-per-chained-call": false,
+		"no-arg": true,
+		"no-banned-terms": true,
+		"no-bitwise": false,
+		"no-boolean-literal-compare": true,
+		"no-conditional-assignment": true,
+		"no-default-export": false,
+		"no-disable-auto-sanitization": true,
+		"no-document-domain": true,
+		"no-duplicate-imports": true,
+		"no-duplicate-parameter-names": true,
+		"no-duplicate-super": true,
+		"no-duplicate-switch-case": true,
+		"no-duplicate-variable": true,
+		"no-dynamic-delete": false,
+		"no-eval": true,
+		"no-floating-promises": true,
+		"no-inferrable-types": true,
+		"no-misused-new": true,
+		"no-namespace": true,
+		"no-octal-literal": true,
+		"no-parameter-reassignment": true,
+		"no-reserved-keywords": false,
+		"no-return-await": true,
+		"no-shadowed-variable": true,
+		"no-typeof-undefined": true,
+		"no-unnecessary-class": true,
+		"no-unnecessary-initializer": true,
+		"no-var-keyword": true,
+		"ordered-imports": false,
+		"possible-timing-attack": true,
+		"prefer-const": true,
+		"prefer-template": true,
+		"promise-function-async": true,
+		"quotemark": {
+			"options": "double",
+			"severity": "warn"
+		},
+		"radix": true,
+		"react-hooks/exaustive-deps": false,
+		"restrict-plus-operands": true,
+		"semicolon": {
+			"options": [
+				"always",
+				"ignore-bound-class-methods"
+			],
+			"severity": "warning"
+		},
+		"switch-default": true,
+		"trailing-comma": {
+			"options": {
+				"multiline": "never",
+				"singleline": "never"
+			}
+		},
+		"triple-equals": {
+			"options": [
+				"allow-null-check"
+			]
+		},
+		"prefer-object-spread": true,
+		"prefer-method-signature": true,
+		"use-isnan": true,
+		"variable-name": {
+			"options": [
+				"ban-keywords",
+				"allow-pascal-case",
+				"check-format"
+			]
+		},
+		"max-classes-per-file": {
+			"options": [
+				3
+			]
+		},
+		"import-name": false,
+		"import-spacing": true
+	}
+}
