@@ -1,10 +1,37 @@
-import Input from "input";
-import React, { useState } from "react";
+import Input, { Masks } from "input";
+import React, { useState, useCallback } from "react";
 
+const Field = ({ mask, title }: { mask: Masks; title: string }) => {
+	const [v, vv] = useState("");
+
+	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => vv(e.target.value), []);
+
+	return (
+		<div style={{ width: "30%", padding: "1rem" }}>
+			<label>
+				{title}:
+				<Input style={{ width: "100%" }} mask={mask} onChange={onChange} value={v} />
+			</label>
+		</div>
+	);
+};
 
 function App() {
-	const [v, vv] = useState("");
-	return <Input mask="currency" onChange={(e) => vv(e.target.value)} value={v} />;
+	return (
+		<div>
+			<Field mask="cellphone" title="Celular" />
+			<Field mask="cep" title="CEP" />
+			<Field mask="creditCard" title="Cartão de crédito" />
+			<Field mask="cep" title="CEP" />
+			<Field mask="cnpj" title="CNPJ" />
+			<Field mask="color" title="Color" />
+			<Field mask="cpf" title="CPF" />
+			<Field mask="currency" title="Currency" />
+			<Field mask="telephone" title="Telefone" />
+			<Field mask="pis" title="PIS/PASEP" />
+			<Field mask="date" title="Data - DD/MM/YYYY" />
+		</div>
+	);
 }
 
 export default App;
