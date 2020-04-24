@@ -1,13 +1,21 @@
-import { DecimalKeyboardProps } from "../@types/input";
+import { DecimalKeyboardProps, DecimalKeyboard } from "../@types/input";
 import { FormatCNPJ, FormatCpf, OnlyNumbers, ToInt } from "./fmt";
 
 const replacer = {
 	cellphoneReplace: /(\d{2})(\d{5})(\d{4})/,
+	reservistaReplace: /(\d{3})(\d{5})(\d{2})(\d)/,
 	telephoneReplace: /(\d{2})(\d{4})(\d{4})/,
 	cepReplace: /(\d{5})(\d{3})/,
 	isoDateReplace: /(\d{4})(\d{2})(\d{2})/,
 	brDateReplace: /(\d{2})(\d{2})(\d{4})/,
 	creditCardReplace: /(\d{4})(\d{4})(\d{4})(\d{4})/
+};
+
+const toPis = (str = "") => {
+	if (str.length === 1) {
+		return OnlyNumbers(str).replace(replacer.reservistaReplace, "$1.$2.$3-$4");
+	}
+	return str;
 };
 
 const toCellphone = (str = "") => {
@@ -36,11 +44,14 @@ const checkDate = (numbers = "", day = 0, first = /[01]/, second = /\d/) => {
 	return [/[0123]/, /\d/, "/", first, second, "/", /\d/, /\d/, /\d/, /\d/];
 };
 
-export const maskConverter = {
+type MaskConverter = { [key in DecimalKeyboard]: (str: string) => string };
+
+export const maskConverter: MaskConverter = {
 	cellphone: toCellphone,
 	telephone: toTelephone,
+	pis: toPis,
 	cnpj: (str: string) => (str.length === 14 ? FormatCNPJ(str) : str),
-	color: (str: string) => (str.length === 7 ? `#${OnlyNumbers(str)}` : str),
+	color: (str: string) => (str.length === 7 ? `#${str}` : str),
 	cpf: (str: string) => (str.length === 11 ? FormatCpf(str) : str),
 	cep: (str: string) => OnlyNumbers(str).replace(replacer.cepReplace, "$1-$2"),
 	cpfCnpj: (str: string) => {
@@ -80,11 +91,12 @@ export const maskConverter = {
 	}
 };
 
-export const masks = {
+export const masks: { [key in DecimalKeyboard]: ((str: string) => Array<string | RegExp>) | Array<string | RegExp> | Function } = {
+	pis: [/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/, /\d/, ".", /\d/, /\d/, "-", /\d/],
 	cellphone: ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/],
 	cep: [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/],
 	cnpj: [/\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/],
-	color: ["#", /\d/, /\d/, /\d/, /\d/, /\d/, /\d/],
+	color: ["#", /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/],
 	cpf: [/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/],
 	telephone: ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/],
 	date: (str = "") => {
@@ -103,11 +115,11 @@ export const masks = {
 	},
 	isoDate: [/\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/],
 	creditCard: [/\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/],
-	cpfCnpj: (value: string = "") => {
+	cpfCnpj: (value = "") => {
 		const mask = OnlyNumbers(value);
 		return mask.length > 11 ? masks.cnpj : masks.cpf;
 	},
-	cellTelephone: (value: string = "") => {
+	cellTelephone: (value = "") => {
 		const mask = OnlyNumbers(value);
 		if (mask.length === 10) {
 			return masks.telephone;
@@ -124,10 +136,12 @@ export function convertMaskToString(mask: any) {
 		const str = maskOutput[i];
 		if (typeof str === "string") {
 			placeholder += str;
-		} else if (str.toString() === "/\\d/") {
+		} else if (`${str}` === "/\\d/") {
 			placeholder += "0";
-		} else if (str.toString() === "/[\\S]/") {
+		} else if (`${str}` === "/[\\S]/") {
 			placeholder += "A";
+		} else if (/\/\[\S+]\//.test(`${str}`)) {
+			placeholder += "0";
 		} else {
 			placeholder += str;
 		}
@@ -135,9 +149,14 @@ export function convertMaskToString(mask: any) {
 	return placeholder;
 }
 
-export const decimalsInput = ["cpf", "cellphone", "cnpj", "cep", "telephone", "date", "cellTelephone", "cpfCnpj"];
+export const decimalsInput = ["cpf", "reservista", "cellphone", "cnpj", "cep", "telephone", "date", "cellTelephone", "cpfCnpj"];
 
 export const decimalKeyboard: DecimalKeyboardProps = {
+	pis: {
+		pattern: "[0-9]{3}.[0-9]{5}.[0-9]{2}-[0-9]",
+		title: "Informe o número do PIS corretamente",
+		inputMode: "decimal"
+	},
 	date: {
 		pattern: "[0-9]{2}/[0-9]{2}/[0-9]{4}",
 		title: "Informe a data no padrão correto",
@@ -174,7 +193,7 @@ export const decimalKeyboard: DecimalKeyboardProps = {
 		inputMode: "decimal"
 	},
 	color: {
-		pattern: "#[0-9]{6}",
+		pattern: "#[0-9a-fA-F]{6}",
 		title: "Informe a cor no padrão correto",
 		inputMode: "decimal"
 	},
