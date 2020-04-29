@@ -10,7 +10,7 @@ const Field = ({ mask, title }: { mask: Masks; title: string }) => {
 		<div style={{ width: "30%", padding: "1rem" }}>
 			<label>
 				{title}:
-				<Input style={{ width: "100%" }} mask={mask} onChange={onChange} value={v} />
+				<Input style={{ width: "100%" }} mask={mask} onChange={onChange} name={mask as string} value={v} />
 			</label>
 		</div>
 	);
