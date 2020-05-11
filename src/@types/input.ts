@@ -1,3 +1,6 @@
+import { Masks } from './masks';
+import { CurrencyInputProps } from '../components/currency-input';
+
 export type InputTypes =
 	| "button"
 	| "checkbox"
@@ -53,3 +56,12 @@ export type KeyboardProp = {
 	inputMode: InputMode;
 };
 export type DecimalKeyboardProps = { [key in DecimalKeyboard]: KeyboardProp };
+
+export type MaskInputProps = {
+	autoCapitalize?: "off" | "none" | "on" | "sentences" | "words" | "characters";
+	type?: InputTypes;
+	mask?: Masks;
+	value?: string;
+};
+
+export type CustomInputProps = Omit<CurrencyInputProps, "value"> & InputProps & MaskInputProps;
