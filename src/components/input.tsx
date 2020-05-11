@@ -24,11 +24,11 @@ const instanceMaskValues = (mask: DecimalKeyboard, html: any, value: ValueType, 
 };
 
 export const Input: React.FC<CustomInputProps> = React.forwardRef<any, CustomInputProps>(
-	({ type = "text", mask, value = "", name, ...html }, externalRef) => {
+	({ type = "text", mask, value = "", ...html }, externalRef) => {
 		const internalRef = useRef<HTMLInputElement | null>(null);
 		useImperativeHandle(externalRef, () => internalRef.current!);
 		if (mask === undefined) {
-			return <input {...html} name={name} type={type} value={value} ref={internalRef} />;
+			return <input {...html} type={type} value={value} ref={internalRef} />;
 		}
 		if (mask === "currency") {
 			return <CurrencyInput {...html} value={value} ref={internalRef} />;
@@ -41,7 +41,6 @@ export const Input: React.FC<CustomInputProps> = React.forwardRef<any, CustomInp
 					{...others}
 					guide
 					mask={maskRegex}
-					name={name}
 					placeholder={placeholder}
 					ref={internalRef as any}
 					type={type}
@@ -49,6 +48,6 @@ export const Input: React.FC<CustomInputProps> = React.forwardRef<any, CustomInp
 				/>
 			);
 		}
-		return <MaskedInput guide {...html} name={name} type={type} value={value} mask={mask as MaskType} ref={internalRef as any} />;
+		return <MaskedInput guide {...html} type={type} value={value} mask={mask as MaskType} ref={internalRef as any} />;
 	}
 ) as any;

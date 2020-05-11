@@ -1,5 +1,14 @@
-import { Masks } from './masks';
-import { CurrencyInputProps } from '../components/currency-input';
+import { Masks } from "./masks";
+import { Locales } from "./locales";
+import { CurrencyCode } from "./currency-code";
+
+export type CurrencyInputProps = Omit<InputProps, "value"> & {
+	name?: string;
+	locale?: Locales;
+	currency?: CurrencyCode;
+	ref?: React.RefObject<HTMLInputElement>;
+	value?: string | number;
+};
 
 export type InputTypes =
 	| "button"
