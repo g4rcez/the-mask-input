@@ -1,5 +1,5 @@
 import Input, { Masks } from "input";
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 const Field = ({ mask, title }: { mask: Masks; title: string }) => {
 	const [v, vv] = useState("");
