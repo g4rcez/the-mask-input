@@ -1,13 +1,13 @@
 import React, { useImperativeHandle, useRef } from "react";
 import MaskedInput from "react-text-mask";
-import { DecimalKeyboard, KeyboardProp, CustomInputProps } from "../@types/input";
+import { FixedMasks, KeyboardProp, CustomInputProps } from "../@types/input";
 import { ValueType, MaskType } from "../@types/masks";
 import { convertMaskToString, decimalKeyboard, maskConverter, masks } from "../helpers/masks";
 import { CurrencyInput } from "./currency-input";
 
 const createPlaceholder = (maskRegex: string) => convertMaskToString(maskRegex);
 
-const instanceMaskValues = (mask: DecimalKeyboard, html: any, value: ValueType, props: CustomInputProps) => {
+const instanceMaskValues = (mask: FixedMasks, html: any, value: ValueType, props: CustomInputProps) => {
 	const maskRegex = (masks as any)[mask];
 	const tmp = decimalKeyboard[mask];
 	const extraProps: KeyboardProp = {

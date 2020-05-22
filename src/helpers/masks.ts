@@ -1,4 +1,4 @@
-import { DecimalKeyboardProps, DecimalKeyboard } from "../@types/input";
+import { DecimalKeyboardProps, FixedMasks } from "../@types/input";
 import { FormatCNPJ, FormatCpf, OnlyNumbers, ToInt } from "./fmt";
 
 const replacer = {
@@ -44,7 +44,7 @@ const checkDate = (numbers = "", day = 0, first = /[01]/, second = /\d/) => {
 	return [/[0123]/, /\d/, "/", first, second, "/", /\d/, /\d/, /\d/, /\d/];
 };
 
-type MaskConverter = { [key in DecimalKeyboard]: (str: string) => string };
+type MaskConverter = { [key in FixedMasks]: (str: string) => string };
 
 export const maskConverter: MaskConverter = {
 	cellphone: toCellphone,
@@ -91,7 +91,7 @@ export const maskConverter: MaskConverter = {
 	}
 };
 
-export const masks: { [key in DecimalKeyboard]: ((str: string) => Array<string | RegExp>) | Array<string | RegExp> | Function } = {
+export const masks: { [key in FixedMasks]: ((str: string) => Array<string | RegExp>) | Array<string | RegExp> | Function } = {
 	pis: [/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/, /\d/, ".", /\d/, /\d/, "-", /\d/],
 	cellphone: ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/],
 	cep: [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/],

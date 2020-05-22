@@ -57,14 +57,14 @@ export type MasksTypes =
 	| "pis"
 	| "telephone";
 
-export type DecimalKeyboard = Exclude<MasksTypes, "currency">;
+export type FixedMasks = Exclude<MasksTypes, "currency">;
 
 export type KeyboardProp = {
 	pattern: string;
 	title: string;
 	inputMode: InputMode;
 };
-export type DecimalKeyboardProps = { [key in DecimalKeyboard]: KeyboardProp };
+export type DecimalKeyboardProps = { [key in FixedMasks]: KeyboardProp };
 
 export type MaskInputProps = {
 	autoCapitalize?: "off" | "none" | "on" | "sentences" | "words" | "characters";
