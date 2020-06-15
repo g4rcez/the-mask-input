@@ -3384,6 +3384,11 @@ data-urls@^1.0.0, data-urls@^1.1.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
+date-fns@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.14.0.tgz#359a87a265bb34ef2e38f93ecf63ac453f9bc7ba"
+  integrity sha512-1zD+68jhFgDIM0rF05rcwYO8cExdNqxjq4xP1QKM60Q45mnO6zaMWB4tOzrIr4M4GSLntsKeE4c9Bdl2jhL/yw==
+
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -3672,7 +3677,7 @@ dotenv-expand@5.1.0:
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
   integrity sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
 
-dotenv@8.2.0:
+dotenv@8.2.0, dotenv@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
@@ -6279,6 +6284,16 @@ lines-and-columns@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
+
+linq-arrays@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/linq-arrays/-/linq-arrays-1.2.0.tgz#d4b8e40072fe937fdf603d1f8963c4d364230389"
+  integrity sha512-wEXEQZh5sldOBPbGRrgKLrgpA6IykXW8wx4Bd+/Txp6MPJP57MuyTtJhYf6Av3uBwq/asiP1bLfcOIUxF628qw==
+
+linq@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/linq/-/linq-3.2.2.tgz#c012291054f54d78f608a37f7bceec95dca09e40"
+  integrity sha512-AtVkCFwg7dizILt88ent7Bng1OLAnKMWBOLo9Kh7ZPFK8OcfYGi2FEzmr66QJtV7uBYZVf19AbVs0B14rIUi+w==
 
 load-json-file@^2.0.0:
   version "2.0.0"
@@ -9242,6 +9257,15 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
+simple-schema-validator@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/simple-schema-validator/-/simple-schema-validator-1.1.0.tgz#9eab0c6c701cb9a743b32e9be5c09ada43c13fed"
+  integrity sha512-T/ecZhZ+oHUjH6g+Ts0vUHclI8dEon7cXd5ehpGjBP8YeQSIazolHHQqPjjqHMRJs0YruI8S0ydDK1CDo2eaEw==
+  dependencies:
+    date-fns "^2.14.0"
+    linq "^3.2.2"
+    linq-arrays "^1.2.0"
+
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
@@ -10014,10 +10038,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@~3.7.2:
-  version "3.7.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
-  integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
+typescript@^3.9.3:
+  version "3.9.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.3.tgz#d3ac8883a97c26139e42df5e93eeece33d610b8a"
+  integrity sha512-D/wqnB2xzNFIcoBG9FG8cXRDjiqSTbG2wd8DMZeQyJlP1vfTkIxH4GKveWaEBYySKIg+USu+E+EDIR47SqnaMQ==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

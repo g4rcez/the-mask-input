@@ -11,12 +11,13 @@ type ValidateOptions = FixedMasks | "email";
 
 export type ValidateInputType = CustomInputProps & {
 	validate?: ValidateOptions | ((value: string) => boolean);
-	onValidate?(isValid: boolean): void;
+	onValidate?(): void;
+	onErrorAfterValid?(): void;
 };
 
 type ValidateDict = Record<ValidateOptions, (str: string) => boolean>;
 
-const placeholder = (s = "") => false;
+const placeholder = () => false;
 
 export const validations: ValidateDict = {
 	cellTelephone: placeholder,

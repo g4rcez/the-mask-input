@@ -1,14 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "../components/input";
 import { ValidateInputType, validations } from "./validations";
 
 export const ValidateInput: React.FC<ValidateInputType> = ({ validate, onValidate, ...props }) => {
+	const [check, setCheck] = useState<null | boolean>(null);
 	useEffect(() => {
 		if (props.value && validate && onValidate) {
 			const fn = typeof validate === "function" ? validate : validations[validate];
 			const test = fn(props.value || "");
-			onValidate(test);
+			if (!check && test) {
+				setCheck(true);
+				onValidate();
+			} else if (!test && check === null) {
+			}
 		}
-	}, [props.value, onValidate, validate]);
+	}, [props.value, onValidate, validate, check]);
 	return <Input {...props} />;
 };

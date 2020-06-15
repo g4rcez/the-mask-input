@@ -26,6 +26,7 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"types": [
+			"node",
 			"cypress"
 		]
 	},
