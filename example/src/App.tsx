@@ -28,7 +28,7 @@ function App() {
 			<Field mask="cpf" title="CPF" />
 			<Field mask="currency" title="Currency" />
 			<Field mask="telephone" title="Telefone" />
-			<Field mask="pis" title="PIS/PASEP" />
+			<Field mask="int" title="Integer" />
 			<Field mask="date" title="Data - DD/MM/YYYY" />
 		</div>
 	);
