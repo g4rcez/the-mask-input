@@ -21,7 +21,10 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(({ mas
 		};
 	}, [mask, html.inputMode, html.pattern, html.title, html.placeholder]);
 
-	const placeholder = useMemo(() => (maskProps === null || mask === "int" ? html.placeholder : convertMaskToString(maskProps.mask)), [value]);
+	const placeholder = useMemo(
+		() => (maskProps === null || mask === "int" ? html.placeholder : html.placeholder ?? convertMaskToString(maskProps.mask)),
+		[value]
+	);
 
 	const guide = useMemo(() => mask === "int", [html.placeholder, maskProps, mask]);
 
