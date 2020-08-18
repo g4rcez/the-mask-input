@@ -52,5 +52,5 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(({ mas
 			/>
 		);
 	}
-	return <MaskedInput guide={guide} {...html} value={value} mask={mask as MaskType} ref={internalRef as any} />;
+	return <MaskedInput guide={guide} {...html} placeholder={placeholder} value={value} mask={mask as MaskType} ref={internalRef as any} />;
 });
