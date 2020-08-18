@@ -1,4 +1,4 @@
-import { onlyNumber } from "./helpers";
+import { OnlyNumbers } from '../../helpers/fmt';
 
 const BLACKLIST = [
 	"00000000000000",
@@ -28,7 +28,7 @@ const cnpjDigit = (digits: string) => {
 };
 
 export const isValidCnpj = (cnpj = "") => {
-	const stripped: string = onlyNumber(cnpj);
+	const stripped: string = OnlyNumbers(cnpj);
 	if (!stripped) {
 		return false;
 	}

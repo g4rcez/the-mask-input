@@ -1,13 +1,13 @@
 import React, { useImperativeHandle, useMemo, useRef, useState } from "react";
-import { currencyToFloat, namedFormatCurrency, safeConvert, toCurrency } from "../helpers/fmt";
 import { CurrencyInputProps } from "../@types/input";
+import { currencyToFloat, namedFormatCurrency, safeConvert, toCurrency } from "../helpers/fmt";
 
 const PATTERN = "^[A-Z]{1,3}[0-9$,. ]+$";
 
-export const CurrencyInput: React.FC<CurrencyInputProps> = React.forwardRef<any, CurrencyInputProps>(
-	({ locale = "pt-BR", currency = "BRL", ...props }, externalRef) => {
+export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
+	({ locale = "pt-BR", currency = "BRL", ...html }, externalRef) => {
 		const ref = useRef<HTMLInputElement>(null);
-		useImperativeHandle(externalRef, () => ref.current);
+		useImperativeHandle(externalRef, () => ref.current as HTMLInputElement);
 
 		const info = useMemo(() => {
 			const infos = namedFormatCurrency(locale, currency);
@@ -16,8 +16,8 @@ export const CurrencyInput: React.FC<CurrencyInputProps> = React.forwardRef<any,
 			return infos;
 		}, [locale, currency]);
 
-		const [value, setValue] = useState(() =>
-			safeConvert(props.value || "", {
+		const [input, setInput] = useState(() =>
+			safeConvert(html.value || "", {
 				separator: info.literal,
 				decimalSeparator: info.decimal,
 				prefix: info.currency,
@@ -35,24 +35,14 @@ export const CurrencyInput: React.FC<CurrencyInputProps> = React.forwardRef<any,
 			});
 			const realValue = currencyToFloat(money);
 			const cursor = e.target.selectionStart || 0;
-			const currentGreaterThanPrevious = money.length < value.length;
-			setValue(money);
+			setInput(money);
 			ref.current!.value = money;
-			if (props.onChange) {
-				props.onChange({
-					...e,
-					target: {
-						...e.target,
-						value: money
-					}
-				});
-			}
-			if (currentGreaterThanPrevious) {
-				money.length;
-			} else if (realValue !== 0) {
-				ref.current!.selectionEnd = cursor;
+			e.target.value = money;
+			html.onChange?.(e);
+			if (realValue !== 0) {
+				ref.current!.selectionEnd = cursor + 1;
 			}
 		};
-		return <input {...props} type="text" ref={ref} value={value} onChange={change} inputMode="decimal" pattern={PATTERN} />;
+		return <input {...html} type="text" ref={ref} value={input} onChange={change} inputMode="decimal" pattern={PATTERN} />;
 	}
-) as any;
+);

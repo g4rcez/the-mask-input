@@ -1,53 +1,53 @@
-import React, { useImperativeHandle, useRef } from "react";
+import React, { useImperativeHandle, useMemo, useRef } from "react";
 import MaskedInput from "react-text-mask";
-import { FixedMasks, KeyboardProp, CustomInputProps } from "../@types/input";
-import { ValueType, MaskType } from "../@types/masks";
-import { convertMaskToString, decimalKeyboard, maskConverter, masks } from "../helpers/masks";
+import { CustomInputProps, MaskConfig, MaskType } from "../@types/input";
+import { convertMaskToString, maskConfig } from "../helpers/masks";
 import { CurrencyInput } from "./currency-input";
 
-const createPlaceholder = (maskRegex: string) => convertMaskToString(maskRegex);
+export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(({ mask, value = "", ...html }, externalRef) => {
+	const internalRef = useRef<HTMLInputElement>(null);
+	useImperativeHandle(externalRef, () => internalRef.current!);
 
-const instanceMaskValues = (mask: FixedMasks, html: any, value: ValueType, props: CustomInputProps) => {
-	const maskRegex = (masks as any)[mask];
-	const tmp = decimalKeyboard[mask];
-	const extraProps: KeyboardProp = {
-		inputMode: tmp.inputMode || props.inputMode,
-		pattern: tmp.pattern || props.pattern || "",
-		title: tmp.title || props.title || ""
-	};
-	return {
-		...extraProps,
-		maskRegex,
-		placeholder: html.placeholder || createPlaceholder(maskRegex),
-		maskedValue: maskConverter.hasOwnProperty(mask) ? (maskConverter as any)[mask](`${value}`) : value
-	};
-};
+	const maskProps = useMemo(() => {
+		if (!(mask && typeof mask === "string" && mask in maskConfig)) {
+			return null;
+		}
+		const config: MaskConfig = maskConfig[mask];
+		return {
+			...config,
+			inputMode: html.inputMode ?? config.inputMode,
+			pattern: html.pattern ?? config.pattern,
+			title: html.title ?? config.title
+		};
+	}, [mask, html.inputMode, html.pattern, html.title, html.placeholder]);
 
-export const Input: React.FC<CustomInputProps> = React.forwardRef<any, CustomInputProps>(
-	({ type = "text", mask, value = "", ...html }, externalRef) => {
-		const internalRef = useRef<HTMLInputElement | null>(null);
-		useImperativeHandle(externalRef, () => internalRef.current!);
-		if (mask === undefined) {
-			return <input {...html} type={type} value={value} ref={internalRef} />;
-		}
-		if (mask === "currency") {
-			return <CurrencyInput {...html} value={value} ref={internalRef} />;
-		}
-		if (mask && mask in masks) {
-			const { maskRegex, maskedValue, placeholder, ...others } = instanceMaskValues(mask as any, html, value, html as any);
-			return (
-				<MaskedInput
-					{...html}
-					{...others}
-					guide
-					mask={maskRegex}
-					placeholder={placeholder}
-					ref={internalRef as any}
-					type={type}
-					value={maskedValue}
-				/>
-			);
-		}
-		return <MaskedInput guide {...html} type={type} value={value} mask={mask as MaskType} ref={internalRef as any} />;
+	const placeholder = useMemo(() => (maskProps === null || mask === "int" ? html.placeholder : convertMaskToString(maskProps.mask)), [value]);
+
+	const guide = useMemo(() => mask === "int", [html.placeholder, maskProps, mask]);
+
+	const maskedValue = useMemo(() => (maskProps === null ? value : maskProps.convert(value)), [value, maskProps]);
+
+	if (mask === "currency") {
+		return <CurrencyInput {...html} value={value} ref={internalRef} />;
 	}
-) as any;
+
+	if (mask === undefined || maskProps === null) {
+		return <input {...html} value={value} ref={internalRef} />;
+	}
+
+	if (maskProps !== null) {
+		const { convert, ...other } = maskProps;
+		return (
+			<MaskedInput
+				{...html}
+				{...other}
+				guide={guide}
+				mask={maskProps.mask}
+				placeholder={placeholder}
+				ref={internalRef as any}
+				value={maskedValue}
+			/>
+		);
+	}
+	return <MaskedInput guide={guide} {...html} value={value} mask={mask as MaskType} ref={internalRef as any} />;
+});

@@ -1,6 +1,6 @@
-import { onlyNumber } from "./helpers";
+import { OnlyNumbers } from "../../helpers/fmt";
 
-export const isValidPis = (pis: string) => {
+export const isValidPis = (p: string) => {
 	const base = "3298765432";
 	let sum = 0;
 	let rest = 0;
@@ -11,7 +11,7 @@ export const isValidPis = (pis: string) => {
 	let i;
 	let calcRest = 0;
 
-	pis = onlyNumber(pis);
+	const pis = OnlyNumbers(p);
 
 	if (pis.length !== 11 || pis === "00000000000") {
 		calcRest = calcRest--;

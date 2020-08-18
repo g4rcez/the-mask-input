@@ -1,6 +1,5 @@
-import { Masks } from "./masks";
-import { Locales } from "./locales";
 import { CurrencyCode } from "./currency-code";
+import { Locales } from "./locales";
 
 export type CurrencyInputProps = Omit<InputProps, "value"> & {
 	name?: string;
@@ -54,10 +53,26 @@ export type MasksTypes =
 	| "currency"
 	| "date"
 	| "isoDate"
-	| "pis"
+	| "int"
 	| "telephone";
 
 export type FixedMasks = Exclude<MasksTypes, "currency">;
+
+export type MasksConfig = { [k in FixedMasks]: MaskConfig };
+
+export type MaskConfig = {
+	mask: Array<string | RegExp> | ((mask?: string) => Array<string | RegExp>);
+	pattern: string;
+	title: string;
+	inputMode: InputMode;
+	convert(str?: string): string;
+};
+
+export type MaskChar = string | RegExp | MasksTypes;
+
+export type MaskType = MaskChar[] | ((value: string) => MaskChar[]);
+
+export type Masks = MasksTypes | Array<string | RegExp> | Function;
 
 export type KeyboardProp = {
 	pattern: string;

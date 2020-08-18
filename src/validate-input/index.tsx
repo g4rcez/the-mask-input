@@ -7,11 +7,10 @@ export const ValidateInput: React.FC<ValidateInputType> = ({ validate, onValidat
 	useEffect(() => {
 		if (props.value && validate && onValidate) {
 			const fn = typeof validate === "function" ? validate : validations[validate];
-			const test = fn(props.value || "");
+			const test = fn?.(props.value || "");
 			if (!check && test) {
 				setCheck(true);
 				onValidate();
-			} else if (!test && check === null) {
 			}
 		}
 	}, [props.value, onValidate, validate, check]);

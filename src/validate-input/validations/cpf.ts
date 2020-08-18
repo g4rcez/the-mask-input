@@ -1,4 +1,4 @@
-import { onlyNumber } from "./helpers";
+import { OnlyNumbers } from "../../helpers/fmt";
 
 const BLACKLIST = ["00000000000", "12345678909"];
 
@@ -11,7 +11,7 @@ const cpfDigit = (digits: string) => {
 };
 
 export const isValidCpf = (cpf = ""): boolean => {
-	const stripped: string = onlyNumber(cpf);
+	const stripped: string = OnlyNumbers(cpf);
 	if (!stripped) {
 		return false;
 	}

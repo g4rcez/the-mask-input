@@ -1,11 +1,9 @@
+import { CustomInputProps, FixedMasks } from "../@types/input";
 import { isValidCep } from "./validations/cep";
 import { isValidCnpj } from "./validations/cnpj";
 import { isValidColor } from "./validations/color";
 import { isValidCpf } from "./validations/cpf";
 import { isValidEmail } from "./validations/email";
-import { isValidPis } from "./validations/pis";
-import { FixedMasks } from "../@types/masks";
-import { CustomInputProps } from "../@types/input";
 
 type ValidateOptions = FixedMasks | "email";
 
@@ -19,7 +17,8 @@ type ValidateDict = Record<ValidateOptions, (str: string) => boolean>;
 
 const placeholder = () => false;
 
-export const validations: ValidateDict = {
+export const validations: Partial<ValidateDict> = {
+	int: placeholder,
 	cellTelephone: placeholder,
 	cellphone: placeholder,
 	cep: isValidCep,
@@ -31,6 +30,6 @@ export const validations: ValidateDict = {
 	date: placeholder,
 	email: isValidEmail,
 	isoDate: placeholder,
-	pis: isValidPis,
+	// pis: isValidPis,
 	telephone: placeholder
 };
