@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, useMemo, useRef } from "react";
 import MaskedInput from "react-text-mask";
-import { CustomInputProps, MaskConfig, MaskType } from "../@types/input";
+import { CustomInputProps, MaskConfig } from "../@types/input";
 import { convertMaskToString, maskConfig } from "../helpers/masks";
 import { CurrencyInput } from "./currency-input";
 
@@ -28,7 +28,7 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(({ mas
 
 	const guide = useMemo(() => mask === "int", [html.placeholder, maskProps, mask]);
 
-	const maskedValue = useMemo(() => (maskProps === null ? value : maskProps.convert(value)), [value, maskProps]);
+	const masked = useMemo(() => (maskProps === null ? value : maskProps.convert(value)), [value, maskProps]);
 
 	if (mask === "currency") {
 		return <CurrencyInput {...html} value={value} ref={internalRef} />;
@@ -38,19 +38,6 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(({ mas
 		return <input {...html} value={value} ref={internalRef} />;
 	}
 
-	if (maskProps !== null) {
-		const { convert, ...other } = maskProps;
-		return (
-			<MaskedInput
-				{...html}
-				{...other}
-				guide={guide}
-				mask={maskProps.mask}
-				placeholder={placeholder}
-				ref={internalRef as any}
-				value={maskedValue}
-			/>
-		);
-	}
-	return <MaskedInput guide={guide} {...html} placeholder={placeholder} value={value} mask={mask as MaskType} ref={internalRef as any} />;
+	const { convert, mask: m, ...other } = maskProps;
+	return <MaskedInput {...html} {...other} guide={guide} mask={maskProps.mask} placeholder={placeholder} ref={internalRef as any} value={masked} />;
 });
