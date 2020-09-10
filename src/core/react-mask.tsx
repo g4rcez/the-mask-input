@@ -47,7 +47,7 @@ export const MaskInput = React.forwardRef<HTMLInputElement, Props>((props, ref) 
 		}
 	}, [props.value, props.mask, props.guide, props.showMask]);
 
-	const { mask, guide, pipe, placeholderChar, keepCharPositions, value, onBlur, onChange, showMask, ...htmlProps } = props;
+	const { mask, guide, pipe, placeholderChar, keepCharPositions, onChange, showMask, ...htmlProps } = props;
 
 	const onChangeInput = (event: any) => {
 		textMaskInputElement.current.update();
