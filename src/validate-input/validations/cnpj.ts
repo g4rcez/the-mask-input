@@ -1,4 +1,4 @@
-import { OnlyNumbers } from '../../helpers/fmt';
+import { OnlyNumbers } from "../../helpers/fmt";
 
 const BLACKLIST = [
 	"00000000000000",
