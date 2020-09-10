@@ -1,26 +1,27 @@
 import { Locales } from "../@types/locales";
 import { CurrencyCode } from "../@types/currency-code";
 
-export const fromValue = (value = "") => value.replace(/(-(?!\d))|[^0-9|-]/g, "") || "";
+const fromValue = (value = "") => value.replace(/(-(?!\d))|[^0-9|-]/g, "") || "";
 
-export const padding = (digits: string, minLength: number) => {
+const padding = (digits: string, minLength: number) => {
 	const currentLength = digits.length;
 	const pad = minLength + 1;
 	if (currentLength >= pad) {
 		return digits;
 	}
 	const amountToAdd = pad - currentLength;
-	return `${"0".repeat(amountToAdd)}${digits}`;
+	const zeros = "0".repeat(amountToAdd);
+	return `${zeros}${digits}`;
 };
 
 export const removeLeadingZeros = (num: string) => num.replace(/^0+([0-9]+)/, "$1");
 
-export type AddDecimals = {
+type AddDecimals = {
 	separator: string;
 	decimalSeparator: string;
 };
 
-export const addDecimals = (num: string, { separator = ".", decimalSeparator = "," }: AddDecimals) => {
+const addDecimals = (num: string, { separator = ".", decimalSeparator = "," }: AddDecimals) => {
 	const centsStart = num.length - 2;
 	const amount = removeLeadingZeros(num.substring(0, centsStart));
 	const cents = num.substring(centsStart);
@@ -60,7 +61,7 @@ export const currencyToFloat = (currency: string) => {
 	return Number.parseFloat(final);
 };
 
-export const ToInt = (str: string) => Number.parseInt(str, 10);
+export const ToInt = (str: string) => Number.parseInt(`${str}`, 10);
 
 export const OnlyNumbers = (str: string) => str.replace(/[^0-9]+/g, "");
 

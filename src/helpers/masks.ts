@@ -1,32 +1,34 @@
-import { MasksConfig } from "../@types/input";
+import { MasksConfig, ArrayMask } from "../@types/input";
 import { FormatCNPJ, FormatCpf, OnlyNumbers, removeLeadingZeros, ToInt } from "./fmt";
 
-export const toCellphone = (str = "") => (str.length === 11 ? OnlyNumbers(str).replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3") : str);
+const TELEPHONE_MASK = ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
 
-export const toTelephone = (str = "") => (str.length === 10 ? OnlyNumbers(str).replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3") : str);
+const CELLPHONE_MASK = ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
 
-export const convertMaskToString = (mask: Function | Array<string | RegExp>) => {
+const CPF_MASK = [/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/];
+
+const CNPJ_MASK = [/\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/];
+
+const array = (el: RegExp, len: number) => Array.from({ length: len }).map(() => el);
+
+const toCellphone = (str = "") => (str.length === 11 ? OnlyNumbers(str).replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3") : str);
+
+const toTelephone = (str = "") => (str.length === 10 ? OnlyNumbers(str).replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3") : str);
+
+export const convertMask = (mask: Function | ArrayMask) => {
 	const maskOutput = typeof mask === "function" ? mask("") : mask;
-	const { length } = maskOutput;
-	let placeholder = "";
-	for (let i = 0; i < length; i++) {
-		const str = maskOutput[i];
-		if (typeof str === "string") {
-			placeholder += str;
-		} else if (`${str}` === "/\\d/") {
-			placeholder += "0";
-		} else if (`${str}` === "/[\\S]/") {
-			placeholder += "A";
-		} else if (/\/\[\S+]\//.test(`${str}`)) {
-			placeholder += "0";
-		} else {
-			placeholder += str;
+	return [...maskOutput].reduce((x, y) => {
+		if (`${y}` === "/\\d/" || /\/\[\S+]\//.test(`${y}`)) {
+			return `${x}0`;
 		}
-	}
-	return placeholder;
+		if (`${y}` === "/[\\S]/") {
+			return `${x}A`;
+		}
+		return `${x}${y}`;
+	});
 };
 
-const checkDate = (numbers = "", day = 0, first = /[01]/, second = /\d/) => {
+const getCheckedDateArray = (numbers = "", day = 0, first = /[01]/, second = /\d/) => {
 	const firstDigitMonth = numbers.substring(2, 3) || "";
 	if (firstDigitMonth === "1") {
 		return [/[0123]/, /\d/, "/", /1/, /[02]/, "/", /\d/, /\d/, /\d/, /\d/];
@@ -36,16 +38,6 @@ const checkDate = (numbers = "", day = 0, first = /[01]/, second = /\d/) => {
 	}
 	return [/[0123]/, /\d/, "/", first, second, "/", /\d/, /\d/, /\d/, /\d/];
 };
-
-export const TELEPHONE_MASK = ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
-
-export const CELLPHONE_MASK = ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
-
-export const CPF_MASK = [/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/];
-
-export const CNPJ_MASK = [/\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/];
-
-const array = (el: RegExp, len: number) => Array.from({ length: len }).map(() => el);
 
 export const maskConfig: MasksConfig = {
 	isoDate: {
@@ -60,14 +52,7 @@ export const maskConfig: MasksConfig = {
 		title: "Informe o CPF/CNPJ no padrão correto",
 		inputMode: "decimal",
 		mask: (str = "") => (OnlyNumbers(str).length > 11 ? CNPJ_MASK : CPF_MASK),
-		convert: (str = "") => {
-			if (str.length <= 14) {
-				return FormatCpf(str);
-			} else if (str.length > 14) {
-				return FormatCNPJ(str);
-			}
-			return str;
-		}
+		convert: (str = "") => (str.length > 14 ? FormatCNPJ(str) : FormatCpf(str))
 	},
 	telephone: {
 		pattern: "\\([0-9]{2}\\) [0-9]{4}-[0-9]{4}",
@@ -98,7 +83,14 @@ export const maskConfig: MasksConfig = {
 		convert: (str = "") => (str.length === 16 ? OnlyNumbers(str).replace(/^(\d{4})(\d{4})(\d{4})(\d{4})$/, "$1 $2 $3 $4") : str)
 	},
 	int: {
-		mask: (s = "") => (s[0] === "0" ? ["0", ...array(/[1-9]/, s.length)] : array(/\d/, s.length)),
+		mask: (s = "") => {
+			const last = s.slice(-1);
+			const first = s.slice(0, 1);
+			if (first === "0") {
+				return ["0"];
+			}
+			return /[0-9]/.test(last) ? array(/\d/, s.length) : array(/\d/, s.length - 1);
+		},
 		pattern: "[0-9]+$",
 		title: "Informe um número inteiro",
 		inputMode: "decimal",
@@ -141,15 +133,26 @@ export const maskConfig: MasksConfig = {
 			const numbers = OnlyNumbers(str);
 			const day = ToInt(numbers.substring(0, 2) || "0");
 			if (/^3/.test(numbers)) {
-				return checkDate(numbers, day, /[01]/, /\d/);
-			}
-			if (day === 31) {
-				checkDate(numbers);
-			}
-			if (day === 30) {
-				checkDate(numbers);
+				return getCheckedDateArray(numbers, day, /[01]/, /\d/);
 			}
 			return [/[0123]/, /\d/, "/", /[01]/, /\d/, "/", /\d/, /\d/, /\d/, /\d/];
 		}
+	},
+	email: {
+		inputMode: "email",
+		mask: (str = "") => {
+			const atSignPosition = str.indexOf("@");
+			if (atSignPosition < 0) {
+				return array(/[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]/, str.length);
+			}
+			const beforeAtSignArray = array(/[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]/, atSignPosition);
+			const domain = /[a-zA-Z0-9-.]/;
+			const last = str.slice(-1);
+			const afterAtSignArray = array(domain, str.length - atSignPosition - (domain.test(last) ? 1 : 2));
+			return [...beforeAtSignArray, "@", ...afterAtSignArray];
+		},
+		pattern: "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+		title: "Informe o email correto",
+		convert: (str = "") => str
 	}
 };

@@ -3,6 +3,7 @@ import { Locales } from "./locales";
 
 export type CurrencyInputProps = Omit<InputProps, "value"> & {
 	name?: string;
+	adjustCaret?: boolean;
 	locale?: Locales;
 	currency?: CurrencyCode;
 	ref?: React.RefObject<HTMLInputElement>;
@@ -54,38 +55,34 @@ export type MasksTypes =
 	| "date"
 	| "isoDate"
 	| "int"
+	| "email"
 	| "telephone";
 
 export type FixedMasks = Exclude<MasksTypes, "currency">;
 
-export type MasksConfig = { [k in FixedMasks]: MaskConfig };
+export type MasksConfig = Record<FixedMasks, MaskConfig>;
+
+export type ArrayMask = Array<string | RegExp>;
 
 export type MaskConfig = {
-	mask: Array<string | RegExp> | ((mask?: string) => Array<string | RegExp>);
+	mask: ArrayMask | ((mask?: string) => ArrayMask);
 	pattern: string;
 	title: string;
 	inputMode: InputMode;
-	convert(str?: string): string;
+	convert: (str?: string) => string;
 };
 
-export type MaskChar = string | RegExp | MasksTypes;
+type Masks = MasksTypes | ArrayMask | ((value?: string) => ArrayMask);
 
-export type MaskType = MaskChar[] | ((value: string) => MaskChar[]);
-
-export type Masks = MasksTypes | Array<string | RegExp> | Function;
-
-export type KeyboardProp = {
-	pattern: string;
-	title: string;
-	inputMode: InputMode;
-};
-export type DecimalKeyboardProps = { [key in FixedMasks]: KeyboardProp };
-
-export type MaskInputProps = {
+type MaskInputProps = {
 	autoCapitalize?: "off" | "none" | "on" | "sentences" | "words" | "characters";
 	type?: InputTypes;
 	mask?: Masks;
+	guide?: boolean;
 	value?: string;
+	adjustCaret?: boolean;
 };
 
 export type CustomInputProps = Omit<CurrencyInputProps, "value"> & InputProps & MaskInputProps;
+
+export type BasicMask = Function | Array<string | RegExp>;

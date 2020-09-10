@@ -5,25 +5,25 @@ import { currencyToFloat, namedFormatCurrency, safeConvert, toCurrency } from ".
 const PATTERN = "^[A-Z]{1,3}[0-9$,. ]+$";
 
 export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
-	({ locale = "pt-BR", currency = "BRL", ...html }, externalRef) => {
+	({ locale = "pt-BR", currency = "BRL", adjustCaret, ...html }, externalRef) => {
 		const ref = useRef<HTMLInputElement>(null);
-		useImperativeHandle(externalRef, () => ref.current as HTMLInputElement);
+		useImperativeHandle(externalRef, () => ref.current!);
 
 		const info = useMemo(() => {
 			const infos = namedFormatCurrency(locale, currency);
 			infos.currency = `${infos.currency.trim()} `;
-			infos.literal = infos.literal.trim() || ".";
+			infos.literal = infos.literal.trim();
 			return infos;
 		}, [locale, currency]);
 
-		const [input, setInput] = useState(() =>
-			safeConvert(html.value || "", {
+		const [input, setInput] = useState(() => {
+			return safeConvert(html.value, {
 				separator: info.literal,
 				decimalSeparator: info.decimal,
 				prefix: info.currency,
 				decimalsLength: info.fraction.length
-			})
-		);
+			});
+		});
 
 		const change = (e: React.ChangeEvent<HTMLInputElement>) => {
 			e.persist();
@@ -34,7 +34,7 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 				decimalsLength: info.fraction.length
 			});
 			const realValue = currencyToFloat(money);
-			const cursor = e.target.selectionStart || 0;
+			const cursor = e.target.selectionStart ?? 0;
 			setInput(money);
 			ref.current!.value = money;
 			e.target.value = money;
@@ -43,6 +43,14 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 				ref.current!.selectionEnd = cursor + 1;
 			}
 		};
-		return <input {...html} type="text" ref={ref} value={input} onChange={change} inputMode="decimal" pattern={PATTERN} />;
+
+		const onClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+			if (adjustCaret) {
+				const last = input.length + 1;
+				ref.current!.setSelectionRange(last, last);
+			}
+			html.onClick?.(e);
+		};
+		return <input {...html} onClick={onClick} type="text" ref={ref} value={input} onChange={change} inputMode="decimal" pattern={PATTERN} />;
 	}
 );

@@ -10,7 +10,7 @@ const Field = ({ mask, title }: { mask: Masks; title: string }) => {
 		<div style={{ width: "30%", padding: "1rem" }}>
 			<label>
 				{title}:
-				<Input style={{ width: "100%" }} mask={mask} onChange={onChange} name={mask as string} value={v} />
+				<Input adjustCaret guide style={{ width: "100%" }} mask={mask} onChange={onChange} name={mask as string} value={v} />
 			</label>
 		</div>
 	);
@@ -30,6 +30,8 @@ function App() {
 			<Field mask="telephone" title="Telefone" />
 			<Field mask="int" title="Integer" />
 			<Field mask="date" title="Data - DD/MM/YYYY" />
+			<Field mask="email" title="Email" />
+			<Field mask="cpfCnpj" title="Document" />
 		</div>
 	);
 }
