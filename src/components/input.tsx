@@ -43,6 +43,7 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 				ref.current?.setSelectionRange?.(0, 0);
 			}
 		};
+		console.log(maskProps);
 		return (
 			<MaskInput
 				{...html}

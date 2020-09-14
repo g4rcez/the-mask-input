@@ -1,7 +1,7 @@
-import Input, { Masks } from "input";
+import Input from "input";
 import React, { useCallback, useState } from "react";
 
-const Field = ({ mask, title }: { mask: Masks; title: string }) => {
+const Field = ({ mask, title }: { mask: string; title: string }) => {
 	const [v, vv] = useState("");
 
 	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => vv(e.target.value), []);
@@ -10,7 +10,16 @@ const Field = ({ mask, title }: { mask: Masks; title: string }) => {
 		<div style={{ width: "30%", padding: "1rem" }}>
 			<label>
 				{title}:
-				<Input adjustCaret guide style={{ width: "100%" }} mask={mask} onChange={onChange} name={mask as string} value={v} />
+				<Input
+					adjustCaret
+					placeholder=" "
+					guide
+					style={{ width: "100%" }}
+					mask={mask as any}
+					onChange={onChange}
+					name={mask as string}
+					value={v}
+				/>
 			</label>
 		</div>
 	);

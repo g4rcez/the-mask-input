@@ -40,6 +40,7 @@ export const MaskInput = React.forwardRef<HTMLInputElement, Props>((props, ref) 
 				: (isNil(pipe) && !isNil(props.pipe)) || (!isNil(pipe) && isNil(props.pipe));
 		const isMaskChanged = mask.toString() !== props.mask.toString();
 		const isSettingChanged = Object.keys(settings).some((prop) => settings[prop] !== props[prop]) || isMaskChanged || isPipeChanged;
+
 		const isValueChanged = value !== inputElement.current?.value;
 
 		if (isValueChanged || isSettingChanged) {

@@ -1,67 +1,70 @@
+import { convertMaskToPlaceholder, isNumber, isString, processCaretTraps } from "../helpers/utilities";
 import { adjustCaretPosition } from "./adjust-caret-position";
 import { toMask } from "./to-mask";
-import { convertMaskToPlaceholder, isNumber, isString, processCaretTraps } from "../helpers/utilities";
+
+type State = { previousConformedValue?: string; previousPlaceholder?: string };
 
 const emptyString = "";
 const strNone = "none";
 const strObject = "object";
+const isAndroid = typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent);
+const defer = typeof requestAnimationFrame !== "undefined" ? requestAnimationFrame : setTimeout;
 
-const isAndroid = window.navigator !== undefined && /Android/i.test(navigator.userAgent);
-const defer = window.requestAnimationFrame !== undefined ? window.requestAnimationFrame : setTimeout;
-
-type Config = {
-	inputElement: HTMLInputElement;
-	mask?: any;
-	guide?: boolean;
-	pipe?: any;
-	placeholderChar?: string;
-	keepCharPositions?: boolean;
-	showMask?: boolean;
-};
-
-type State = { previousConformedValue?: string; previousPlaceholder?: string };
-export const createInputMaskElement = (config: Config) => {
+export const createInputMaskElement = (config: any) => {
 	const state: State = { previousConformedValue: undefined, previousPlaceholder: undefined };
 
 	return {
 		state,
+
 		update(
-			rawValue?: string,
-			{ inputElement, mask: providedMask, guide = true, pipe, placeholderChar = "_", keepCharPositions = false, showMask = true } = config
+			rawValue: string,
+			{ inputElement, mask: providedMask, guide, pipe, placeholderChar = "_", keepCharPositions = false, showMask = false } = config
 		) {
-			if (rawValue === undefined) {
+			if (typeof rawValue === "undefined") {
 				rawValue = inputElement.value;
 			}
+
 			if (rawValue === state.previousConformedValue) {
 				return;
 			}
+
 			if (typeof providedMask === strObject && providedMask.pipe !== undefined && providedMask.mask !== undefined) {
 				pipe = providedMask.pipe;
 				providedMask = providedMask.mask;
 			}
 
 			let placeholder;
+
 			let mask;
-			if (Array.isArray(providedMask)) {
+
+			if (providedMask instanceof Array) {
 				placeholder = convertMaskToPlaceholder(providedMask, placeholderChar);
 			}
 
-			const safeRawValue = getSafeRawValue(rawValue);
-			const currentCaretPosition = inputElement.selectionEnd;
+			if (providedMask === false) {
+				return;
+			}
+
+			const safeRawValue = getSafeRawValue(rawValue) as string;
+
+			const { selectionEnd: currentCaretPosition } = inputElement;
+
 			const { previousConformedValue, previousPlaceholder } = state;
 
 			let caretTrapIndexes;
 
 			if (typeof providedMask === "function") {
 				mask = providedMask(safeRawValue, { currentCaretPosition, previousConformedValue, placeholderChar });
+
 				if (mask === false) {
 					return;
 				}
-				const result = processCaretTraps(mask);
-				const indexes = result.indexes;
-				const maskWithoutCaretTraps = result.maskWithoutCaretTraps;
+
+				const { maskWithoutCaretTraps, indexes } = processCaretTraps(mask);
+
 				mask = maskWithoutCaretTraps;
 				caretTrapIndexes = indexes;
+
 				placeholder = convertMaskToPlaceholder(mask, placeholderChar);
 			} else {
 				mask = providedMask;
@@ -77,46 +80,54 @@ export const createInputMaskElement = (config: Config) => {
 				keepCharPositions
 			};
 
-			const conformedValue = toMask(safeRawValue, mask, conformToMaskConfig).conformedValue;
+			const { conformedValue } = toMask(safeRawValue, mask, conformToMaskConfig);
+
 			const piped = typeof pipe === "function";
 
-			let pipeResults = {};
+			let pipeResults: any = {};
 
 			if (piped) {
 				pipeResults = pipe(conformedValue, { rawValue: safeRawValue, ...conformToMaskConfig });
+
 				if (pipeResults === false) {
 					pipeResults = { value: previousConformedValue, rejected: true };
 				} else if (isString(pipeResults)) {
 					pipeResults = { value: pipeResults };
 				}
 			}
-			const finalConformedValue = piped ? (pipeResults as any).value : conformedValue;
+
+			const finalConformedValue = piped ? pipeResults.value : conformedValue;
+
 			const adjustedCaretPosition = adjustCaretPosition({
 				previousConformedValue,
 				previousPlaceholder,
 				conformedValue: finalConformedValue,
 				placeholder,
-				rawValue: safeRawValue,
+				rawValue: safeRawValue as any,
 				currentCaretPosition,
 				placeholderChar,
-				indexesOfPipedChars: (pipeResults as any).indexesOfPipedChars,
+				indexesOfPipedChars: pipeResults.indexesOfPipedChars,
 				caretTrapIndexes
 			});
+
 			const inputValueShouldBeEmpty = finalConformedValue === placeholder && adjustedCaretPosition === 0;
 			const emptyValue = showMask ? placeholder : emptyString;
 			const inputElementValue = inputValueShouldBeEmpty ? emptyValue : finalConformedValue;
+
 			state.previousConformedValue = inputElementValue;
 			state.previousPlaceholder = placeholder;
+
 			if (inputElement.value === inputElementValue) {
 				return;
 			}
+
 			inputElement.value = inputElementValue;
-			safeSetSelection(inputElement, adjustedCaretPosition!);
+			safeSetSelection(inputElement, adjustedCaretPosition);
 		}
 	};
 };
 
-const safeSetSelection = (element: HTMLInputElement, selectionPosition: number) => {
+function safeSetSelection(element: any, selectionPosition: number | null | undefined) {
 	if (document.activeElement === element) {
 		if (isAndroid) {
 			defer(() => element.setSelectionRange(selectionPosition, selectionPosition, strNone), 0);
@@ -124,19 +135,18 @@ const safeSetSelection = (element: HTMLInputElement, selectionPosition: number) 
 			element.setSelectionRange(selectionPosition, selectionPosition, strNone);
 		}
 	}
-};
+}
 
-const getSafeRawValue = (inputValue: any) => {
+function getSafeRawValue(inputValue: unknown) {
 	if (isString(inputValue)) {
 		return inputValue;
-	}
-	if (isNumber(inputValue)) {
+	} else if (isNumber(inputValue)) {
 		return String(inputValue);
-	}
-	if (inputValue === undefined || inputValue === null) {
+	} else if (inputValue === undefined || inputValue === null) {
 		return emptyString;
+	} else {
+		throw new Error(
+			"The 'value' provided to Text Mask needs to be a string or a number. The value " + `received was:\n\n ${JSON.stringify(inputValue)}`
+		);
 	}
-	throw new Error(
-		"The 'value' provided to Text Mask needs to be a string or a number. The value " + `received was:\n\n ${JSON.stringify(inputValue)}`
-	);
-};
+}

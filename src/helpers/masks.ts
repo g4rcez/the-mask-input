@@ -62,11 +62,18 @@ export const maskConfig: MasksConfig = {
 		convert: toTelephone
 	},
 	cnpj: {
-		convert: FormatCNPJ,
+		convert: (str = "") => (str.length === 14 ? FormatCNPJ(str) : str),
+		inputMode: "decimal",
 		mask: CNPJ_MASK,
 		pattern: "[0-9]{2}.[0-9]{3}.[0-9]{3}/[0-9]{4}-[0-9][0-9]",
-		title: "Informe o CNPJ no padrão correto",
-		inputMode: "decimal"
+		title: "Informe o CNPJ no padrão correto"
+	},
+	cpf: {
+		convert: (str = "") => (str.length === 11 ? FormatCpf(str) : str),
+		inputMode: "decimal",
+		mask: CPF_MASK,
+		pattern: "[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}",
+		title: "Informe o CPF no padrão correto"
 	},
 	cep: {
 		mask: [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/],
@@ -95,13 +102,6 @@ export const maskConfig: MasksConfig = {
 		title: "Informe um número inteiro",
 		inputMode: "decimal",
 		convert: (str = "") => OnlyNumbers(removeLeadingZeros(str))
-	},
-	cpf: {
-		convert: (str = "") => (str.length === 11 ? FormatCpf(str) : str),
-		mask: CPF_MASK,
-		pattern: "[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}",
-		title: "Informe o CPF no padrão correto",
-		inputMode: "decimal"
 	},
 	cellphone: {
 		mask: ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/],
