@@ -52,7 +52,7 @@ export const maskConfig: MasksConfig = {
 		title: "Informe o CPF/CNPJ no padrão correto",
 		inputMode: "decimal",
 		mask: (str = "") => (OnlyNumbers(str).length > 11 ? CNPJ_MASK : CPF_MASK),
-		convert: (str = "") => (str.length > 14 ? FormatCNPJ(str) : FormatCpf(str))
+		convert: (str = "") => (OnlyNumbers(str).length > 11 ? FormatCNPJ(str) : FormatCpf(str))
 	},
 	telephone: {
 		pattern: "\\([0-9]{2}\\) [0-9]{4}-[0-9]{4}",
@@ -62,7 +62,7 @@ export const maskConfig: MasksConfig = {
 		convert: toTelephone
 	},
 	cnpj: {
-		convert: (str = "") => (str.length === 14 ? FormatCNPJ(str) : str),
+		convert: FormatCNPJ,
 		mask: CNPJ_MASK,
 		pattern: "[0-9]{2}.[0-9]{3}.[0-9]{3}/[0-9]{4}-[0-9][0-9]",
 		title: "Informe o CNPJ no padrão correto",
