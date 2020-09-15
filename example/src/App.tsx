@@ -2,7 +2,7 @@ import Input from "input";
 import React, { useCallback, useState } from "react";
 
 const Field = ({ mask, title }: { mask: string; title: string }) => {
-	const [v, vv] = useState("");
+	const [v, vv] = useState("11111111111");
 
 	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => vv(e.target.value), []);
 

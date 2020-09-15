@@ -64,7 +64,3 @@ export const currencyToFloat = (currency: string) => {
 export const ToInt = (str: string) => Number.parseInt(`${str}`, 10);
 
 export const OnlyNumbers = (str: string) => str.replace(/[^0-9]+/g, "");
-
-export const FormatCpf = (str: string) => OnlyNumbers(str).replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-
-export const FormatCNPJ = (str = "") => OnlyNumbers(str).replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");

@@ -1,4 +1,4 @@
-import { convertMaskToPlaceholder, isNumber, isString, processCaretTraps } from "../helpers/utilities";
+import { getMaskPlaceholder, isNumber, isString, processCaretTraps } from "../helpers/utilities";
 import { adjustCaretPosition } from "./adjust-caret-position";
 import { toMask } from "./to-mask";
 
@@ -38,7 +38,7 @@ export const createInputMaskElement = (config: any) => {
 			let mask;
 
 			if (providedMask instanceof Array) {
-				placeholder = convertMaskToPlaceholder(providedMask, placeholderChar);
+				placeholder = getMaskPlaceholder(providedMask, placeholderChar);
 			}
 
 			if (providedMask === false) {
@@ -65,7 +65,7 @@ export const createInputMaskElement = (config: any) => {
 				mask = maskWithoutCaretTraps;
 				caretTrapIndexes = indexes;
 
-				placeholder = convertMaskToPlaceholder(mask, placeholderChar);
+				placeholder = getMaskPlaceholder(mask, placeholderChar);
 			} else {
 				mask = providedMask;
 			}

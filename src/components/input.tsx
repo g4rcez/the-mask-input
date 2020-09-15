@@ -23,7 +23,6 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 		}, [mask, html.inputMode, html.pattern, html.title, html.placeholder]);
 
 		const guide = useMemo(() => guidePlaceholder || mask === "int", [html.placeholder, maskProps, mask, guidePlaceholder]);
-		const masked = useMemo(() => (maskProps === null ? value : maskProps.convert(value)), [value, maskProps]);
 		const placeholder = useMemo(
 			() => (maskProps === null || mask === "int" ? html.placeholder : html.placeholder ?? convertMask(maskProps.mask)),
 			[value]
@@ -36,25 +35,15 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 			return <input {...html} value={value} ref={ref} />;
 		}
 
-		const { convert, mask: m, ...other } = maskProps;
+		const { mask: m, ...other } = maskProps;
 		const onClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
 			html.onClick?.(event);
 			if (adjustCaret) {
 				ref.current?.setSelectionRange?.(0, 0);
 			}
 		};
-		console.log(maskProps);
 		return (
-			<MaskInput
-				{...html}
-				{...other}
-				onClick={onClick}
-				guide={guide}
-				mask={maskProps.mask}
-				placeholder={placeholder}
-				ref={ref}
-				value={masked}
-			/>
+			<MaskInput {...html} {...other} onClick={onClick} guide={guide} mask={maskProps.mask} placeholder={placeholder} ref={ref} value={value} />
 		);
 	}
 );

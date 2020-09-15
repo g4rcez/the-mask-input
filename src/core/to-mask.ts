@@ -1,4 +1,4 @@
-import { convertMaskToPlaceholder, processCaretTraps } from "../helpers/utilities";
+import { getMaskPlaceholder, processCaretTraps } from "../helpers/utilities";
 
 export const toMask = (rawValue = "", mask: any[] = [], config: any = {}) => {
 	if (!Array.isArray(mask)) {
@@ -14,7 +14,7 @@ export const toMask = (rawValue = "", mask: any[] = [], config: any = {}) => {
 		guide = true,
 		previousConformedValue = "",
 		placeholderChar = "_",
-		placeholder = convertMaskToPlaceholder(mask, placeholderChar),
+		placeholder = getMaskPlaceholder(mask, placeholderChar),
 		currentCaretPosition,
 		keepCharPositions
 	} = config;

@@ -69,7 +69,6 @@ export type MaskConfig = {
 	pattern: string;
 	title: string;
 	inputMode: InputMode;
-	convert: (str?: string) => string;
 };
 
 type Masks = MasksTypes | ArrayMask | ((value?: string) => ArrayMask);

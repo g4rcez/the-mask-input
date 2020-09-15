@@ -1,4 +1,4 @@
-export const convertMaskToPlaceholder = (mask: Array<RegExp | string> = [], placeholderChar: string) =>
+export const getMaskPlaceholder = (mask: Array<RegExp | string> = [], placeholderChar: string) =>
 	mask.map((char) => (char instanceof RegExp ? placeholderChar : char)).join("");
 
 export const isString = (value: unknown) => typeof value === "string" || value instanceof String;

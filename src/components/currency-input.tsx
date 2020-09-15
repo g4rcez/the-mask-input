@@ -37,7 +37,6 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 			const cursor = e.target.selectionStart ?? 0;
 			setInput(money);
 			ref.current!.value = money;
-			e.target.value = money;
 			html.onChange?.(e);
 			if (realValue !== 0) {
 				ref.current!.selectionEnd = cursor + 1;
