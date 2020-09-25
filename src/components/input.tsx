@@ -10,8 +10,16 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 		useImperativeHandle(externalRef, () => ref.current!);
 
 		const maskProps = useMemo(() => {
-			if (!(mask && typeof mask === "string" && mask in maskConfig)) {
+			if (mask === undefined || mask === "currency") {
 				return null;
+			}
+			if (Array.isArray(mask) || typeof mask === "function") {
+				return {
+					mask: mask,
+					pattern: html.pattern,
+					title: html.title,
+					inputMode: html.inputMode
+				};
 			}
 			const config: MaskConfig = maskConfig[mask];
 			return {
