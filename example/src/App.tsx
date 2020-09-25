@@ -1,10 +1,14 @@
 import Input from "input";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-const Field = ({ mask, title }: { mask: string; title: string }) => {
+const Field = ({ mask, title }: { mask: any; title: string }) => {
 	const [v, vv] = useState("11111111111");
 
 	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => vv(e.target.value), []);
+
+	useEffect(() => {
+		setTimeout(() => vv("2222"), 2000);
+	}, []);
 
 	return (
 		<div style={{ width: "30%", padding: "1rem" }}>
@@ -17,7 +21,7 @@ const Field = ({ mask, title }: { mask: string; title: string }) => {
 					style={{ width: "100%" }}
 					mask={mask as any}
 					onChange={onChange}
-					name={mask as string}
+					name={Math.random().toString()}
 					value={v}
 				/>
 			</label>
