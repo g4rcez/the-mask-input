@@ -2,14 +2,10 @@ import Input from "input";
 import React, { useCallback, useEffect, useState } from "react";
 
 const Field = ({ mask, title }: { mask: any; title: string }) => {
-	const [v, vv] = useState("1250");
+	const [get, set] = useState("1250");
 
-	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => vv(e.target.value), []);
-
-	useEffect(() => {
-		setTimeout(() => vv("2222"), 5000);
-	}, []);
-
+	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => set(e.target.value), []);
+	console.log(get);
 	return (
 		<div style={{ width: "30%", padding: "1rem" }}>
 			<label>
@@ -22,9 +18,17 @@ const Field = ({ mask, title }: { mask: any; title: string }) => {
 					mask={mask as any}
 					onChange={onChange}
 					name={Math.random().toString()}
-					value={v}
+					value={get}
 				/>
 			</label>
+			<button
+				onClick={() => {
+					console.log("set");
+					set(`${Math.random() * 1000}`);
+				}}
+			>
+				Set
+			</button>
 		</div>
 	);
 };
