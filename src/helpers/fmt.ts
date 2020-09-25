@@ -38,7 +38,7 @@ export const toCurrency = (value: string, { separator, prefix, decimalSeparator,
 	return `${prefix}${addDecimals(valueToMask, {
 		separator,
 		decimalSeparator
-	})}`;
+	})}`.replaceAll("&nbsp;", " ");
 };
 
 export const safeConvert = (str: string | number = "", props: ToCurrency) => toCurrency(Number.parseFloat(`${str}`).toFixed(2), props);

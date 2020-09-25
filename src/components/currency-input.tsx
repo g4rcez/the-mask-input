@@ -26,8 +26,8 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 
 		const info = useMemo(() => {
 			const infos = namedFormatCurrency(locale, currency);
-			infos.currency = `${infos.currency.trim()} `;
-			infos.literal = infos.literal.trim();
+			infos.currency = `${infos.currency.trim()} `.replaceAll("&nbsp;", " ");
+			infos.literal = infos.literal.trim().replaceAll("&nbsp;", " ");
 			return infos;
 		}, [locale, currency]);
 
