@@ -41,7 +41,8 @@ export const toCurrency = (value: string, { separator, prefix, decimalSeparator,
 	})}`.replaceAll("&nbsp;", " ");
 };
 
-export const safeConvert = (str: string | number = "", props: ToCurrency) => toCurrency(Number.parseFloat(`${str}`).toFixed(2), props);
+export const safeConvert = (str: string | number = "", props: ToCurrency) =>
+	toCurrency(Number.parseFloat(`${str}`).toFixed(props.decimalsLength), props);
 
 export const namedFormatCurrency = (locale: Locales, currency: CurrencyCode) =>
 	new Intl.NumberFormat(locale, { style: "currency", currency }).formatToParts(1000).reduce((acc, el) => ({ ...acc, [el.type]: el.value }), {

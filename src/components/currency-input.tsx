@@ -1,16 +1,10 @@
 import React, { useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { CurrencyInputProps } from "../@types/input";
-import { currencyToFloat, namedFormatCurrency, toCurrency } from "../helpers/fmt";
+import { currencyToFloat, namedFormatCurrency, toCurrency, safeConvert, ToCurrency } from "../helpers/fmt";
 
 const PATTERN = "^[A-Z]{1,3}[0-9$,. ]+$";
 
-const formatter = (s: string, info: any) =>
-	toCurrency(s || "0", {
-		separator: info.literal,
-		decimalSeparator: info.decimal,
-		prefix: info.currency,
-		decimalsLength: info.fraction.length
-	});
+const formatter = (s: string, info: ToCurrency) => toCurrency(s, info);
 
 export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
 	({ locale = "pt-BR", currency = "BRL", adjustCaret, ...html }, externalRef) => {
@@ -19,8 +13,12 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 		useImperativeHandle(externalRef, () => ref.current!);
 
 		useLayoutEffect(() => {
-			const realValue = currencyToFloat(`${html.value || "0"}`);
-			const money = Intl.NumberFormat(locale, { style: "currency", currency }).format(realValue);
+			const money = safeConvert(`${html.value || "0"}`, {
+				decimalSeparator: info.decimal,
+				decimalsLength: info.fraction.length,
+				prefix: info.currency,
+				separator: info.group
+			});
 			setInput(money);
 		}, [html.value]);
 
@@ -33,12 +31,17 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 
 		const change = (e: React.ChangeEvent<HTMLInputElement>) => {
 			e.persist();
-			const money = formatter(e.target.value, info);
+			const money = formatter(e.target.value, {
+				decimalSeparator: info.decimal,
+				decimalsLength: info.fraction.length,
+				prefix: info.currency,
+				separator: info.group
+			});
 			const realValue = currencyToFloat(money);
 			const cursor = e.target.selectionStart ?? 0;
 			setInput(money);
-			ref.current!.value = money;
-			e.target.value = money;
+			e.target.value = `${realValue}`;
+			console.log({ money });
 			html.onChange?.(e);
 			if (realValue !== 0) {
 				ref.current!.selectionEnd = cursor + 1;
