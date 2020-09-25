@@ -1,6 +1,6 @@
-import React, { useImperativeHandle, useMemo, useRef, useState } from "react";
+import React, { useImperativeHandle, useMemo, useRef } from "react";
 import { CurrencyInputProps } from "../@types/input";
-import { currencyToFloat, namedFormatCurrency, safeConvert, toCurrency } from "../helpers/fmt";
+import { currencyToFloat, namedFormatCurrency, toCurrency } from "../helpers/fmt";
 
 const PATTERN = "^[A-Z]{1,3}[0-9$,. ]+$";
 
@@ -16,15 +16,6 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 			return infos;
 		}, [locale, currency]);
 
-		const [input, setInput] = useState(() => {
-			return safeConvert(html.value, {
-				separator: info.literal,
-				decimalSeparator: info.decimal,
-				prefix: info.currency,
-				decimalsLength: info.fraction.length
-			});
-		});
-
 		const change = (e: React.ChangeEvent<HTMLInputElement>) => {
 			e.persist();
 			const money = toCurrency(e.target.value, {
@@ -35,7 +26,6 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 			});
 			const realValue = currencyToFloat(money);
 			const cursor = e.target.selectionStart ?? 0;
-			setInput(money);
 			ref.current!.value = money;
 			html.onChange?.(e);
 			if (realValue !== 0) {
@@ -45,11 +35,11 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 
 		const onClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
 			if (adjustCaret) {
-				const last = input.length + 1;
+				const last = (ref.current?.value.length || 0) + 1;
 				ref.current!.setSelectionRange(last, last);
 			}
 			html.onClick?.(e);
 		};
-		return <input {...html} onClick={onClick} type="text" ref={ref} value={input} onChange={change} inputMode="decimal" pattern={PATTERN} />;
+		return <input {...html} onClick={onClick} type="text" ref={ref} onChange={change} inputMode="decimal" pattern={PATTERN} />;
 	}
 );
