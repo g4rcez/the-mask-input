@@ -2,12 +2,12 @@ import Input from "input";
 import React, { useCallback, useEffect, useState } from "react";
 
 const Field = ({ mask, title }: { mask: any; title: string }) => {
-	const [v, vv] = useState("11111111111");
+	const [v, vv] = useState("1250");
 
 	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => vv(e.target.value), []);
 
 	useEffect(() => {
-		setTimeout(() => vv("2222"), 2000);
+		setTimeout(() => vv("2222"), 5000);
 	}, []);
 
 	return (
@@ -30,8 +30,23 @@ const Field = ({ mask, title }: { mask: any; title: string }) => {
 };
 
 function App() {
+	const [a, setA] = useState("");
 	return (
 		<div>
+			<div style={{ width: "30%", padding: "1rem" }}>
+				<label>
+					<Input
+						adjustCaret
+						placeholder="Custom Mask"
+						guide
+						style={{ width: "100%" }}
+						mask={[/\d/, /\d/, "%"]}
+						onChange={(e) => setA(e.target.value)}
+						name={"custom"}
+						value={a}
+					/>
+				</label>
+			</div>
 			<Field mask="cellphone" title="Celular" />
 			<Field mask="cep" title="CEP" />
 			<Field mask="creditCard" title="Cartão de crédito" />
