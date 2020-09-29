@@ -9,10 +9,13 @@ const formatter = (s: string, info: ToCurrency) => toCurrency(s, info);
 export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
 	({ locale = "pt-BR", currency = "BRL", adjustCaret, ...html }, externalRef) => {
 		const ref = useRef<HTMLInputElement>(null);
-		const [input, setInput] = useState<string>(() => `${html.value || "0"}`);
+		const [input, setInput] = useState<string>(() => html.value?.toString() || "");
 		useImperativeHandle(externalRef, () => ref.current!);
 
 		useLayoutEffect(() => {
+			if (html.value == "") {
+				return;
+			}
 			const money = safeConvert(`${html.value || "0"}`, {
 				decimalSeparator: info.decimal,
 				decimalsLength: info.fraction.length,
@@ -41,7 +44,6 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 			const cursor = e.target.selectionStart ?? 0;
 			setInput(money);
 			e.target.value = `${realValue}`;
-			console.log({ money });
 			html.onChange?.(e);
 			if (realValue !== 0) {
 				ref.current!.selectionEnd = cursor + 1;

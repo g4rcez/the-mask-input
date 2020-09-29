@@ -2,7 +2,7 @@ import Input from "input";
 import React, { useState } from "react";
 
 const Field = ({ mask, title }: { mask: any; title: string }) => {
-	const [get, set] = useState("9000");
+	const [get, set] = useState("");
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => set(e.target.value);
 
 	return (
