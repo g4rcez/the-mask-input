@@ -14,7 +14,7 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 
 		useLayoutEffect(() => {
 			if (html.value == "") {
-				return;
+				return setInput("");
 			}
 			const money = safeConvert(`${html.value || "0"}`, {
 				decimalSeparator: info.decimal,
