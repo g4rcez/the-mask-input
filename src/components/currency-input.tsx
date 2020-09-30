@@ -2,7 +2,7 @@ import React, { useImperativeHandle, useLayoutEffect, useMemo, useRef, useState 
 import { CurrencyInputProps } from "../@types/input";
 import { currencyToFloat, namedFormatCurrency, toCurrency, safeConvert, ToCurrency } from "../helpers/fmt";
 
-const PATTERN = "^[A-Z]{1,3}[0-9$,. ]+$";
+export const CURRENCY_PATTERN = "^[A-Z]{1,3}[0-9$,. ]+$";
 
 const formatter = (s: string, info: ToCurrency) => toCurrency(s, info);
 
@@ -57,6 +57,6 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 			}
 			html.onClick?.(e);
 		};
-		return <input {...html} value={input} onClick={onClick} type="text" ref={ref} onChange={change} inputMode="decimal" pattern={PATTERN} />;
+		return <input {...html} value={input} onClick={onClick} type="text" ref={ref} onChange={change} inputMode="decimal" />;
 	}
 );
