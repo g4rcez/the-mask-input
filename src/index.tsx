@@ -4,5 +4,3 @@ export * from "./@types/locales";
 export * from "./components/currency-input";
 export { Input as default } from "./components/input";
 export * from "./components/inputs-mask";
-export * from "./validate-input";
-

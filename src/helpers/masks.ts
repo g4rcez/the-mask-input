@@ -38,14 +38,14 @@ const getCheckedDateArray = (numbers = "", day = 0, first = /[01]/, second = /\d
 export const maskConfig: MasksConfig = {
 	isoDate: {
 		pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}",
-		title: "Informe a data no padrão correto",
+		title: "ISO Date",
 		inputMode: "decimal",
 		mask: [/\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/]
 	},
 
 	telephone: {
 		pattern: "\\([0-9]{2}\\) [0-9]{4}-[0-9]{4}",
-		title: "Informe o telefone no padrão correto",
+		title: "Telephone",
 		inputMode: "decimal",
 		mask: TELEPHONE_MASK
 	},
@@ -53,17 +53,17 @@ export const maskConfig: MasksConfig = {
 		inputMode: "decimal",
 		mask: CNPJ_MASK,
 		pattern: "[0-9]{2}.[0-9]{3}.[0-9]{3}/[0-9]{4}-[0-9][0-9]",
-		title: "Informe o CNPJ no padrão correto"
+		title: "CNPJ"
 	},
 	cpf: {
 		inputMode: "decimal",
 		mask: CPF_MASK,
 		pattern: "[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}",
-		title: "Informe o CPF no padrão correto"
+		title: "CPF"
 	},
 	cpfCnpj: {
 		pattern: "([0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}|[0-9]{2}.[0-9]{3}.[0-9]{3}/[0-9]{4}-[0-9][0-9])",
-		title: "Informe o CPF/CNPJ no padrão correto",
+		title: "CPF or CNPJ",
 		inputMode: "decimal",
 		mask: (str = "") => (OnlyNumbers(str).length <= 11 ? CPF_MASK : CNPJ_MASK)
 	},
@@ -71,42 +71,42 @@ export const maskConfig: MasksConfig = {
 	cep: {
 		mask: [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/],
 		pattern: "[0-9]{5}-[0-9]{3}",
-		title: "Informe o CEP no padrão correto",
+		title: "CEP",
 		inputMode: "decimal"
 	},
 	creditCard: {
 		mask: [/\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/],
 		pattern: "[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}",
-		title: "Informe o número do cartão no padrão correto",
+		title: "Credit Card",
 		inputMode: "decimal"
 	},
 	int: {
 		mask: (s = "") => (/[0-9]/.test(s.slice(-1)) ? array(/\d/, s.length) : array(/\d/, s.length - 1)),
 		pattern: "[0-9]+$",
-		title: "Informe um número inteiro",
+		title: "Integer number",
 		inputMode: "decimal"
 	},
 	cellphone: {
 		mask: ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/],
 		pattern: "\\([0-9]{2}\\) [0-9]{5}-[0-9]{4}",
-		title: "Informe o celular no padrão correto",
+		title: "Cellphone",
 		inputMode: "decimal"
 	},
 	cellTelephone: {
 		mask: (value = "") => (OnlyNumbers(value).length === 10 ? TELEPHONE_MASK : CELLPHONE_MASK),
 		pattern: "\\([0-9]{2}\\) [0-9]{4,5}-[0-9]{4}",
-		title: "Informe o telefone/celular no padrão correto",
+		title: "Telephone or cellphone",
 		inputMode: "decimal"
 	},
 	color: {
 		pattern: "#[0-9a-fA-F]{6}",
-		title: "Informe a cor no padrão correto",
+		title: "Color",
 		inputMode: "decimal",
 		mask: ["#", /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/]
 	},
 	date: {
 		pattern: "[0-9]{2}/[0-9]{2}/[0-9]{4}",
-		title: "Informe a data no padrão correto",
+		title: "Date Day/Month/Year",
 		inputMode: "decimal",
 		mask: (str = "") => {
 			const numbers = OnlyNumbers(str);
@@ -131,6 +131,6 @@ export const maskConfig: MasksConfig = {
 			return [...beforeAtSignArray, "@", ...afterAtSignArray];
 		},
 		pattern: "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
-		title: "Informe o email correto"
+		title: "Email"
 	}
 };
