@@ -4,7 +4,6 @@ import React, { useState } from "react";
 const Field = ({ mask, title }: { mask: any; title: string }) => {
 	const [get, set] = useState("");
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => set(e.target.value);
-
 	return (
 		<div style={{ width: "30%", padding: "1rem" }}>
 			<label>
@@ -29,6 +28,7 @@ function App() {
 	const [a, setA] = useState("");
 	return (
 		<div>
+			<Input adjustCaret placeholder="CPF no control" guide style={{ width: "100%" }} mask="cpf" name={"cpf-test"} />
 			<Field mask="currency" title="Currency" />
 			<div style={{ width: "30%", padding: "1rem" }}>
 				<label>
