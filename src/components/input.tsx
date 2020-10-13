@@ -5,7 +5,7 @@ import { convertMask, maskConfig } from "../helpers/masks";
 import { CurrencyInput } from "./currency-input";
 
 export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
-	({ mask, adjustCaret, guide: guidePlaceholder, value = "", ...html }, externalRef) => {
+	({ mask, adjustCaret, guide: guidePlaceholder, ...html }, externalRef) => {
 		const ref = useRef<HTMLInputElement>(null);
 		useImperativeHandle(externalRef, () => ref.current!);
 
@@ -33,14 +33,14 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 		const guide = useMemo(() => guidePlaceholder || mask === "int", [html.placeholder, maskProps, mask, guidePlaceholder]);
 		const placeholder = useMemo(
 			() => (maskProps === null || mask === "int" ? html.placeholder : html.placeholder ?? convertMask(maskProps.mask)),
-			[value]
+			[html.value]
 		);
 
 		if (mask === "currency") {
-			return <CurrencyInput {...html} value={value} ref={ref} />;
+			return <CurrencyInput {...html} ref={ref} />;
 		}
 		if (maskProps === null) {
-			return <input {...html} value={value} ref={ref} />;
+			return <input {...html} ref={ref} />;
 		}
 
 		const { mask: m, ...other } = maskProps;
@@ -51,7 +51,7 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 			}
 		};
 		return (
-			<MaskInput {...html} {...other} onClick={onClick} guide={guide} mask={maskProps.mask} placeholder={placeholder} ref={ref} value={value} />
+			<MaskInput {...html} {...other} onClick={onClick} guide={guide} mask={maskProps.mask} placeholder={placeholder} ref={ref} />
 		);
 	}
 );
