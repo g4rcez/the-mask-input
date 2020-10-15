@@ -40,69 +40,80 @@ export const maskConfig: MasksConfig = {
 		pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}",
 		title: "ISO Date",
 		inputMode: "decimal",
-		mask: [/\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/]
+		mask: [/\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/],
+		revert: OnlyNumbers
 	},
 
 	telephone: {
 		pattern: "\\([0-9]{2}\\) [0-9]{4}-[0-9]{4}",
 		title: "Telephone",
 		inputMode: "decimal",
-		mask: TELEPHONE_MASK
+		mask: TELEPHONE_MASK,
+		revert: OnlyNumbers
 	},
 	cnpj: {
 		inputMode: "decimal",
 		mask: CNPJ_MASK,
 		pattern: "[0-9]{2}.[0-9]{3}.[0-9]{3}/[0-9]{4}-[0-9][0-9]",
-		title: "CNPJ"
+		title: "CNPJ",
+		revert: OnlyNumbers
 	},
 	cpf: {
 		inputMode: "decimal",
 		mask: CPF_MASK,
 		pattern: "[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}",
-		title: "CPF"
+		title: "CPF",
+		revert: OnlyNumbers
 	},
 	cpfCnpj: {
 		pattern: "([0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}|[0-9]{2}.[0-9]{3}.[0-9]{3}/[0-9]{4}-[0-9][0-9])",
 		title: "CPF or CNPJ",
 		inputMode: "decimal",
-		mask: (str = "") => (OnlyNumbers(str).length <= 11 ? CPF_MASK : CNPJ_MASK)
+		mask: (str = "") => (OnlyNumbers(str).length <= 11 ? CPF_MASK : CNPJ_MASK),
+		revert: OnlyNumbers
 	},
 
 	cep: {
 		mask: [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/],
 		pattern: "[0-9]{5}-[0-9]{3}",
 		title: "CEP",
-		inputMode: "decimal"
+		inputMode: "decimal",
+		revert: OnlyNumbers
 	},
 	creditCard: {
 		mask: [/\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/],
 		pattern: "[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}",
 		title: "Credit Card",
-		inputMode: "decimal"
+		inputMode: "decimal",
+		revert: OnlyNumbers
 	},
 	int: {
 		mask: (s = "") => (/[0-9]/.test(s.slice(-1)) ? array(/\d/, s.length) : array(/\d/, s.length - 1)),
 		pattern: "[0-9]+$",
 		title: "Integer number",
-		inputMode: "decimal"
+		inputMode: "decimal",
+		revert: OnlyNumbers
 	},
 	cellphone: {
 		mask: ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/],
 		pattern: "\\([0-9]{2}\\) [0-9]{5}-[0-9]{4}",
 		title: "Cellphone",
-		inputMode: "decimal"
+		inputMode: "decimal",
+		revert: OnlyNumbers
 	},
 	cellTelephone: {
 		mask: (value = "") => (OnlyNumbers(value).length === 10 ? TELEPHONE_MASK : CELLPHONE_MASK),
 		pattern: "\\([0-9]{2}\\) [0-9]{4,5}-[0-9]{4}",
 		title: "Telephone or cellphone",
-		inputMode: "decimal"
+		inputMode: "decimal",
+		revert: OnlyNumbers
 	},
 	color: {
 		pattern: "#[0-9a-fA-F]{6}",
 		title: "Color",
 		inputMode: "decimal",
-		mask: ["#", /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/]
+		mask: ["#", /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/, /[\dA-Fa-f]/],
+		revert: (s: string) => s
 	},
 	date: {
 		pattern: "[0-9]{2}/[0-9]{2}/[0-9]{4}",
@@ -115,7 +126,8 @@ export const maskConfig: MasksConfig = {
 				return getCheckedDateArray(numbers, day, /[01]/, /\d/);
 			}
 			return [/[0123]/, /\d/, "/", /[01]/, /\d/, "/", /\d/, /\d/, /\d/, /\d/];
-		}
+		},
+		revert: OnlyNumbers
 	},
 	email: {
 		inputMode: "email",
@@ -131,6 +143,7 @@ export const maskConfig: MasksConfig = {
 			return [...beforeAtSignArray, "@", ...afterAtSignArray];
 		},
 		pattern: "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
-		title: "Email"
+		title: "Email",
+		revert: (s: string) => s
 	}
 };

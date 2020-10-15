@@ -66,6 +66,7 @@ export type ArrayMask = Array<string | RegExp>;
 
 export type MaskConfig = {
 	mask: ArrayMask | ((mask?: string) => ArrayMask);
+	revert: (masked: string) => string;
 	pattern: string;
 	title: string;
 	inputMode: InputMode;
@@ -80,8 +81,11 @@ type MaskInputProps = {
 	guide?: boolean;
 	value?: string;
 	adjustCaret?: boolean;
+	revertMask?: (s: string) => string
 };
 
-export type CustomInputProps = Omit<CurrencyInputProps, "value"> & InputProps & MaskInputProps;
+export type CustomInputProps = Omit<CurrencyInputProps, "value"> & InputProps & MaskInputProps & {
+	onChange?: (e: React.ChangeEvent<HTMLInputElement>, unmaskedValue?: string) => void
+};
 
 export type BasicMask = Function | Array<string | RegExp>;
