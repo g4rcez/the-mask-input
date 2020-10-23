@@ -38,10 +38,10 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 		);
 
 		if (mask === "currency") {
-			return <CurrencyInput {...html} ref={ref} />;
+			return <CurrencyInput {...html} onChange={onChange} ref={ref} />;
 		}
 		if (maskProps === null) {
-			return <input {...html} ref={ref} />;
+			return <input {...html} onChange={onChange} ref={ref} />;
 		}
 
 		const { mask: m, ...other } = maskProps;
@@ -56,14 +56,15 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 			() =>
 				onChange
 					? (e: React.ChangeEvent<HTMLInputElement>) => {
+							e.persist();
 							if (m) {
-								e.persist();
 								const unmasked = maskProps.revert(e.target.value ?? "");
-								onChange?.(e, unmasked);
+								return onChange?.(e, unmasked);
 							}
+							return onChange?.(e);
 					  }
 					: undefined,
-			[onChange, maskProps]
+			[onChange]
 		);
 
 		return (
