@@ -19,7 +19,7 @@ const Field = ({ mask, title }: { mask: any; title: string }) => {
 					value={get}
 				/>
 			</label>
-			<button onClick={() => set([...(Math.random() * 1000).toString()].slice(0, 5).join(""))}>Set</button>
+			<button onClick={() => set((Math.random() * 1000000000).toString())}>Set</button>
 		</div>
 	);
 };

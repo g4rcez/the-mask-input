@@ -89,7 +89,7 @@ export const maskConfig: MasksConfig = {
 	},
 	int: {
 		mask: (s = "") => (/[0-9]/.test(s.slice(-1)) ? array(/\d/, s.length) : array(/\d/, s.length - 1)),
-		pattern: "[0-9]+$",
+		pattern: "^[0-9]+$",
 		title: "Integer number",
 		inputMode: "decimal",
 		revert: OnlyNumbers

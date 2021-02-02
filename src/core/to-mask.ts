@@ -34,8 +34,6 @@ export const toMask = (rawValue = "", mask: any[] = [], config: any = {}) => {
 
 	const indexOfLastChange = indexOfFirstChange + Math.abs(editDistance);
 
-	//
-
 	if (keepCharPositions === true && !isAddition) {
 		let compensatingPlaceholderChars = "";
 

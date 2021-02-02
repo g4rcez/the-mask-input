@@ -15,12 +15,11 @@ export const createInputMaskElement = (config: any) => {
 
 	return {
 		state,
-
 		update(
 			rawValue: string,
 			{ inputElement, mask: providedMask, guide, pipe, placeholderChar = "_", keepCharPositions = false, showMask = false } = config
 		) {
-			if (typeof rawValue === "undefined") {
+			if (rawValue === undefined) {
 				rawValue = inputElement.value;
 			}
 
@@ -37,7 +36,7 @@ export const createInputMaskElement = (config: any) => {
 
 			let mask;
 
-			if (providedMask instanceof Array) {
+			if (Array.isArray(providedMask)) {
 				placeholder = getMaskPlaceholder(providedMask, placeholderChar);
 			}
 

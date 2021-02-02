@@ -15,11 +15,11 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 			}
 			if (Array.isArray(mask) || typeof mask === "function") {
 				return {
-					revert: (s: string) => s,
-					mask: mask,
+					inputMode: html.inputMode,
+					mask,
 					pattern: html.pattern,
+					revert: (s: string) => s,
 					title: html.title,
-					inputMode: html.inputMode
 				};
 			}
 			const config: MaskConfig = maskConfig[mask];
@@ -37,6 +37,21 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 			[html.value]
 		);
 
+		const change = useMemo(
+			() =>
+				onChange
+					? (e: React.ChangeEvent<HTMLInputElement>) => {
+							e.persist();
+							if (m) {
+								const unmasked = maskProps?.revert(e.target.value ?? "");
+								return onChange?.(e, unmasked);
+							}
+							return onChange?.(e);
+					  }
+					: undefined,
+			[onChange]
+		);
+
 		if (mask === "currency") {
 			return <CurrencyInput {...html} onChange={onChange} ref={ref} />;
 		}
@@ -51,21 +66,6 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 				ref.current?.setSelectionRange?.(0, 0);
 			}
 		};
-
-		const change = useMemo(
-			() =>
-				onChange
-					? (e: React.ChangeEvent<HTMLInputElement>) => {
-							e.persist();
-							if (m) {
-								const unmasked = maskProps.revert(e.target.value ?? "");
-								return onChange?.(e, unmasked);
-							}
-							return onChange?.(e);
-					  }
-					: undefined,
-			[onChange]
-		);
 
 		return (
 			<MaskInput

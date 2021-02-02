@@ -1,12 +1,19 @@
 import { CurrencyCode } from "./currency-code";
 import { Locales } from "./locales";
 
+export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "autoCapitalize" | "onChange"> & {
+	type?: InputTypes;
+	inputMode?: InputMode;
+	autoCapitalize?: "off" | "none" | "on" | "sentences" | "words" | "characters";
+};
+
 export type CurrencyInputProps = Omit<InputProps, "value"> & {
 	name?: string;
 	adjustCaret?: boolean;
 	locale?: Locales;
 	currency?: CurrencyCode;
 	ref?: React.RefObject<HTMLInputElement>;
+	onChange?: (e: React.ChangeEvent<HTMLInputElement>, unmasked?: string) => void;
 	value?: string | number;
 };
 
@@ -36,12 +43,6 @@ export type InputTypes =
 
 export type InputMode = "decimal" | "none" | "text" | "numeric" | "tel" | "search" | "email" | "url";
 
-export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "autoCapitalize"> & {
-	type?: InputTypes;
-	inputMode?: InputMode;
-	autoCapitalize?: "off" | "none" | "on" | "sentences" | "words" | "characters";
-};
-
 export type MasksTypes =
 	| "cellphone"
 	| "cellTelephone"
@@ -70,6 +71,7 @@ export type MaskConfig = {
 	pattern: string;
 	title: string;
 	inputMode: InputMode;
+	type?: InputTypes;
 };
 
 type Masks = MasksTypes | ArrayMask | ((value?: string) => ArrayMask);
@@ -81,11 +83,13 @@ type MaskInputProps = {
 	guide?: boolean;
 	value?: string;
 	adjustCaret?: boolean;
-	revertMask?: (s: string) => string
+	revertMask?: (s: string) => string;
 };
 
-export type CustomInputProps = Omit<CurrencyInputProps, "value"> & InputProps & MaskInputProps & {
-	onChange?: (e: React.ChangeEvent<HTMLInputElement>, unmaskedValue?: string) => void
-};
+export type CustomInputProps = Omit<CurrencyInputProps, "value"> &
+	InputProps &
+	MaskInputProps & {
+		onChange?: (e: React.ChangeEvent<HTMLInputElement>, unmaskedValue?: string) => void;
+	};
 
 export type BasicMask = Function | Array<string | RegExp>;

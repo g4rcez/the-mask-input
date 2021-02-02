@@ -43,8 +43,6 @@ export const adjustCaretPosition = ({
 	if (possiblyHasRejectedChar) {
 		startingSearchIndex = currentCaretPosition - editLength;
 	} else {
-		//
-
 		const normalizedConformedValue = conformedValue.toLowerCase();
 		const normalizedRawValue = rawValue.toLowerCase();
 
@@ -60,7 +58,7 @@ export const adjustCaretPosition = ({
 			.filter((char: string) => char !== placeholderChar).length;
 
 		const leftMaskChars = placeholder
-			.substr(0, intersection.length)
+			.substring(0, intersection.length)
 			.split("")
 			.filter((char: string) => char !== placeholderChar).length;
 
