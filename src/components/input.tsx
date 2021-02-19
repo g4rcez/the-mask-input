@@ -5,7 +5,7 @@ import { convertMask, maskConfig } from "../helpers/masks";
 import { CurrencyInput } from "./currency-input";
 
 export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
-	({ mask, onChange, adjustCaret, guide: guidePlaceholder, ...html }, externalRef) => {
+	({ mask, onChange, adjustCaret, guide: guidePlaceholder, revertMask, ...html }, externalRef) => {
 		const ref = useRef<HTMLInputElement>(null);
 		useImperativeHandle(externalRef, () => ref.current!);
 
@@ -19,14 +19,14 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 					mask,
 					pattern: html.pattern,
 					revert: (s: string) => s,
-					title: html.title,
+					title: html.title
 				};
 			}
 			const config: MaskConfig = maskConfig[mask];
 			return {
 				...config,
-				inputMode: config.inputMode,
-				pattern: config.pattern,
+				inputMode: config.inputMode ?? config.inputMode,
+				pattern: html.pattern ?? config.pattern,
 				title: html.title ?? config.title
 			};
 		}, [mask, html.inputMode, html.pattern, html.title, html.placeholder]);
@@ -59,7 +59,7 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 			return <input {...html} onChange={onChange} ref={ref} />;
 		}
 
-		const { mask: m, ...other } = maskProps;
+		const { mask: m, revert, ...other } = maskProps;
 		const onClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
 			html.onClick?.(event);
 			if (adjustCaret) {
