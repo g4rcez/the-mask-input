@@ -55,6 +55,7 @@ export type MasksTypes =
 	| "currency"
 	| "date"
 	| "isoDate"
+	| "time"
 	| "int"
 	| "email"
 	| "telephone";

@@ -43,6 +43,13 @@ export const maskConfig: MasksConfig = {
 		mask: [/\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/],
 		revert: OnlyNumbers
 	},
+	time: {
+		pattern: "[0-9]{2}:[0-9]{2}",
+		title: "Time Hour:Minute",
+		inputMode: "decimal",
+		mask: [/\d/, /\d/, ":", /\d/, /\d/],
+		revert: OnlyNumbers
+	},
 
 	telephone: {
 		pattern: "\\([0-9]{2}\\) [0-9]{4}-[0-9]{4}",

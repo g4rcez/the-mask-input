@@ -2,6 +2,7 @@ import { Input } from "./input";
 import React from "react";
 import { CustomInputProps } from "../@types/input";
 
+export const TimeInput = (props: CustomInputProps) => <Input {...props} mask="time" />;
 export const CpfInput = (props: CustomInputProps) => <Input {...props} mask="cpf" />;
 export const CnpjInput = (props: CustomInputProps) => <Input {...props} mask="cnpj" />;
 export const CellphoneTelephoneInput = (props: CustomInputProps) => <Input {...props} mask="cellTelephone" />;
