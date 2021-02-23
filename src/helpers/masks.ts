@@ -44,10 +44,14 @@ export const maskConfig: MasksConfig = {
 		revert: OnlyNumbers
 	},
 	time: {
-		pattern: "[0-9]{2}:[0-9]{2}",
+		pattern: "[0-9]{2}:[0-5][0-9]",
 		title: "Time Hour:Minute",
 		inputMode: "decimal",
-		mask: [/\d/, /\d/, ":", /\d/, /\d/],
+		mask: (str) => {
+			const firstChar = Number.parseInt(str?.charAt(0) || "1");
+			const second = firstChar === 2 ? /[0-4]/ : /\d/;
+			return [/[012]/, second, ":", /[0-5]/, /\d/];
+		},
 		revert: OnlyNumbers
 	},
 

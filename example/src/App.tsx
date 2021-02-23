@@ -37,7 +37,11 @@ function App() {
 						placeholder="Custom Mask"
 						guide
 						style={{ width: "100%" }}
-						mask={[/\d/, /\d/, "%"]}
+						mask={(str) => {
+							const firstChar = Number.parseInt(str?.charAt(0) ?? "1");
+							const second = firstChar === 2 ? /[0-4]/ : /\d/;
+							return [/[012]/, second, ":", /[0-5]/, /\d/];
+						}}
 						onChange={(e) => setA(e.target.value)}
 						name={"custom"}
 						value={a}
