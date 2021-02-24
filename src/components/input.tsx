@@ -15,9 +15,9 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 			}
 			if (Array.isArray(mask) || typeof mask === "function") {
 				return {
-					inputMode: html.inputMode,
+					inputMode: html?.inputMode,
 					mask,
-					pattern: html.pattern,
+					pattern: html?.pattern,
 					revert: (s: string) => s,
 					title: html.title
 				};
@@ -25,9 +25,9 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 			const config: MaskConfig = maskConfig[mask];
 			return {
 				...config,
-				inputMode: config.inputMode ?? config.inputMode,
-				pattern: html.pattern ?? config.pattern,
-				title: html.title ?? config.title
+				inputMode: config?.inputMode ?? html?.inputMode,
+				pattern: config?.pattern ?? html?.pattern,
+				title: config?.title ?? html?.title
 			};
 		}, [mask, html.inputMode, html.pattern, html.title, html.placeholder]);
 
