@@ -1,5 +1,5 @@
 import { ArrayMask, MasksConfig } from "../@types/input";
-import { OnlyNumbers, ToInt } from "./fmt";
+import { OnlyNumbers } from "./fmt";
 
 const TELEPHONE_MASK = ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
 
@@ -22,17 +22,6 @@ export const convertMask = (mask: Function | ArrayMask) => {
 		}
 		return `${x}${y}`;
 	});
-};
-
-const getCheckedDateArray = (numbers = "", day = 0, first = /[01]/, second = /\d/) => {
-	const firstDigitMonth = numbers.substring(2, 3) || "";
-	if (firstDigitMonth === "1") {
-		return [/[0123]/, /\d/, "/", /1/, /[02]/, "/", /\d/, /\d/, /\d/, /\d/];
-	}
-	if (day >= 30) {
-		return [/[0123]/, /[01]/, "/", first, /[013456789]/, "/", /\d/, /\d/, /\d/, /\d/];
-	}
-	return [/[0123]/, /\d/, "/", first, second, "/", /\d/, /\d/, /\d/, /\d/];
 };
 
 export const maskConfig: MasksConfig = {
@@ -130,15 +119,8 @@ export const maskConfig: MasksConfig = {
 		pattern: "[0-9]{2}/[0-9]{2}/[0-9]{4}",
 		title: "Date Day/Month/Year",
 		inputMode: "decimal",
-		mask: (str = "") => {
-			const numbers = OnlyNumbers(str);
-			if (/^3/.test(numbers)) {
-				const day = ToInt(numbers.substring(0, 2) || "0");
-				return getCheckedDateArray(numbers, day, /[01]/, /\d/);
-			}
-			return [/[0123]/, /\d/, "/", /[01]/, /\d/, "/", /\d/, /\d/, /\d/, /\d/];
-		},
-		revert: OnlyNumbers
+		mask: [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/],
+		revert: (s: string) => s
 	},
 	email: {
 		inputMode: "email",

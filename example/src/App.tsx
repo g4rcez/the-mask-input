@@ -9,7 +9,6 @@ const Field = ({ mask, title }: { mask: any; title: string }) => {
 			<label>
 				{title}:
 				<Input
-					adjustCaret
 					placeholder=" "
 					guide
 					style={{ width: "100%" }}
@@ -28,12 +27,25 @@ function App() {
 	const [a, setA] = useState("");
 	return (
 		<div>
-			<Input adjustCaret placeholder="CPF no control" guide style={{ width: "100%" }} mask="cpf" name={"cpf-test"} />
+			<input
+				maxLength={10}
+				type="text"
+				onKeyUp={(e) => {
+					const v = (e.target as any).value;
+					if (v.match(/^\d{2}$/) !== null) {
+						(e.target as any).value = v + "/";
+					} else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
+						(e.target as any).value = v + "/";
+					}
+					e.preventDefault();
+				}}
+				placeholder="Date..."
+			/>
+			<Input placeholder="CPF no control" guide style={{ width: "100%" }} mask="cpf" name={"cpf-test"} />
 			<Field mask="currency" title="Currency" />
 			<div style={{ width: "30%", padding: "1rem" }}>
 				<label>
 					<Input
-						adjustCaret
 						placeholder="Custom Mask"
 						guide
 						style={{ width: "100%" }}

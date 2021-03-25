@@ -5,7 +5,7 @@ import { convertMask, maskConfig } from "../helpers/masks";
 import { CurrencyInput } from "./currency-input";
 
 export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
-	({ mask, onChange, adjustCaret, guide: guidePlaceholder, revertMask, ...html }, externalRef) => {
+	({ mask, onChange, adjustCaret, guide: guidePlaceholder = true, revertMask, ...html }, externalRef) => {
 		const ref = useRef<HTMLInputElement>(null);
 		useImperativeHandle(externalRef, () => ref.current!);
 
@@ -33,7 +33,10 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 
 		const guide = useMemo(() => guidePlaceholder || mask === "int", [html.placeholder, maskProps, mask, guidePlaceholder]);
 		const placeholder = useMemo(
-			() => (maskProps === null || mask === "int" ? html.placeholder : html.placeholder ?? convertMask(maskProps.mask)),
+			() =>
+				maskProps === null || maskProps.mask === undefined || mask === "int"
+					? html.placeholder
+					: html.placeholder ?? convertMask(maskProps.mask),
 			[html.value]
 		);
 
@@ -55,17 +58,35 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 		if (mask === "currency") {
 			return <CurrencyInput {...html} onChange={onChange} ref={ref} />;
 		}
-		if (maskProps === null) {
+
+		if (maskProps === null || maskProps.mask === undefined) {
 			return <input {...html} onChange={onChange} ref={ref} />;
 		}
 
 		const { mask: m, revert, ...other } = maskProps;
 		const onClick = (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
 			html.onClick?.(event);
+			ref.current?.select();
 			if (adjustCaret) {
 				ref.current?.setSelectionRange?.(0, 0);
 			}
 		};
+
+		if (mask === "date") {
+			return (
+				<input
+					{...html}
+					{...other}
+					maxLength={10}
+					type="date"
+					pattern="\d{4}-\d{2}-\d{2}"
+					onClick={onClick}
+					placeholder={placeholder}
+					ref={ref}
+					onChange={change}
+				/>
+			);
+		}
 
 		return (
 			<MaskInput
