@@ -65,3 +65,5 @@ export const currencyToFloat = (currency: string) => {
 export const ToInt = (str: string) => Number.parseInt(`${str}`, 10);
 
 export const OnlyNumbers = (str: string) => str.replace(/[^0-9]+/g, "");
+
+export const replaceBlankSpace = (str: string) => str.replace(new RegExp(String.fromCharCode(160), "g"), " ")
