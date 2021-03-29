@@ -1,6 +1,8 @@
 import { Locales } from "../@types/locales";
 import { CurrencyCode } from "../@types/currency-code";
 
+export const replaceBlankSpace = (str: string) => str.replace(new RegExp(String.fromCharCode(160), "g"), " ");
+
 const fromValue = (value = "") => value.replace(/(-(?!\d))|[^0-9|-]/g, "") || "";
 
 const padding = (digits: string, minLength: number) => {
@@ -35,10 +37,11 @@ export type ToCurrency = {
 };
 export const toCurrency = (value: string, { separator, prefix, decimalSeparator, decimalsLength }: ToCurrency) => {
 	const valueToMask = padding(fromValue(value), decimalsLength);
-	return `${prefix}${addDecimals(valueToMask, {
+	const result = `${prefix}${addDecimals(valueToMask, {
 		separator,
 		decimalSeparator
 	})}`.replaceAll("&nbsp;", " ");
+	return replaceBlankSpace(result);
 };
 
 export const safeConvert = (str: string | number = "", props: ToCurrency) =>
@@ -65,5 +68,3 @@ export const currencyToFloat = (currency: string) => {
 export const ToInt = (str: string) => Number.parseInt(`${str}`, 10);
 
 export const OnlyNumbers = (str: string) => str.replace(/[^0-9]+/g, "");
-
-export const replaceBlankSpace = (str: string) => str.replace(new RegExp(String.fromCharCode(160), "g"), " ")
