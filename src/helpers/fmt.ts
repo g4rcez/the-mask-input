@@ -40,7 +40,7 @@ export const toCurrency = (value: string, { separator, prefix, decimalSeparator,
 	const result = `${prefix}${addDecimals(valueToMask, {
 		separator,
 		decimalSeparator
-	})}`.replaceAll("&nbsp;", " ");
+	})}`;
 	return replaceBlankSpace(result);
 };
 
