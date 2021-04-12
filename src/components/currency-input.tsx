@@ -1,6 +1,7 @@
-import React, { useCallback, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { CurrencyInputProps } from "../@types/input";
-import { currencyToFloat, namedFormatCurrency, safeConvert, toCurrency } from "../helpers/fmt";
+import { currencyToFloat, namedFormatCurrency, safeConvert, toCurrency, replaceBlankSpace } from "../helpers/fmt";
+import { useIsoEffect } from "./use-effect";
 
 export const CURRENCY_PATTERN = "^[A-Z]{1,3}[0-9$,. ]+$";
 
@@ -10,7 +11,7 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 		const [input, setInput] = useState<string>(() => html.value?.toString() ?? "");
 		useImperativeHandle(externalRef, () => ref.current!);
 
-		useLayoutEffect(() => {
+		useIsoEffect(() => {
 			if (html.value == "") {
 				return setInput("");
 			}
@@ -25,8 +26,8 @@ export const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputPro
 
 		const info = useMemo(() => {
 			const infos = namedFormatCurrency(locale, currency);
-			infos.currency = `${infos.currency.trim()} `.replaceAll("&nbsp;", " ");
-			infos.literal = infos.literal.trim().replaceAll("&nbsp;", " ");
+			infos.currency = replaceBlankSpace(`${infos.currency.trim()} `);
+			infos.literal = replaceBlankSpace(infos.literal.trim());
 			return infos;
 		}, [locale, currency]);
 
