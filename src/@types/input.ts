@@ -58,7 +58,8 @@ export type MasksTypes =
 	| "time"
 	| "int"
 	| "email"
-	| "telephone";
+	| "telephone"
+	| "percent";
 
 export type FixedMasks = Exclude<MasksTypes, "currency">;
 

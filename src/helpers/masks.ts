@@ -72,7 +72,6 @@ export const maskConfig: MasksConfig = {
 		mask: (str = "") => (OnlyNumbers(str).length <= 11 ? CPF_MASK : CNPJ_MASK),
 		revert: OnlyNumbers
 	},
-
 	cep: {
 		mask: [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/],
 		pattern: "[0-9]{5}-[0-9]{3}",
@@ -93,6 +92,22 @@ export const maskConfig: MasksConfig = {
 		title: "Integer number",
 		inputMode: "decimal",
 		revert: OnlyNumbers
+	},
+	percent: {
+		mask: (s = "") => {
+			const first = s[0];
+			if (first === "0") {
+				return [/0/, ".", ...array(/\d/, s.length - 2)];
+			}
+			if (first === "1") {
+				return [/1/];
+			}
+			return [/[01]/];
+		},
+		pattern: "^[01].[0-9]+$",
+		title: "Integer number",
+		inputMode: "decimal",
+		revert: (s) => Number.parseFloat(s).toString().replace(/_/g, "")
 	},
 	cellphone: {
 		mask: ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/],
