@@ -30,14 +30,17 @@ function App() {
 			<input
 				maxLength={10}
 				type="text"
-				onKeyUp={(e) => {
-					const v = (e.target as any).value;
-					if (v.match(/^\d{2}$/) !== null) {
-						(e.target as any).value = v + "/";
-					} else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-						(e.target as any).value = v + "/";
-					}
-					e.preventDefault();
+				onChange={(e) => {
+					const maskDate = (value: string) => {
+						let v = value.replace(/\D/g, "").slice(0, 10);
+						if (v.length >= 5) {
+							return `${v.slice(0, 2)}/${v.slice(2, 4)}/${v.slice(4)}`;
+						} else if (v.length >= 3) {
+							return `${v.slice(0, 2)}/${v.slice(2)}`;
+						}
+						return v;
+					};
+					e.target.value = maskDate(e.target.value);
 				}}
 				placeholder="Date..."
 			/>
@@ -69,6 +72,7 @@ function App() {
 			<Field mask="color" title="Color" />
 			<Field mask="telephone" title="Telefone" />
 			<Field mask="int" title="Integer" />
+			<Field mask="percent" title="Percent" />
 			<Field mask="date" title="Data - DD/MM/YYYY" />
 			<Field mask="email" title="Email" />
 			<Field mask="cpfCnpj" title="Document" />
