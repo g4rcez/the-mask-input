@@ -96,15 +96,18 @@ export const maskConfig: MasksConfig = {
 	percent: {
 		mask: (s = "") => {
 			const first = s[0];
+			let dotsOrCommas = 0;
+			const newStr = [...s].filter((x) => {
+				if (x === "," || x === "") dotsOrCommas += 1;
+				if (!Number.isNaN(Number(x))) return true;
+				return dotsOrCommas === 1;
+			});
 			if (first === "0") {
-				return [/0/, ".", ...array(/\d/, s.length - 2)];
+				return [/0/, "."].concat(array(/\d/, newStr.length - 1));
 			}
-			if (first === "1") {
-				return [/1/];
-			}
-			return [/[01]/];
+			return first === "1" ? [/1/] : [/[01]/];
 		},
-		pattern: "^[01].[0-9]+$",
+		pattern: "^(0|1)((.|,)[0-9]+)?$",
 		title: "Integer number",
 		inputMode: "decimal",
 		revert: (s) => Number.parseFloat(s).toString().replace(/_/g, "")
