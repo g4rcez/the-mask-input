@@ -1,9 +1,9 @@
 import { ArrayMask, MasksConfig } from "../@types/input";
 import { OnlyNumbers } from "./fmt";
 
-const TELEPHONE_MASK = ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
+const TELEPHONE_MASK = ["(", /[1-9]/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
 
-const CELLPHONE_MASK = ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
+const CELLPHONE_MASK = ["(", /[1-9]/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
 
 const CPF_MASK = [/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/];
 
@@ -38,7 +38,7 @@ export const maskConfig: MasksConfig = {
 		inputMode: "decimal",
 		mask: (str) => {
 			const firstChar = Number.parseInt(str?.charAt(0) || "1");
-			const second = firstChar === 2 ? /[0-4]/ : /\d/;
+			const second = firstChar === 2 ? /[0-3]/ : /\d/;
 			return [/[012]/, second, ":", /[0-5]/, /\d/];
 		},
 		revert: OnlyNumbers
