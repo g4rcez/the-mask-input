@@ -76,6 +76,7 @@ function App() {
 			<Field mask="date" title="Data - DD/MM/YYYY" />
 			<Field mask="email" title="Email" />
 			<Field mask="cpfCnpj" title="Document" />
+			<Field mask="uuid" title="UUID V4" />
 		</div>
 	);
 }
