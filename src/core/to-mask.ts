@@ -112,8 +112,6 @@ export const toMask = (rawValue = "", mask: any[] = [], config: any = {}) => {
 				}
 			}
 
-			//
-
 			if (suppressGuide === false) {
 				conformedValue += placeholder.substr(i, placeholderLength);
 			}
@@ -123,8 +121,6 @@ export const toMask = (rawValue = "", mask: any[] = [], config: any = {}) => {
 			conformedValue += charInPlaceholder;
 		}
 	}
-
-	//
 
 	if (suppressGuide && isAddition === false) {
 		let indexOfLastFilledPlaceholderChar = null;
@@ -141,6 +137,5 @@ export const toMask = (rawValue = "", mask: any[] = [], config: any = {}) => {
 			conformedValue = "";
 		}
 	}
-
 	return { conformedValue, meta: { someCharsRejected } };
 };

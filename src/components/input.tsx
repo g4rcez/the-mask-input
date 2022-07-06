@@ -4,6 +4,8 @@ import { MaskInput } from "../core/react-mask";
 import { convertMask, maskConfig } from "../helpers/masks";
 import { CurrencyInput } from "./currency-input";
 
+const returnString = (s: string) => s;
+
 export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 	({ mask, onChange, adjustCaret, guide: guidePlaceholder = true, revertMask, ...html }, externalRef) => {
 		const ref = useRef<HTMLInputElement>(null);
@@ -15,11 +17,11 @@ export const Input = React.forwardRef<HTMLInputElement, CustomInputProps>(
 			}
 			if (Array.isArray(mask) || typeof mask === "function") {
 				return {
-					inputMode: html?.inputMode,
 					mask,
+					title: html.title,
+					revert: returnString,
 					pattern: html?.pattern,
-					revert: (s: string) => s,
-					title: html.title
+					inputMode: html?.inputMode
 				};
 			}
 			const config: MaskConfig = maskConfig[mask];

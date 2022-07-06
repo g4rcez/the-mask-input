@@ -15,3 +15,4 @@ export const CreditCardInput = (props: CustomInputProps) => <Input {...props} ma
 export const DateInput = (props: CustomInputProps) => <Input {...props} mask="date" />;
 export const IntegerInput = (props: CustomInputProps) => <Input {...props} mask="int" />;
 export const IsoDateInput = (props: CustomInputProps) => <Input {...props} mask="isoDate" />;
+export const UuidInput = (props: CustomInputProps) => <Input {...props} mask="uuid" />;

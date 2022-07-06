@@ -24,11 +24,7 @@ export const adjustCaretPosition = ({
 
 	const isFirstRawValue = previousConformedValueLength === 0;
 
-	//
-
 	const isPartialMultiCharEdit = editLength > 1 && !isAddition && !isFirstRawValue;
-
-	//
 
 	if (isPartialMultiCharEdit) {
 		return currentCaretPosition;

@@ -44,6 +44,7 @@ export type InputTypes =
 export type InputMode = "decimal" | "none" | "text" | "numeric" | "tel" | "search" | "email" | "url";
 
 export type MasksTypes =
+	| "uuid"
 	| "cellphone"
 	| "cellTelephone"
 	| "cep"

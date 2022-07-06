@@ -37,10 +37,7 @@ export type ToCurrency = {
 };
 export const toCurrency = (value: string, { separator, prefix, decimalSeparator, decimalsLength }: ToCurrency) => {
 	const valueToMask = padding(fromValue(value), decimalsLength);
-	const result = `${prefix}${addDecimals(valueToMask, {
-		separator,
-		decimalSeparator
-	})}`;
+	const result = `${prefix}${addDecimals(valueToMask, { separator, decimalSeparator })}`;
 	return replaceBlankSpace(result);
 };
 
@@ -57,13 +54,13 @@ export const namedFormatCurrency = (locale: Locales, currency: CurrencyCode) =>
 		literal: ""
 	});
 
-export const currencyToFloat = (currency: string) => {
-	const final = currency
-		.replace(/,/g, ".")
-		.replace(/(.*)\./, (x) => `${x.replace(/\./g, "")}.`)
-		.replace(/[^0-9.]/g, "");
-	return Number.parseFloat(final);
-};
+export const currencyToFloat = (currency: string) =>
+	Number.parseFloat(
+		currency
+			.replace(/,/g, ".")
+			.replace(/(.*)\./, (x) => `${x.replace(/\./g, "")}.`)
+			.replace(/[^0-9.]/g, "")
+	);
 
 export const ToInt = (str: string) => Number.parseInt(`${str}`, 10);
 
