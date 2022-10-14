@@ -47,11 +47,7 @@ export const masks: Record<Masks, TheMasks> = {
 	int: (s) => (digit.test(s.slice(-1)) ? "d".repeat(s.length) : "d".repeat(s.length - 1))
 };
 
-export type MaskConfig = {
-	pattern: string;
-	inputMode: InputMode;
-	mask: TheMasks;
-};
+export type MaskConfig = { pattern: string; inputMode: InputMode; mask: TheMasks };
 
 export const createPattern = (mask: TheMasks) => {
 	if (typeof mask === "string") {

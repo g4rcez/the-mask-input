@@ -1,4 +1,4 @@
-/// <reference types="Cypress" />
+/// <reference types.ts="Cypress" />
 
 describe("Test CPF", () => {
 	it("CPF Field", () => {

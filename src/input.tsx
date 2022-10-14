@@ -3,7 +3,7 @@ import { Mask, TheMaskInputProps, TheMasks, Tokens } from "./types";
 import { originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps } from "./currency-input";
 
-function forRegexMask(value: string = "", mask: string | Mask[], tokens: Tokens = originalTokens) {
+function formatRegexMask(value: string = "", mask: string | Mask[], tokens: Tokens = originalTokens) {
 	let output = "";
 	const len = mask.length;
 	const valueLen = value.length;
@@ -32,12 +32,12 @@ function forRegexMask(value: string = "", mask: string | Mask[], tokens: Tokens 
 	return output;
 }
 
-const masker = (value: string, mask: TheMasks, tokens: Tokens) => {
+const applyMask = (value: string, mask: TheMasks, tokens: Tokens) => {
 	if (typeof mask === "function") {
 		const realMask = mask(value);
-		return forRegexMask(value, realMask, tokens);
+		return formatRegexMask(value, realMask, tokens);
 	}
-	return forRegexMask(value, mask, tokens);
+	return formatRegexMask(value, mask, tokens);
 };
 
 const emitChange = (input: HTMLInputElement, value: string) => {
@@ -46,7 +46,7 @@ const emitChange = (input: HTMLInputElement, value: string) => {
 	input.dispatchEvent(new Event("input", { bubbles: true }));
 };
 
-const MaskInput = forwardRef(({ onChange, tokens, mask, as, ...props }: TheMaskInputProps, ref: React.ForwardedRef<HTMLInputElement>) => {
+const MaskInput = forwardRef(({ onChange, tokens, mask, as, ...props }: TheMaskInputProps, ref: React.Ref<HTMLInputElement>) => {
 	const Component = as ?? "input";
 	const internalRef = useRef<HTMLInputElement>(null);
 	useImperativeHandle(ref, () => internalRef.current!);
@@ -62,7 +62,7 @@ const MaskInput = forwardRef(({ onChange, tokens, mask, as, ...props }: TheMaskI
 		const currentInput = event.currentTarget;
 		let caret = refInput.selectionEnd ?? 0;
 		const digit = refInput.value[caret - 1];
-		refInput.value = masker(currentInput.value, mask, tokens ?? originalTokens);
+		refInput.value = applyMask(currentInput.value, mask, tokens ?? originalTokens);
 		const value = refInput.value;
 		if (value === stateValue) return;
 		setStateValue(value);
