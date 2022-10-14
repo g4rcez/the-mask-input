@@ -14,7 +14,7 @@ export type TheMaskInputProps = Omit<NativeProps, "value" | "type" | "defaultVal
 		value: string;
 	}>;
 
-export type Token = { regex?: RegExp; parse?: (v: string) => string } & { escape?: boolean };
+export type Token = { regex: RegExp; parse?: (v: string) => string };
 
 export type AutoCapitalize = "off" | "none" | "on" | "sentences" | "words" | "characters";
 

@@ -3,11 +3,11 @@ import { Mask, TheMaskInputProps, TheMasks, Tokens } from "./types";
 import { originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps } from "./currency-input";
 
-function formatRegexMask(value: string = "", mask: string | Mask[], tokens: Tokens = originalTokens) {
+function formatRegexMask(value: string, mask: string | Mask[], tokens: Tokens = originalTokens) {
 	let output = "";
 	const len = mask.length;
 	const valueLen = value.length;
-	if (valueLen > mask.length) return value.substring(0, len);
+	if (valueLen > len) return value.substring(0, len);
 	for (let i = 0; i < valueLen; i++) {
 		const char = value.charAt(i);
 		const matcher = mask[i];
@@ -17,28 +17,15 @@ function formatRegexMask(value: string = "", mask: string | Mask[], tokens: Toke
 			}
 		} else {
 			const token = tokens[matcher];
-			if (token && token.escape) {
-				continue;
-			}
 			if (token && token.regex) {
-				if (token.regex.test(char)) {
-					output += char;
-				}
-			} else {
-				output += matcher;
-			}
+				if (token.regex.test(char)) output += char;
+			} else output += matcher === char ? matcher : `${matcher}${char}`;
 		}
 	}
 	return output;
 }
 
-const applyMask = (value: string, mask: TheMasks, tokens: Tokens) => {
-	if (typeof mask === "function") {
-		const realMask = mask(value);
-		return formatRegexMask(value, realMask, tokens);
-	}
-	return formatRegexMask(value, mask, tokens);
-};
+const applyMask = (value: string, mask: TheMasks, tokens: Tokens) => formatRegexMask(value, typeof mask === "function" ? mask(value) : mask, tokens);
 
 const emitChange = (input: HTMLInputElement, value: string) => {
 	const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;

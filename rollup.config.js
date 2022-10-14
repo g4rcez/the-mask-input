@@ -3,9 +3,9 @@ import resolve from "@rollup/plugin-node-resolve";
 import strip from "@rollup/plugin-strip";
 import url from "@rollup/plugin-url";
 import external from "rollup-plugin-peer-deps-external";
-import { terser } from "rollup-plugin-terser";
+import {terser} from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
-import pkg from "./package.json";
+import pkg from "./package.json" assert {type: "json"};
 
 export default {
 	input: "src/index.tsx",
@@ -35,8 +35,8 @@ export default {
 		strip(),
 		external(),
 		url(),
-		resolve({ browser: true, preferBuiltins: false }),
-		typescript({ rollupCommonJSResolveHack: true, clean: true }),
-		commonjs({ sourceMap: false, ignoreGlobal: false })
+		resolve({browser: true, preferBuiltins: false}),
+		typescript({clean: true}),
+		commonjs({sourceMap: false, ignoreGlobal: false})
 	]
 };
