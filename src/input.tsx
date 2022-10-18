@@ -1,4 +1,4 @@
-import React, { ChangeEvent, forwardRef, useImperativeHandle, useRef, useState } from "react";
+import React, { ChangeEvent, forwardRef, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { Mask, TheMaskInputProps, TheMasks, Tokens } from "./types";
 import { originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps } from "./currency-input";
@@ -33,11 +33,37 @@ const emitChange = (input: HTMLInputElement, value: string) => {
 	input.dispatchEvent(new Event("input", { bubbles: true }));
 };
 
-const MaskInput = forwardRef(({ onChange, tokens, mask, as, ...props }: TheMaskInputProps, ref: React.Ref<HTMLInputElement>) => {
+export const createPattern = (mask: TheMasks, value: string) => {
+	const maskIsFunction = typeof mask === "function";
+	let result: string | Mask[] = maskIsFunction ? "" : mask;
+	if (maskIsFunction) {
+		result = mask(value);
+	}
+	if (typeof result === "string") {
+		const len = result.length;
+		const m = [];
+		for (let i = 0; i < len; i++) {
+			const char = result[i];
+			const token = originalTokens[char];
+			token === undefined ? m.push(char.replace(/\./g, "\\.").replace(/\(/g, "\\(").replace(/\)/g, "\\)")) : m.push(token.regex?.source);
+		}
+		return m.join("").replace(/\\\\/g, "\\");
+	}
+	console.log(mask, value);
+	return "";
+};
+
+const MaskInput = forwardRef<HTMLInputElement, TheMaskInputProps>(({ onChange, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
 	const Component = as ?? "input";
 	const internalRef = useRef<HTMLInputElement>(null);
 	useImperativeHandle(ref, () => internalRef.current!);
 	const [stateValue, setStateValue] = useState(props.value ?? props.defaultValue ?? "");
+
+	const patternMemo = useMemo(() => {
+		if (pattern) return pattern;
+		if (mask === undefined) return;
+		return createPattern(mask, stateValue);
+	}, [pattern, stateValue]);
 
 	const changeMask = (event: ChangeEvent<HTMLInputElement>) => {
 		if (!event.isTrusted || internalRef.current === null) return;
@@ -53,6 +79,7 @@ const MaskInput = forwardRef(({ onChange, tokens, mask, as, ...props }: TheMaskI
 		const value = refInput.value;
 		if (value === stateValue) return;
 		setStateValue(value);
+		onChangeText?.(value);
 		while (caret < value.length && value.charAt(caret - 1) !== digit) {
 			caret += 1;
 		}
@@ -64,7 +91,7 @@ const MaskInput = forwardRef(({ onChange, tokens, mask, as, ...props }: TheMaskI
 		onChange?.(event);
 	};
 
-	return <Component {...props} onChange={changeMask} ref={internalRef} value={stateValue} />;
+	return <Component {...props} pattern={patternMemo} onChange={changeMask} ref={internalRef} value={stateValue} />;
 });
 
 export type TheMaskPropsMerge = (TheMaskInputProps & { mask?: TheMaskInputProps["mask"] }) | (CurrencyInputProps & { mask?: "money" | "currency" });

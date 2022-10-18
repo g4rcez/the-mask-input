@@ -7,6 +7,7 @@ export type TheMaskInputProps = Omit<NativeProps, "value" | "type" | "defaultVal
 		as: "input" | React.FC<Omit<TheMaskInputProps, "as">>;
 		autoCapitalize: AutoCapitalize;
 		defaultValue: string;
+		onChangeText?: (text: string) => void;
 		inputMode: InputMode;
 		mask: TheMasks;
 		tokens: Tokens;

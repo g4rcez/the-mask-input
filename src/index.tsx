@@ -2,12 +2,11 @@ import { TheMaskInput, TheMaskPropsMerge } from "./input";
 import { inputMaskedProps, MaskConfig } from "./masks";
 import React from "react";
 
-export { TheMaskInput, TheMaskInput as Input } from "./input";
+export { TheMaskInput, createPattern, TheMaskInput as Input } from "./input";
 export { CurrencyInput, CurrencyInput as MoneyInput } from "./currency-input";
-export { createPattern, masks, inputMaskedProps } from "./masks";
+export { masks, inputMaskedProps } from "./masks";
 
-export const Component = (mask: (v: string) => MaskConfig) => (props: TheMaskPropsMerge) =>
-	<TheMaskInput {...mask(props.value ?? "")} {...(props as any)} />;
+export const Component = (mask: MaskConfig) => (props: TheMaskPropsMerge) => <TheMaskInput {...mask} {...(props as any)} />;
 
 export const CellTelephone = Component(inputMaskedProps.cellTelephone);
 export const Cellphone = Component(inputMaskedProps.cellphone);

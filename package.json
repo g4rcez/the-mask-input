@@ -16,7 +16,7 @@
 	"scripts": {
 		"build": "rollup -c",
 		"cypress": "cypress open",
-		"start": "rollup -c --watch",
+		"dev": "rollup -c --watch",
 		"prepare": "rollup -c",
 		"format": "prettier --write \"{.,src/**}/*.{js,jsx,ts,tsx}\""
 	},

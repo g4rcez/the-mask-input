@@ -16,6 +16,7 @@ import {
 	Time,
 	Uuid
 } from "the-mask-input";
+import { useState } from "react";
 
 const Field = ({ Component, placeholder, ...props }: any) => (
 	<fieldset style={{ position: "relative" }}>
@@ -27,6 +28,7 @@ const Field = ({ Component, placeholder, ...props }: any) => (
 );
 
 export default function App() {
+	const [state, setState] = useState(0);
 	return (
 		<form
 			style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", alignItems: "center" }}
@@ -35,7 +37,8 @@ export default function App() {
 				alert("Everything works");
 			}}
 		>
-			<Field Component={CurrencyInput} autoFocus placeholder="Money" />
+			<Field value={state} Component={CurrencyInput} placeholder="Currency - Controlled" onChange={(e: any) => setState(e.target.value)} />
+			<Field Component={CurrencyInput} autoFocus placeholder="Money - Uncontrolled" />
 			<Field Component={Cpf} placeholder="CPF" />
 			<Field Component={CellTelephone} placeholder="CellTelephone" />
 			<Field Component={Cellphone} placeholder="Cellphone" />
@@ -43,7 +46,7 @@ export default function App() {
 			<Field Component={Cnpj} placeholder="Cnpj" />
 			<Field Component={Color} placeholder="Color" />
 			<Field Component={Cpf} placeholder="Cpf" />
-			<Field Component={CpfCnpj} autoFocus placeholder="CpfCnpj" />
+			<Field Component={CpfCnpj} placeholder="CpfCnpj" />
 			<Field Component={CreditCard} placeholder="CreditCard" />
 			<Field Component={Date} placeholder="Date" />
 			<Field Component={Int} placeholder="Int" />
