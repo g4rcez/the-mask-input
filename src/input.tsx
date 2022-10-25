@@ -49,7 +49,6 @@ export const createPattern = (mask: TheMasks, value: string) => {
 		}
 		return m.join("").replace(/\\\\/g, "\\");
 	}
-	console.log(mask, value);
 	return "";
 };
 
