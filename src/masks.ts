@@ -29,7 +29,7 @@ export type InputMode = "decimal" | "none" | "text" | "numeric" | "tel" | "searc
 
 const digit = /[0-9]/;
 
-const cellphoneMask = "(dd) 9dddd-dddd";
+const cellphoneMask = "(dd) ddddd-dddd";
 
 const telephoneMask = "(dd) dddd-dddd";
 

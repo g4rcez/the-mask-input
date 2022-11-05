@@ -27,12 +27,6 @@ function formatRegexMask(value: string, mask: string | Mask[], tokens: Tokens = 
 
 const applyMask = (value: string, mask: TheMasks, tokens: Tokens) => formatRegexMask(value, typeof mask === "function" ? mask(value) : mask, tokens);
 
-const emitChange = (input: HTMLInputElement, value: string) => {
-	const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
-	nativeInputValueSetter?.call(input, value);
-	input.dispatchEvent(new Event("input", { bubbles: true }));
-};
-
 export const createPattern = (mask: TheMasks, value: string) => {
 	const maskIsFunction = typeof mask === "function";
 	let result: string | Mask[] = maskIsFunction ? "" : mask;
@@ -65,32 +59,30 @@ const MaskInput = forwardRef<HTMLInputElement, TheMaskInputProps>(({ onChange, p
 	}, [pattern, stateValue]);
 
 	const changeMask = (event: ChangeEvent<HTMLInputElement>) => {
-		if (!event.isTrusted || internalRef.current === null) return;
+		const value = event.target.value;
 		if (mask === undefined) {
-			setStateValue(event.target.value);
+			setStateValue(value);
+			onChangeText?.(value);
 			return onChange?.(event);
 		}
-		const refInput = internalRef.current;
-		const currentInput = event.currentTarget;
+		const refInput = event.target;
 		let caret = refInput.selectionEnd ?? 0;
-		const digit = refInput.value[caret - 1];
-		refInput.value = applyMask(currentInput.value, mask, tokens ?? originalTokens);
-		const value = refInput.value;
-		if (value === stateValue) return;
-		setStateValue(value);
-		onChangeText?.(value);
-		while (caret < value.length && value.charAt(caret - 1) !== digit) {
+		const digit = value[caret - 1];
+		const masked = applyMask(value, mask, tokens ?? originalTokens);
+		refInput.value = masked;
+		if (masked === stateValue) return;
+		setStateValue(masked);
+		onChangeText?.(masked);
+		while (caret < masked.length && masked.charAt(caret - 1) !== digit) {
 			caret += 1;
 		}
 		if (refInput !== document.activeElement) {
 			refInput.setSelectionRange(caret, caret);
-			setTimeout(() => refInput.setSelectionRange(caret, caret), 0);
 		}
-		emitChange(refInput, value);
+		event.target.value = masked;
 		onChange?.(event);
 	};
-
-	return <Component {...props} pattern={patternMemo} onChange={changeMask} ref={internalRef} value={stateValue} />;
+	return <Component {...props} pattern={patternMemo} onChange={changeMask} value={stateValue} ref={internalRef} />;
 });
 
 export type TheMaskPropsMerge = (TheMaskInputProps & { mask?: TheMaskInputProps["mask"] }) | (CurrencyInputProps & { mask?: "money" | "currency" });
