@@ -1,0 +1,10 @@
+html, body {
+	font-size: 16px;
+	background-color: black;
+	color: white;
+	color-scheme: dark;
+}
+
+input {
+	font-size: 1.25rem
+}

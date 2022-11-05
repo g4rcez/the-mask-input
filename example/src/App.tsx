@@ -1,84 +1,42 @@
-import Input from "input";
-import React, { useState } from "react";
+import "./App.css";
+import { Input } from "the-mask-input";
+import { ChangeEvent, useState } from "react";
 
-const Field = ({ mask, title }: { mask: any; title: string }) => {
-	const [get, set] = useState("");
-	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => set(e.target.value);
+export default function App() {
+	const [state, setState] = useState({} as Record<string, string>);
+	const [show, setShow] = useState(false);
+	const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+		setState((prev) => ({ ...prev, [name]: value }));
+	};
 	return (
-		<div style={{ width: "30%", padding: "1rem" }}>
-			<label>
-				{title}:
-				<Input
-					placeholder=" "
-					guide
-					style={{ width: "100%" }}
-					mask={mask as any}
-					onChange={onChange}
-					name={Math.random().toString()}
-					value={get}
-				/>
-			</label>
-			<button onClick={() => set((Math.random() * 1000000000).toString())}>Set</button>
-		</div>
-	);
-};
-
-function App() {
-	const [a, setA] = useState("");
-	return (
-		<div>
-			<input
-				maxLength={10}
-				type="text"
-				onChange={(e) => {
-					const maskDate = (value: string) => {
-						let v = value.replace(/\D/g, "").slice(0, 10);
-						if (v.length >= 5) {
-							return `${v.slice(0, 2)}/${v.slice(2, 4)}/${v.slice(4)}`;
-						} else if (v.length >= 3) {
-							return `${v.slice(0, 2)}/${v.slice(2)}`;
-						}
-						return v;
-					};
-					e.target.value = maskDate(e.target.value);
+		<div style={{ display: "flex", flexWrap: "wrap", gap: "2rem" }}>
+			{show && <span id="test">Success</span>}
+			<form
+				onSubmit={(e) => {
+					e.preventDefault();
+					setShow(true);
 				}}
-				placeholder="Date..."
-			/>
-			<Input placeholder="CPF no control" guide style={{ width: "100%" }} mask="cpf" name={"cpf-test"} />
-			<Field mask="currency" title="Currency" />
-			<div style={{ width: "30%", padding: "1rem" }}>
-				<label>
-					<Input
-						placeholder="Custom Mask"
-						guide
-						style={{ width: "100%" }}
-						mask={(str) => {
-							const firstChar = Number.parseInt(str?.charAt(0) ?? "1");
-							const second = firstChar === 2 ? /[0-4]/ : /\d/;
-							return [/[012]/, second, ":", /[0-5]/, /\d/];
-						}}
-						onChange={(e) => setA(e.target.value)}
-						name={"custom"}
-						value={a}
-					/>
-				</label>
-			</div>
-			<Field mask="cellphone" title="Celular" />
-			<Field mask="cep" title="CEP" />
-			<Field mask="creditCard" title="Cartão de crédito" />
-			<Field mask="cep" title="CEP" />
-			<Field mask="cnpj" title="CNPJ" />
-			<Field mask="cpf" title="CPF" />
-			<Field mask="color" title="Color" />
-			<Field mask="telephone" title="Telefone" />
-			<Field mask="int" title="Integer" />
-			<Field mask="percent" title="Percent" />
-			<Field mask="date" title="Data - DD/MM/YYYY" />
-			<Field mask="email" title="Email" />
-			<Field mask="cpfCnpj" title="Document" />
-			<Field mask="uuid" title="UUID V4" />
+				style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", alignItems: "center" }}
+			>
+				<Input value={state.cellTelephone} onChange={onChange} mask="cellTelephone" name="cellTelephone" placeholder="cellTelephone" />
+				<Input value={state.cellphone} onChange={onChange} mask="cellphone" name="cellphone" placeholder="cellphone" />
+				<Input value={state.cep} onChange={onChange} mask="cep" name="cep" placeholder="cep" />
+				<Input value={state.cnpj} onChange={onChange} mask="cnpj" name="cnpj" placeholder="cpfCnpj" />
+				<Input value={state.color} onChange={onChange} mask="color" name="color" placeholder="color" />
+				<Input value={state.cpf} onChange={onChange} mask="cpf" name="cpf" placeholder="cpf" />
+				<Input value={state.creditCard} onChange={onChange} mask="creditCard" name="creditCard" placeholder="creditCard" />
+				<Input value={state.date} onChange={onChange} mask="date" name="date" placeholder="date" />
+				<Input value={state.int} onChange={onChange} mask="int" name="int" placeholder="int" />
+				<Input value={state.isoDate} onChange={onChange} mask="isoDate" name="isoDate" placeholder="isoDate" />
+				<Input value={state.money} onChange={onChange} mask="money" name="money" placeholder="money" />
+				<Input value={state.telephone} onChange={onChange} mask="telephone" name="telephone" placeholder="telephone" />
+				<Input value={state.time} onChange={onChange} mask="time" name="time" placeholder="time" />
+				<Input value={state.uuid} onChange={onChange} mask="uuid" name="uuid" placeholder="uuid" />
+				<button type="submit" style={{ height: "fit-content", padding: "0.6rem" }}>
+					Test pattern
+				</button>
+			</form>
 		</div>
 	);
 }
-
-export default App;
