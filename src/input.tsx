@@ -1,26 +1,26 @@
 import React, { ChangeEvent, forwardRef, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { Mask, TheMaskInputProps, TheMasks, Tokens } from "./types";
+import { Mask, TheMaskInputProps, TheMasks, Token, Tokens } from "./types";
 import { originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps } from "./currency-input";
 
 function formatRegexMask(value: string, mask: string | Mask[], tokens: Tokens = originalTokens) {
 	let output = "";
-	const len = mask.length;
-	const valueLen = value.length;
-	if (valueLen > len) return value.substring(0, len);
-	for (let i = 0; i < valueLen; i++) {
-		const char = value.charAt(i);
-		const matcher = mask[i];
-		if (matcher instanceof RegExp) {
-			if (matcher.test(char)) {
-				output += char;
-			}
-		} else {
-			const token = tokens[matcher];
-			if (token && token.regex) {
-				if (token.regex.test(char)) output += char;
-			} else output += matcher === char ? matcher : `${matcher}${char}`;
+	for (let countMask = 0, i = 0; countMask < mask.length && i < value.length; ) {
+		const maskChar = mask[countMask];
+		const masker = maskChar instanceof RegExp ? maskChar : tokens[maskChar];
+		const char = value[i];
+		if (masker === undefined) {
+			output += maskChar;
+			if (char === maskChar) i += 1;
+			countMask += 1;
+			continue;
 		}
+		const token: Token = masker instanceof RegExp ? { regex: masker } : masker;
+		if (token.regex.test(char)) {
+			output += token.parse?.(char) ?? char;
+		}
+		countMask += 1;
+		i += 1;
 	}
 	return output;
 }

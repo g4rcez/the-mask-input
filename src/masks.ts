@@ -29,7 +29,7 @@ export type InputMode = "decimal" | "none" | "text" | "numeric" | "tel" | "searc
 
 const digit = /[0-9]/;
 
-const cellphoneMask = "(dd) ddddd-dddd";
+const cellphoneMask = "(dd) 9dddd-dddd";
 
 const telephoneMask = "(dd) dddd-dddd";
 
@@ -48,7 +48,7 @@ export const masks: Record<Masks, TheMasks> = {
 	cnpj: cnpjMask,
 	telephone: telephoneMask,
 	cellphone: cellphoneMask,
-	cellTelephone: (s) => (numbers(s).length <= 11 ? telephoneMask : cellphoneMask),
+	cellTelephone: (s) => (numbers(s).length < 11 ? telephoneMask : cellphoneMask),
 	creditCard: "dddd dddd dddd dddd",
 	uuid: "HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH",
 	color: (v) => (v.length > 4 ? "#HHHHHH" : "#HHH"),
