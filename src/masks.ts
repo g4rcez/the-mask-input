@@ -27,7 +27,7 @@ export type Masks =
 
 export type InputMode = "decimal" | "none" | "text" | "numeric" | "tel" | "search" | "email" | "url";
 
-const digit = /[0-9]/;
+const digit = /\d/;
 
 const cellphoneMask = "(dd) 9dddd-dddd";
 
