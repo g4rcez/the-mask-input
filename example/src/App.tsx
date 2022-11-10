@@ -1,6 +1,6 @@
 import "./App.css";
-import { Input } from "the-mask-input";
 import { ChangeEvent, useState } from "react";
+import { Input } from "../../src";
 
 export default function App() {
 	const [state, setState] = useState({} as Record<string, string>);

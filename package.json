@@ -1,6 +1,6 @@
 {
 	"name": "the-mask-input",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "The mask",
 	"type": "module",
 	"author": "g4rcez",
@@ -16,6 +16,7 @@
 	"scripts": {
 		"build": "rollup -c",
 		"cypress": "cypress open",
+		"test": "cypress run",
 		"dev": "rollup -c --watch",
 		"prepare": "rollup -c",
 		"format": "prettier --write \"{.,src/**}/*.{js,jsx,ts,tsx}\""
