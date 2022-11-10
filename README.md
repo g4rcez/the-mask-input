@@ -1,83 +1,102 @@
 # the-mask-input
 
-**The mask input** é um `<input />` para React com máscaras pré definidas para formatos comuns em formulários brasileiros.
-Não tem o formato que você quer? Só passar um `Array<string|RegExp>` ou uma função `(text: string) => Array<string|RegExp>`
+A simple way to create inputs with masked values. Works like `<input />`, but apply mask for your values.
 
-## Instalação
+Just 2.8kB Minified + Gzipped - [Bundlephobia](https://bundlephobia.com/package/the-mask-input)
 
-Esse processo aqui todo mundo já tá acostumado
+# How to Install?
 
 ```bash
-npm i the-mask-input #ou se você usa yarn...
+npm i the-mask-input
 yarn add the-mask-input
+pnpm add the-mask-input
 ```
 
-## Como utilizar?
+# How can I use?
 
-```jsx
-import Input, { Masks } from "the-mask-input";
-import React, { useState, useCallback } from "react";
+[tl;dr examples](https://github.com/g4rcez/the-mask-input/blob/master/example/src/App.tsx)
 
-const Field = ({ mask, title }: { mask: Masks; title: string }) => {
-	const [value, setValue] = useState("");
-	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value), []);
-	return (
-		<div>
-			<label>
-				{title}:
-				<Input style={{ width: "100%" }} mask={mask} onChange={onChange} value={value} />
-			</label>
-		</div>
-	);
-};
+the-mask-input already has some default presets of mask, like cpf/cnpj (brazillian documents) and uuid.
 
-const App = () => (
-	<>
-		<Field mask="cpf" title="Informe seu CPF"/>
-	</>
-)
+```typescript jsx
+import {Input} from "the-mask-input"
+
+export default function App () {
+	return <form>
+		<Input name="cpf" placeholder="cpf" mask="cpf" />
+	</form>
+}
 ```
 
-Por padrão, `the-input-mask` possui algumas máscaras pre-definidas:
+This is a simple code to use mask in your inputs.
 
-```typescript
-type Masks = "cellphone" | "cellTelephone" | "cep" | "cnpj" | "color" | "cpf" | "cpfCnpj" | "creditCard" | "currency" | "date" | "isoDate" | "pis" | "telephone";
+# Default masks
+
+All built-in masks in `<Input />`
+
+- cpf: 000.000.000-00
+- cnpj: 00.000.000/0000-00
+- cpfCnpj: 000.000.000-00 and 00.000.000/0000-00
+- cep: 000000-000
+- cellphone: (00) 90000-0000
+- telephone: (00) 0000-0000
+- cellTelephone: (00) 0000-0000 and (00) 90000-0000
+- int: accept only integer numbers
+- color: #000 and #000000
+- creditCard: 0000 0000 0000 0000 0000
+- date: dd/MM/yyyy - Default date is brazillian pattern
+- isoDate: yyyy/MM/dd
+- time: 00:00 - Accept only 0-23 in yours
+- uuid: default [uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier) format
+
+# Create your own mask
+
+If you need to create your own pattern, you can do
+using [RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) or strings
+as [tokens](https://github.com/g4rcez/the-mask-input/blob/master/src/masks.ts#L3). To create your masks, you can use
+
+- Only a string as tokens
+- Array of strings or RegExp
+- A function returning an array of strings or RegExp
+
+## Using string
+
+We can create a CPF mask only using string:
+
+```typescript jsx
+<Input mask="ddd.ddd.ddd-dd" />
 ```
 
-Atenção especial para "cellTelephone" e "cpfCnpj" que são máscaras que mudam os valores conforme o usuário digita
+`d` is a special token in the-mask-input, and has more:
 
-- cellTelephone irá de `(00) 0000-0000` para `(00) 90000-0000` caso o usuário informe o nono dígito.
-- cpfCnpj irá de `000.000.000-00` para `00.000.000/0000-00` caso o usuário informe 12 dígitos ou mais
+- `d`: only numbers 0-9
+- `H`: hexadecimals. 0-9 and a-f
+- `X`: all numbers and strings A-Z (upper and lower case)
+- `x`: only strings A-Z (upper and lower case)
+- `A`: only strings A-Z, only upper case
+- `a`: only strings A-Z, only lower case
 
-Caso nenhuma dessas te atenda, não fique triste, basta criar sua própria máscara com um Array de string ou RegExp. Se for um valor
-dinâmico, você pode passar uma função `(text: string) => Array<string|RegExp>` para criar sua máscara. Se liga só:
+## Using array
 
-```jsx
-import Input, { Masks, CustomInputProps } from "the-mask-input";
-import React, { useState, useCallback } from "react";
+In this option, you can use string and RegExp. Here you cannot use the-mask-input tokens. Let's create
+a [Vehicle registration plates of Brazil](https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Brazil)
 
-// Máscara com um número + 3 letras
-const customMask = [/\d/, /[A-Za-z]/, /[A-Za-z]/, /[A-Za-z]/];
-
-const CustomInput: React.FC<CustomInputProps> = (props) => {
-	const [value, setValue] = useState("");
-	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value), []);
-	return (
-		<Input {...props} mask={customMask} onChange={onChange} value={value} />
-	);
-};
+```typescript jsx
+<Input mask={[/[A-Z]/, /[A-Z]/, /[A-Z]/, /\d/, /\d/, /\d/, /\d/]} />
 ```
 
-Você não precisa sacar tudo de regex pra criar sua máscara, vou passar uma colinha pra você:
+## Using function
 
-- `/\d/`: Número: 0-9
-- `/[0-9]/`: Número de 0 a 9, o número pós "-" será o máximo permitido
-- `/[2-5]/`: Número de 0 a 9, como exemplo do mínimo permitido sendo 2 e do máximo permitido sendo 5
-- `/[A-Z]/`: Letras de A até Z (maiúsculo), a letra após "-" será a maior permitida
-- `/[A-F]/`: Letras de A até F (maiúsculo), como exemplo do máximo permitido sendo F
-- `/[!#$%*&()=+-]/`: Alguns caracteres especiais, nesse caso, lembre-se de colocar o "-" por último para não criar um range de caracteres
+In this mode, you can use a function to apply some logic before you return an array. Let's create a time mask, accept
+only 23 in hours.
 
-## ToDo
-
-- Criar testes
-- Criar uma função para gerar máscaras e ajudar os amigos desenvolvedores que não gostam de regex
+```typescript jsx
+const hourStartsWithTwo = ["2", /[0-3]/, ":", /[0-5]/, /\d/];
+const hour = [/[012]/, /\d/, ":", /[0-5]/, /[0-9]/];
+const mask = (value: string) => {
+	const n = numbers (value);
+	const first = n[0];
+	return first === "2" ? hourStartsWithTwo : hour;
+}
+<Input mask={mask} />
+```
