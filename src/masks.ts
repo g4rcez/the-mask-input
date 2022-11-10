@@ -39,8 +39,15 @@ const cnpjMask = "dd.ddd.ddd/dddd-dd";
 
 const numbers = (s: string) => s.replace(/\D/g, "");
 
+const hourStartsWithTwo = ["2", /[0-3]/, ":", /[0-5]/, /\d/];
+const hour = [/[012]/, /\d/, ":", /[0-5]/, /[0-9]/];
+
 export const masks: Record<Masks, TheMasks> = {
-	time: "dd:dd",
+	time: (s) => {
+		const n = numbers(s);
+		const first = n[0];
+		return first === "2" ? hourStartsWithTwo : hour;
+	},
 	cep: "ddddd-ddd",
 	date: "dd/dd/dddd",
 	cpf: cpfMask,

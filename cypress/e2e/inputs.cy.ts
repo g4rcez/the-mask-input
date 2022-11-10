@@ -12,6 +12,8 @@ describe("Test all masked inputs", () => {
 
 	it("test time HH:mm", () => {
 		test("time", "1212", "12:12");
+		test("time", "2999", "2");
+		test("time", "29221", "22:21");
 	});
 
 	it("test uuid", () => {
