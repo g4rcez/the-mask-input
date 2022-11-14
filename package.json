@@ -1,9 +1,9 @@
 {
 	"name": "the-mask-input",
 	"version": "3.0.3",
-	"description": "The mask",
-	"type": "module",
+	"description": "A simple way to create inputs with masked values. Works like `<input />`, but apply mask for your values.",
 	"author": "g4rcez",
+	"readme": "./README.md",
 	"license": "MIT",
 	"main": "dist/index.js",
 	"module": "dist/index.es.js",
@@ -15,7 +15,7 @@
 		"npm": ">=4"
 	},
 	"scripts": {
-		"build": "rollup -c",
+		"build": "rollup -c --bundleConfigAsCjs",
 		"cypress": "cypress open",
 		"test": "cypress run",
 		"dev": "rollup -c --watch",

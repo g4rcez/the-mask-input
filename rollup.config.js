@@ -1,11 +1,11 @@
-import commonjs from "@rollup/plugin-commonjs";
-import resolve from "@rollup/plugin-node-resolve";
-import strip from "@rollup/plugin-strip";
-import url from "@rollup/plugin-url";
-import external from "rollup-plugin-peer-deps-external";
-import { terser } from "rollup-plugin-terser";
-import typescript from "rollup-plugin-typescript2";
-import fs from "fs";
+const commonjs = require("@rollup/plugin-commonjs");
+const resolve = require("@rollup/plugin-node-resolve").default
+const strip = require("@rollup/plugin-strip");
+const url = require("@rollup/plugin-url");
+const external = require("rollup-plugin-peer-deps-external");
+const { terser } = require("rollup-plugin-terser");
+const fs = require("fs");
+const typescript = require("rollup-plugin-typescript2");
 
 const pkg = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
 
