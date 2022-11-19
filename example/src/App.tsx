@@ -19,6 +19,7 @@ export default function App() {
 				}}
 				style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", alignItems: "center" }}
 			>
+				<Input value={state.percent} onChange={onChange} mask="percent" name="percent" placeholder="percent" />
 				<Input value={state.cellTelephone} onChange={onChange} mask="cellTelephone" name="cellTelephone" placeholder="cellTelephone" />
 				<Input value={state.cellphone} onChange={onChange} mask="cellphone" name="cellphone" placeholder="cellphone" />
 				<Input value={state.cep} onChange={onChange} mask="cep" name="cep" placeholder="cep" />

@@ -2,6 +2,7 @@ import React, { ChangeEvent, forwardRef, useImperativeHandle, useMemo, useRef, u
 import { Mask, TheMaskInputProps, TheMasks, Token, Tokens } from "./types";
 import { originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps } from "./currency-input";
+import { PercentageInput, PercentInputProps } from "./percent-input";
 
 function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string) => string, tokens: Tokens = originalTokens) {
 	const value = transform(v);
@@ -88,9 +89,21 @@ const MaskInput = forwardRef<HTMLInputElement, TheMaskInputProps>(
 	}
 );
 
-export type TheMaskPropsMerge = (TheMaskInputProps & { mask?: TheMaskInputProps["mask"] }) | (CurrencyInputProps & { mask?: "money" | "currency" });
+export type TheMaskPropsMerge =
+	| (TheMaskInputProps & { mask?: TheMaskInputProps["mask"] })
+	| (CurrencyInputProps & { mask?: "money" | "currency" })
+	| (PercentInputProps & { mask?: "percent" });
 
 export const TheMaskInput = forwardRef<HTMLInputElement, TheMaskPropsMerge>((props, externalRef) => {
 	const isCurrency = props.mask === "currency" || props.mask === "money";
-	return isCurrency ? <CurrencyInput {...props} mask={undefined} ref={externalRef} /> : <MaskInput {...props} ref={externalRef} />;
+
+	if (isCurrency) {
+		return <CurrencyInput {...props} mask={undefined} ref={externalRef} />;
+	}
+
+	if (props.mask === "percent") {
+		return <PercentageInput {...props} mask={undefined} ref={externalRef} />;
+	}
+
+	return <MaskInput {...props} ref={externalRef} />;
 });
