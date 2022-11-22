@@ -34,7 +34,7 @@ export const toPercent = (value: string, props: PercentageInfo) => {
 };
 
 export const PercentageInput = forwardRef(
-	({ locale = "pt-BR", currency = "BRL", mask, onChange, ...html }: PercentInputProps, externalRef: React.Ref<HTMLInputElement>) => {
+	({ locale = "pt-BR", currency = "BRL", mask, onChange, onKeyUp, ...html }: PercentInputProps, externalRef: React.Ref<HTMLInputElement>) => {
 		const ref = useRef<HTMLInputElement>(null);
 		const [input, setInput] = useState<string>(() => html.value?.toString() ?? "");
 		useImperativeHandle(externalRef, () => ref.current!);
@@ -50,6 +50,22 @@ export const PercentageInput = forwardRef(
 			return infos;
 		}, [locale, currency]);
 
+		const valueLength = input.length - info.percentSign.length - CHAR_BETWEEN_VALUE_AND_SYMBOL;
+
+		const keyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+			if (event.currentTarget.selectionStart !== null) {
+				const { selectionStart, selectionEnd } = event.currentTarget;
+				const isSelection = selectionStart !== selectionEnd;
+				const cursorIsOnSymbol = valueLength < selectionStart;
+
+				if (!isSelection && cursorIsOnSymbol) {
+					focusNumber();
+				}
+			}
+
+			onKeyUp?.(event);
+		};
+
 		const change = (e: React.ChangeEvent<HTMLInputElement>) => {
 			const percent = toPercent(e.target.value, info);
 			const realValue = valueToFloat(percent);
@@ -61,7 +77,6 @@ export const PercentageInput = forwardRef(
 		const focusNumber = () => {
 			const inputElement = ref.current;
 			if (!inputElement) return;
-			const valueLength = input.length - info.percentSign.length - CHAR_BETWEEN_VALUE_AND_SYMBOL;
 			inputElement.setSelectionRange(valueLength, valueLength);
 		};
 
@@ -69,6 +84,6 @@ export const PercentageInput = forwardRef(
 			focusNumber();
 		}, [input]);
 
-		return <input {...html} value={input} type="text" ref={ref} onChange={change} onFocus={focusNumber} inputMode="decimal" />;
+		return <input {...html} value={input} type="text" ref={ref} onChange={change} onFocus={focusNumber} onKeyUp={keyUp} inputMode="decimal" />;
 	}
 );
