@@ -22,7 +22,8 @@ export default function App() {
 				<Input value={state.cellTelephone} onChange={onChange} mask="cellTelephone" name="cellTelephone" placeholder="cellTelephone" />
 				<Input value={state.cellphone} onChange={onChange} mask="cellphone" name="cellphone" placeholder="cellphone" />
 				<Input value={state.cep} onChange={onChange} mask="cep" name="cep" placeholder="cep" />
-				<Input value={state.cnpj} onChange={onChange} mask="cnpj" name="cnpj" placeholder="cpfCnpj" />
+				<Input value={state.cnpj} onChange={onChange} mask="cnpj" name="cnpj" placeholder="cnpj" />
+				<Input value={state.cpfCnpj} onChange={onChange} mask="cpfCnpj" name="cpfCnpj" placeholder="cpfCnpj" />
 				<Input value={state.color} onChange={onChange} mask="color" name="color" placeholder="color" />
 				<Input value={state.cpf} onChange={onChange} mask="cpf" name="cpf" placeholder="cpf" />
 				<Input value={state.creditCard} onChange={onChange} mask="creditCard" name="creditCard" placeholder="creditCard" />

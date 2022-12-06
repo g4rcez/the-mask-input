@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, DetailedHTMLProps } from "react";
+import React, { InputHTMLAttributes, DetailedHTMLProps } from "react";
 
 type NativeProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
@@ -7,7 +7,8 @@ export type TheMaskInputProps = Omit<NativeProps, "value" | "type" | "defaultVal
 		as: "input" | React.FC<Omit<TheMaskInputProps, "as">>;
 		autoCapitalize: AutoCapitalize;
 		defaultValue: string;
-		onChangeText?: (text: string) => void;
+		transform: (value: string) => string;
+		onChangeText: (text: string) => void;
 		inputMode: InputMode;
 		mask: TheMasks;
 		tokens: Tokens;

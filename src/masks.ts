@@ -63,12 +63,12 @@ export const masks: Record<Masks, TheMasks> = {
 	int: (s) => (digit.test(s.slice(-1)) ? "d".repeat(Math.max(s.length, 0)) : "d".repeat(Math.max(s.length - 1, 0)))
 };
 
-export type MaskConfig = { pattern?: string; inputMode: InputMode; mask: TheMasks };
+export type MaskConfig = { pattern?: string; inputMode: InputMode; mask: TheMasks; transform?: (s: string) => string };
 
-const mask = (mask: TheMasks, inputMode: InputMode, pattern?: string): MaskConfig => ({
+const mask = (mask: TheMasks, inputMode: InputMode, props: Pick<MaskConfig, "transform" | "pattern"> = {}): MaskConfig => ({
 	mask,
 	inputMode,
-	pattern
+	...props
 });
 
 export const inputMaskedProps: Record<Masks, MaskConfig> = {
@@ -76,12 +76,12 @@ export const inputMaskedProps: Record<Masks, MaskConfig> = {
 	cellphone: mask(masks.cellphone, "tel"),
 	cep: mask(masks.cep, "decimal"),
 	cnpj: mask(masks.cnpj, "decimal"),
-	color: mask(masks.color, "decimal", "#[a-fA-F0-9]{3}([a-fA-F0-9]{3})"),
+	color: mask(masks.color, "decimal", { pattern: "#[a-fA-F0-9]{3}([a-fA-F0-9]{3})" }),
 	cpf: mask(masks.cpf, "decimal"),
-	cpfCnpj: mask(masks.cpfCnpj, "decimal"),
+	cpfCnpj: mask(masks.cpfCnpj, "decimal", { transform: numbers }),
 	creditCard: mask(masks.creditCard, "decimal"),
 	date: mask(masks.date, "decimal"),
-	int: mask(masks.int, "decimal", "[0-9]+"),
+	int: mask(masks.int, "decimal", { pattern: "[0-9]+" }),
 	isoDate: mask(masks.isoDate, "decimal"),
 	telephone: mask(masks.telephone, "tel"),
 	time: mask(masks.time, "decimal"),
