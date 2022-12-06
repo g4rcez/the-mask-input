@@ -1,6 +1,6 @@
 {
 	"name": "the-mask-input",
-	"version": "3.0.4",
+	"version": "3.0.6",
 	"description": "A simple way to create inputs with masked values. Works like `<input />`, but apply mask for your values.",
 	"author": "g4rcez",
 	"readme": "./README.md",
@@ -18,8 +18,8 @@
 		"build": "rollup -c --bundleConfigAsCjs",
 		"cypress": "cypress open",
 		"test": "cypress run",
-		"dev": "rollup -c --watch",
-		"prepare": "rollup -c",
+		"dev": "rollup -c --watch --bundleConfigAsCjs",
+		"prepare": "pnpm build",
 		"format": "prettier --write \"{.,src/**}/*.{js,jsx,ts,tsx}\""
 	},
 	"peerDependencies": {

@@ -4,6 +4,8 @@ import React, { useMemo } from "react";
 
 export { CurrencyInput, CurrencyInput as MoneyInput } from "./currency-input";
 export { masks, inputMaskedProps } from "./masks";
+export type { TheMaskPropsMerge as TheMaskProps } from "./input";
+export type { CurrencyInputProps } from "./currency-input";
 
 const Component = (mask: MaskConfig) => (props: TheMaskPropsMerge) => <TheMaskInput {...mask} {...(props as any)} />;
 
