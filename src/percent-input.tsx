@@ -1,17 +1,16 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 
 import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "./libs";
-import { CurrencyCode, Locales, TheMaskInputProps } from "./types";
+import { Locales, TheMaskInputProps } from "./types";
 
 const CHAR_BETWEEN_VALUE_AND_SYMBOL = 1;
 
 export declare type PercentInputProps = Omit<TheMaskInputProps, "value" | "mask"> &
 	Partial<{
-		currency: CurrencyCode;
 		locale: Locales;
 		name: string;
 		onChangeText: (value: string) => void;
-		onChange: (e: React.ChangeEvent<HTMLInputElement>, unmasked?: string) => void;
+		onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 		value: string;
 		mask: "percentage";
 	}>;
@@ -34,13 +33,13 @@ export const toPercent = (value: string, props: PercentageInfo) => {
 };
 
 export const PercentageInput = forwardRef(
-	({ locale = "pt-BR", currency = "BRL", mask, onChange, onKeyUp, ...html }: PercentInputProps, externalRef: React.Ref<HTMLInputElement>) => {
+	({ locale = "pt-BR", mask, onChange, onKeyUp, ...html }: PercentInputProps, externalRef: React.Ref<HTMLInputElement>) => {
 		const ref = useRef<HTMLInputElement>(null);
 		const [input, setInput] = useState<string>(() => html.value?.toString() ?? "");
 		useImperativeHandle(externalRef, () => ref.current!);
 
 		useEffect(
-			() => setInput(html.value === "" ? "" : toPercent(Number.parseFloat(`${html.value ?? "0"}`).toFixed(info.fraction.length), info)),
+			() => setInput(html.value || toPercent(Number.parseFloat(`${html.value ?? "0"}`).toFixed(info.fraction.length), info)),
 			[html.value]
 		);
 
@@ -48,13 +47,14 @@ export const PercentageInput = forwardRef(
 			const infos = namedFormatPercent(locale);
 			infos.percentSign = replaceBlankSpace(`${infos.percentSign}`);
 			return infos;
-		}, [locale, currency]);
+		}, [locale]);
 
 		const valueLength = input.length - info.percentSign.length - CHAR_BETWEEN_VALUE_AND_SYMBOL;
 
 		const keyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-			if (event.currentTarget.selectionStart !== null) {
-				const { selectionStart, selectionEnd } = event.currentTarget;
+			const target = event.currentTarget;
+			if (target.selectionStart !== null) {
+				const { selectionStart, selectionEnd } = target;
 				const isSelection = selectionStart !== selectionEnd;
 				const cursorIsOnSymbol = valueLength < selectionStart;
 
