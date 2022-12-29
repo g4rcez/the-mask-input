@@ -6,6 +6,15 @@ describe("Test all masked inputs", () => {
 	const test = (id: string, type: string, value: string) =>
 		cy.get(`input[name='${id}']`).focus().clear().type(type, { force: true }).should("have.value", value);
 
+	it("test percent", () => {
+		test("percent", "0", "0,00 %");
+		test("percent", "1", "0,01 %");
+		test("percent", "10", "0,10 %");
+		test("percent", "100", "1,00 %");
+		test("percent", "1000", "10,00 %");
+		test("percent", "10000", "100,00 %");
+	});
+
 	it("test cellTelephone using a telephone", () => {
 		test("cellTelephone", "0012345678", "(00) 1234-5678");
 	});
