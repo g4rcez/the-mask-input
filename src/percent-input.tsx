@@ -41,15 +41,21 @@ export const PercentageInput = forwardRef(
 		useEffect(
 			() => setInput(html.value || toPercent(Number.parseFloat(`${html.value ?? "0"}`).toFixed(info.fraction.length), info)),
 			[html.value]
-		);
+			);
 
-		const info = useMemo(() => {
-			const infos = namedFormatPercent(locale);
+			const info = useMemo(() => {
+				const infos = namedFormatPercent(locale);
 			infos.percentSign = replaceBlankSpace(`${infos.percentSign}`);
 			return infos;
 		}, [locale]);
 
 		const valueLength = input.length - info.percentSign.length - CHAR_BETWEEN_VALUE_AND_SYMBOL;
+
+		const focusNumber = () => {
+			const inputElement = ref.current;
+			if (!inputElement) return;
+			inputElement.setSelectionRange(valueLength, valueLength);
+		};
 
 		const keyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
 			const target = event.currentTarget;
@@ -74,11 +80,6 @@ export const PercentageInput = forwardRef(
 			onChange?.(e);
 		};
 
-		const focusNumber = () => {
-			const inputElement = ref.current;
-			if (!inputElement) return;
-			inputElement.setSelectionRange(valueLength, valueLength);
-		};
 
 		useEffect(() => {
 			focusNumber();
