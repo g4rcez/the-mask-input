@@ -26,11 +26,11 @@ export const Telephone = Component(inputMaskedProps.telephone);
 export const Time = Component(inputMaskedProps.time);
 export const Uuid = Component(inputMaskedProps.uuid);
 
-type Props = TheMaskPropsMerge & {
+export type TheMaskInputProps = TheMaskPropsMerge & {
 	mask?: TheMaskPropsMerge["mask"] | keyof typeof inputMaskedProps;
 };
 
-export const Input = React.forwardRef<HTMLInputElement, Props>(function InternalMaskInput(props, externalRef) {
+export const Input = React.forwardRef<HTMLInputElement, TheMaskInputProps>(function InternalMaskInput(props, externalRef) {
 	const maskConfig = useMemo(
 		() => (typeof props.mask === "string" && has(inputMaskedProps, props.mask) ? inputMaskedProps[props.mask] : { mask: props.mask }),
 		[props.mask]
