@@ -52,6 +52,8 @@ export type InputTypes =
 
 export type InputMode = "decimal" | "none" | "text" | "numeric" | "tel" | "search" | "email" | "url";
 
+export type CurrencyDisplay = "symbol" | "narrowSymbol" | "code" | "name";
+
 // https://www.currency-iso.org/dam/downloads/lists/list_one.xml
 export type CurrencyCode =
 	| "AFN"
