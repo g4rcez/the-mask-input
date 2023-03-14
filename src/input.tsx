@@ -1,4 +1,4 @@
-import React, { ChangeEvent, forwardRef, useImperativeHandle, useMemo, useRef, useState } from "react";
+import React, { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { Mask, TheMaskInputProps, TheMasks, Token, Tokens } from "./types";
 import { originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps } from "./currency-input";
@@ -53,7 +53,20 @@ const MaskInput = forwardRef<HTMLInputElement, TheMaskInputProps>(
 		const Component = as ?? "input";
 		const internalRef = useRef<HTMLInputElement>(null);
 		useImperativeHandle(ref, () => internalRef.current!);
-		const [stateValue, setStateValue] = useState(props.value ?? props.defaultValue ?? "");
+		const [stateValue, setStateValue] = useState(() => {
+			const v = props.value ?? props.defaultValue ?? "";
+			if (mask === undefined) return v;
+			return formatRegexMask(v, typeof mask === "function" ? mask(v) : mask, transform ?? noop, tokens ?? originalTokens);
+		});
+
+		useEffect(() => {
+			if (props.value === undefined) return;
+			setStateValue(() => {
+				const v = props.value ?? props.defaultValue ?? "";
+				if (mask === undefined) return v;
+				return formatRegexMask(v, typeof mask === "function" ? mask(v) : mask, transform ?? noop, tokens ?? originalTokens);
+			});
+		}, [props.value, mask, transform, props.defaultValue]);
 
 		const patternMemo = useMemo(() => {
 			if (pattern) return pattern;
@@ -85,7 +98,7 @@ const MaskInput = forwardRef<HTMLInputElement, TheMaskInputProps>(
 			event.target.value = masked;
 			onChange?.(event);
 		};
-		return <Component {...props} pattern={patternMemo} onChange={changeMask} value={stateValue} ref={internalRef} />;
+		return <Component {...props} pattern={patternMemo} defaultValue={undefined} onChange={changeMask} value={stateValue} ref={internalRef} />;
 	}
 );
 

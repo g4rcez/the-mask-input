@@ -2,6 +2,55 @@ import "./App.css";
 import { ChangeEvent, useState } from "react";
 import { Input } from "../../src";
 
+export const Controlled = () => {
+	const [value, setValue] = useState("");
+	return (
+		<fieldset>
+			{value}
+			<Input mask="cpf" value={value} onChangeText={(e) => setValue(e)} />
+			<button
+				onClick={() =>
+					setValue(
+						Math.ceil(Math.random() * 9)
+							.toString()
+							.repeat(11)
+					)
+				}
+			>
+				Change
+			</button>
+		</fieldset>
+	);
+};
+
+export const InputsWithDefault = () => {
+	return (
+		<div style={{ display: "flex", flexWrap: "wrap", gap: "2rem" }}>
+			<form style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", alignItems: "center" }} onSubmit={(e) => e.preventDefault()}>
+				<Input mask="percent" name="percent" placeholder="percent" />
+				<Input mask="cellTelephone" name="cellTelephone" placeholder="cellTelephone" />
+				<Input mask="cellphone" name="cellphone" placeholder="cellphone" />
+				<Input defaultValue="00000000" mask="cep" name="cep" placeholder="cep" />
+				<Input defaultValue="00000111223456" mask="cnpj" name="cnpj" placeholder="cnpj" />
+				<Input mask="cpfCnpj" name="cpfCnpj" placeholder="cpfCnpj" />
+				<Input mask="color" name="color" placeholder="color" />
+				<Input defaultValue="02134567892" mask="cpf" name="cpf" placeholder="cpf" />
+				<Input mask="creditCard" name="creditCard" placeholder="creditCard" />
+				<Input mask="date" name="date" placeholder="date" />
+				<Input mask="int" name="int" placeholder="int" />
+				<Input mask="isoDate" name="isoDate" placeholder="isoDate" />
+				<Input mask="money" name="money" placeholder="money" />
+				<Input mask="telephone" name="telephone" placeholder="telephone" />
+				<Input mask="time" name="time" placeholder="time" />
+				<Input mask="uuid" name="uuid" placeholder="uuid" />
+				<button type="submit" style={{ height: "fit-content", padding: "0.6rem" }}>
+					Test masks
+				</button>
+			</form>
+		</div>
+	);
+};
+
 export default function App() {
 	const [state, setState] = useState({} as Record<string, string>);
 	const [show, setShow] = useState(false);
@@ -11,6 +60,8 @@ export default function App() {
 	};
 	return (
 		<div style={{ display: "flex", flexWrap: "wrap", gap: "2rem" }}>
+			<Controlled />
+			<InputsWithDefault />
 			{show && <span id="test">Success</span>}
 			<form
 				onSubmit={(e) => {
