@@ -1,6 +1,6 @@
 import "./App.css";
 import { ChangeEvent, useState } from "react";
-import { Input } from "../../src";
+import { CurrencyInput, Input } from "../../src";
 
 export const Controlled = () => {
 	const [value, setValue] = useState("");
@@ -83,6 +83,9 @@ export default function App() {
 				<Input value={state.int} onChange={onChange} mask="int" name="int" placeholder="int" />
 				<Input value={state.isoDate} onChange={onChange} mask="isoDate" name="isoDate" placeholder="isoDate" />
 				<Input value={state.money} onChange={onChange} mask="money" name="money" placeholder="money" />
+				<CurrencyInput value={state.money} onChange={onChange} name="Currency" placeholder="Currency" mask="currency" />
+				<CurrencyInput value={state.money} onChange={onChange} name="Currency" placeholder="Currency" mask="currency" currency="USD" locale="en-US" />
+				<CurrencyInput value={state.money} onChange={onChange} name="Currency" placeholder="Currency" mask="currency" currency="USD" currencyDisplay="code" locale="en-US" />
 				<Input value={state.telephone} onChange={onChange} mask="telephone" name="telephone" placeholder="telephone" />
 				<Input value={state.time} onChange={onChange} mask="time" name="time" placeholder="time" />
 				<Input value={state.uuid} onChange={onChange} mask="uuid" name="uuid" placeholder="uuid" />

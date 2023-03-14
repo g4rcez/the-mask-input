@@ -1,10 +1,11 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "./libs";
-import { CurrencyCode, Locales, TheMaskInputProps } from "./types";
+import { CurrencyCode, CurrencyDisplay, Locales, TheMaskInputProps } from "./types";
 
 export declare type CurrencyInputProps = Omit<TheMaskInputProps, "value" | "mask"> &
 	Partial<{
 		currency: CurrencyCode;
+		currencyDisplay: CurrencyDisplay;
 		locale: Locales;
 		name: string;
 		onChangeText: (value: string) => void;
@@ -13,13 +14,13 @@ export declare type CurrencyInputProps = Omit<TheMaskInputProps, "value" | "mask
 		mask: "money" | "currency";
 	}>;
 
-export const namedFormatCurrency = (locale: Locales, currency: CurrencyCode) =>
-	new Intl.NumberFormat(locale, { style: "currency", currency }).formatToParts(1000).reduce(
+export const namedFormatCurrency = (locale: Locales, currency: CurrencyCode, currencyDisplay: CurrencyDisplay) =>
+	new Intl.NumberFormat(locale, { style: "currency", currency, currencyDisplay }).formatToParts(1000).reduce(
 		(acc, el) => ({
 			...acc,
 			[el.type]: el.value
 		}),
-		{ currency: "", decimal: ",", fraction: "", group: "", integer: "", literal: "" }
+		{ currency: "", currencyDisplay: "", decimal: ",", fraction: "", group: "", integer: "", literal: "" }
 	);
 
 export type CurrencyInfo = ReturnType<typeof namedFormatCurrency>;
@@ -31,7 +32,7 @@ export const toCurrency = (value: string, props: CurrencyInfo) => {
 };
 
 export const CurrencyInput = forwardRef(
-	({ locale = "pt-BR", currency = "BRL", mask, onChange, ...html }: CurrencyInputProps, externalRef: React.Ref<HTMLInputElement>) => {
+	({ locale = "pt-BR", currency = "BRL", currencyDisplay = "symbol", mask, onChange, ...html }: CurrencyInputProps, externalRef: React.Ref<HTMLInputElement>) => {
 		const ref = useRef<HTMLInputElement>(null);
 		const [input, setInput] = useState<string>(() => html.value?.toString() ?? "");
 		useImperativeHandle(externalRef, () => ref.current!);
@@ -42,7 +43,7 @@ export const CurrencyInput = forwardRef(
 		);
 
 		const info = useMemo(() => {
-			const infos = namedFormatCurrency(locale, currency);
+			const infos = namedFormatCurrency(locale, currency, currencyDisplay);
 			infos.currency = replaceBlankSpace(`${infos.currency.trim()} `);
 			infos.literal = replaceBlankSpace(infos.literal.trim());
 			return infos;
