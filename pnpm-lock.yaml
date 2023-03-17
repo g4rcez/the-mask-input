@@ -27,7 +27,7 @@ specifiers:
   rollup-plugin-peer-deps-external: 2.2.4
   rollup-plugin-terser: 7.0.2
   rollup-plugin-typescript2: 0.34.1
-  tslib: 2.4.0
+  tslib: 2.5.0
   typescript: 4.8.4
 
 devDependencies:
@@ -35,7 +35,7 @@ devDependencies:
   '@rollup/plugin-commonjs': 15.0.0_rollup@3.1.0
   '@rollup/plugin-node-resolve': 9.0.0_rollup@3.1.0
   '@rollup/plugin-strip': 2.0.0_rollup@3.1.0
-  '@rollup/plugin-typescript': 6.0.0_52y3o6nq3pi22pxbagne3lkikq
+  '@rollup/plugin-typescript': 6.0.0_vdsrbuod4az42pcj2p5dttwrc4
   '@rollup/plugin-url': 5.0.1_rollup@3.1.0
   '@types/jest': 26.0.13
   '@types/node': 14.6.4
@@ -57,7 +57,7 @@ devDependencies:
   rollup-plugin-peer-deps-external: 2.2.4_rollup@3.1.0
   rollup-plugin-terser: 7.0.2_rollup@3.1.0
   rollup-plugin-typescript2: 0.34.1_iveik5itt6bizfkphibyk5djdy
-  tslib: 2.4.0
+  tslib: 2.5.0
   typescript: 4.8.4
 
 packages:
@@ -1533,7 +1533,7 @@ packages:
       rollup: 3.1.0
     dev: true
 
-  /@rollup/plugin-typescript/6.0.0_52y3o6nq3pi22pxbagne3lkikq:
+  /@rollup/plugin-typescript/6.0.0_vdsrbuod4az42pcj2p5dttwrc4:
     resolution: {integrity: sha512-Y5U2L4eaF3wUSgCZRMdvNmuzWkKMyN3OwvhAdbzAi5sUqedaBk/XbzO4T7RlViDJ78MOPhwAIv2FtId/jhMtbg==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
@@ -1544,7 +1544,7 @@ packages:
       '@rollup/pluginutils': 3.1.0_rollup@3.1.0
       resolve: 1.22.1
       rollup: 3.1.0
-      tslib: 2.4.0
+      tslib: 2.5.0
       typescript: 4.8.4
     dev: true
 
@@ -4332,7 +4332,7 @@ packages:
       fs-extra: 10.1.0
       rollup: 3.1.0
       semver: 7.3.8
-      tslib: 2.4.0
+      tslib: 2.5.0
       typescript: 4.8.4
     dev: true
 
@@ -4352,7 +4352,7 @@ packages:
   /rxjs/7.5.7:
     resolution: {integrity: sha512-z9MzKh/UcOqB3i20H6rtrlaE/CgjLOvheWK/9ILrbhROGTweAi1BaFsTT9FbwZi5Trr1qNRs+MXkhmR06awzQA==}
     dependencies:
-      tslib: 2.4.0
+      tslib: 2.5.0
     dev: true
 
   /safe-buffer/5.2.1:
@@ -4755,8 +4755,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /tslib/2.4.0:
-    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+  /tslib/2.5.0:
+    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
     dev: true
 
   /tunnel-agent/0.6.0:

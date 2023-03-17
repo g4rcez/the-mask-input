@@ -1,11 +1,14 @@
-import { TheMaskInput, TheMaskPropsMerge } from "./input";
+import { TheMaskInput } from "./input";
 import { inputMaskedProps, MaskConfig } from "./masks";
 import React, { useMemo } from "react";
+import { PercentInputProps } from "./percent-input";
+import { TheMaskInputProps } from "./types";
 
 export { CurrencyInput, CurrencyInput as MoneyInput } from "./currency-input";
 export { masks, inputMaskedProps } from "./masks";
 export type { TheMaskPropsMerge as TheMaskProps } from "./input";
 export type { CurrencyInputProps } from "./currency-input";
+import type { CurrencyInputProps } from "./currency-input";
 
 const Component = (mask: MaskConfig) => (props: TheMaskPropsMerge) => <TheMaskInput {...mask} {...(props as any)} />;
 
@@ -26,11 +29,13 @@ export const Telephone = Component(inputMaskedProps.telephone);
 export const Time = Component(inputMaskedProps.time);
 export const Uuid = Component(inputMaskedProps.uuid);
 
-export type TheMaskInputProps = TheMaskPropsMerge & {
-	mask?: TheMaskPropsMerge["mask"] | keyof typeof inputMaskedProps;
-};
+export type TheMaskPropsMerge =
+	| TheMaskInputProps
+	| (TheMaskInputProps & { mask?: TheMaskInputProps["mask"] })
+	| (CurrencyInputProps & { mask?: "money" | "currency" })
+	| (PercentInputProps & { mask?: "percent" });
 
-export const Input = React.forwardRef<HTMLInputElement, TheMaskInputProps>(function InternalMaskInput(props, externalRef) {
+export const Input = React.forwardRef<HTMLInputElement, TheMaskPropsMerge>(function InternalMaskInput(props, externalRef) {
 	const maskConfig = useMemo(
 		() => (typeof props.mask === "string" && has(inputMaskedProps, props.mask) ? inputMaskedProps[props.mask] : { mask: props.mask }),
 		[props.mask]
