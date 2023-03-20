@@ -5,11 +5,11 @@ type NativeProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTML
 export type TheMaskInputProps = Omit<NativeProps, "value" | "type" | "defaultValue" | "inputMode" | "autoCapitalize"> &
 	Partial<{
 		as: "input" | React.FC<Omit<TheMaskInputProps, "as">>;
-			currency: CurrencyCode;
+		currency: CurrencyCode;
 		currencyDisplay: CurrencyDisplay;
 		locale: Locales;
 		autoCapitalize: AutoCapitalize;
-		defaultValue: string;
+		defaultValue: string | number;
 		transform: (value: string) => string;
 		onChangeText: (text: string) => void;
 		inputMode: InputMode;

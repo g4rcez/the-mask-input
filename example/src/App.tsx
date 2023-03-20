@@ -37,7 +37,7 @@ export const InputsWithDefault = () => {
 				<Input defaultValue="02134567892" mask="cpf" name="cpf" placeholder="cpf" />
 				<Input mask="creditCard" name="creditCard" placeholder="creditCard" />
 				<Input mask="date" name="date" placeholder="date" />
-				<Input mask="int" name="int" placeholder="int" />
+				<Input mask="int" name="int" placeholder="int" min={0} max={100} defaultValue={40} />
 				<Input mask="isoDate" name="isoDate" placeholder="isoDate" />
 				<Input mask="money" name="money" placeholder="money" />
 				<Input mask="telephone" name="telephone" placeholder="telephone" />

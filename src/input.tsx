@@ -27,11 +27,11 @@ function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string
 	return output;
 }
 
-export const createPattern = (mask: TheMasks, value: string) => {
+export const createPattern = (mask: TheMasks, value: string | number) => {
 	const maskIsFunction = typeof mask === "function";
 	let result: string | Mask[] = maskIsFunction ? "" : mask;
 	if (maskIsFunction) {
-		result = mask(value);
+		result = mask(value.toString());
 	}
 	if (typeof result === "string") {
 		const len = result.length;
@@ -56,7 +56,7 @@ const MaskInput = forwardRef<HTMLInputElement, TheMaskInputProps>(
 		const [stateValue, setStateValue] = useState(() => {
 			const v = props.value ?? props.defaultValue ?? "";
 			if (mask === undefined) return v;
-			return formatRegexMask(v, typeof mask === "function" ? mask(v) : mask, transform ?? noop, tokens ?? originalTokens);
+			return formatRegexMask(v.toString(), typeof mask === "function" ? mask(v.toString()) : mask, transform ?? noop, tokens ?? originalTokens);
 		});
 
 		useEffect(() => {
@@ -64,7 +64,7 @@ const MaskInput = forwardRef<HTMLInputElement, TheMaskInputProps>(
 			setStateValue(() => {
 				const v = props.value ?? props.defaultValue ?? "";
 				if (mask === undefined) return v;
-				return formatRegexMask(v, typeof mask === "function" ? mask(v) : mask, transform ?? noop, tokens ?? originalTokens);
+				return formatRegexMask(v.toString(), typeof mask === "function" ? mask(v.toString()) : mask, transform ?? noop, tokens ?? originalTokens);
 			});
 		}, [props.value, mask, transform, props.defaultValue]);
 
@@ -98,7 +98,7 @@ const MaskInput = forwardRef<HTMLInputElement, TheMaskInputProps>(
 			event.target.value = masked;
 			onChange?.(event);
 		};
-		return <Component {...props} pattern={patternMemo} defaultValue={undefined} onChange={changeMask} value={stateValue} ref={internalRef} />;
+		return <Component {...props} pattern={patternMemo} defaultValue={undefined} onChange={changeMask} value={stateValue.toString()} ref={internalRef} />;
 	}
 );
 
