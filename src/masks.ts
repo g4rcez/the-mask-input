@@ -84,6 +84,6 @@ export const inputMaskedProps: Record<Masks, MaskConfig> = {
 	int: mask(masks.int, "decimal", { pattern: "[0-9]+" }),
 	isoDate: mask(masks.isoDate, "decimal"),
 	telephone: mask(masks.telephone, "tel"),
-	time: mask(masks.time, "decimal"),
+	time: mask(masks.time, "decimal", { pattern: "[0-9][0-9]:[0-9][0-9]" }),
 	uuid: mask(masks.uuid, "decimal")
 };

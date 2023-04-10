@@ -27,23 +27,24 @@ function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string
 	return output;
 }
 
+const stringPattern = (result: string) => {
+	const len = result.length;
+	const m = [];
+	for (let i = 0; i < len; i++) {
+		const char = result[i];
+		const token = originalTokens[char];
+		token === undefined ? m.push(char.replace(/\./g, "\\.").replace(/\(/g, "\\(").replace(/\)/g, "\\)")) : m.push(token.regex?.source);
+	}
+	return m.join("").replace(/\\\\/g, "\\");
+};
+
 export const createPattern = (mask: TheMasks, value: string) => {
 	const maskIsFunction = typeof mask === "function";
 	let result: string | Mask[] = maskIsFunction ? "" : mask;
 	if (maskIsFunction) {
 		result = mask(value);
 	}
-	if (typeof result === "string") {
-		const len = result.length;
-		const m = [];
-		for (let i = 0; i < len; i++) {
-			const char = result[i];
-			const token = originalTokens[char];
-			token === undefined ? m.push(char.replace(/\./g, "\\.").replace(/\(/g, "\\(").replace(/\)/g, "\\)")) : m.push(token.regex?.source);
-		}
-		return m.join("").replace(/\\\\/g, "\\");
-	}
-	return "";
+	return typeof result !== "string" ? "" : stringPattern(result);
 };
 
 const noop = (s: string) => s;
