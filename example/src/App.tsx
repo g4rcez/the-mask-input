@@ -34,22 +34,22 @@ export const Controlled = () => {
 export const InputsWithDefault = () => {
 	return (
 		<form className="flex gap-6 flex-wrap items-end" onSubmit={(e) => e.preventDefault()}>
-			<StyledInput mask="percent" locale="pt-BR" name="percent" placeholder="percent" />
-			<StyledInput mask="cellTelephone" name="cellTelephone" placeholder="cellTelephone" />
-			<StyledInput mask="cellphone" name="cellphone" placeholder="cellphone" />
-			<StyledInput defaultValue="00000000" mask="cep" name="cep" placeholder="cep" />
-			<StyledInput defaultValue="00000111223456" mask="cnpj" name="cnpj" placeholder="cnpj" />
-			<StyledInput mask="cpfCnpj" name="cpfCnpj" placeholder="cpfCnpj" />
-			<StyledInput mask="color" name="color" placeholder="color" />
-			<StyledInput defaultValue="02134567892" mask="cpf" name="cpf" placeholder="cpf" />
-			<StyledInput mask="creditCard" name="creditCard" placeholder="creditCard" />
-			<StyledInput mask="date" name="date" placeholder="date" />
-			<StyledInput mask="int" name="int" placeholder="int" />
-			<StyledInput mask="isoDate" name="isoDate" placeholder="isoDate" />
-			<StyledInput mask="money" name="money" placeholder="money" />
-			<StyledInput mask="telephone" name="telephone" placeholder="telephone" />
-			<StyledInput mask="time" name="time" placeholder="time" />
-			<StyledInput mask="uuid" name="uuid" placeholder="uuid" />
+			<StyledInput mask="percent" locale="pt-BR" name="default-percent" placeholder="percent" />
+			<StyledInput mask="cellTelephone" name="default-cellTelephone" placeholder="cellTelephone" />
+			<StyledInput mask="cellphone" name="default-cellphone" placeholder="cellphone" />
+			<StyledInput defaultValue="00000000" mask="cep" name="default-cep" placeholder="cep" />
+			<StyledInput defaultValue="00000111223456" mask="cnpj" name="default-cnpj" placeholder="cnpj" />
+			<StyledInput mask="cpfCnpj" name="default-cpfCnpj" placeholder="cpfCnpj" />
+			<StyledInput mask="color" name="default-color" placeholder="color" />
+			<StyledInput defaultValue="02134567892" mask="cpf" name="default-cpf" placeholder="cpf" />
+			<StyledInput mask="creditCard" name="default-creditCard" placeholder="creditCard" />
+			<StyledInput mask="date" name="default-date" placeholder="date" />
+			<StyledInput mask="int" name="default-int" placeholder="int" />
+			<StyledInput mask="isoDate" name="default-isoDate" placeholder="isoDate" />
+			<StyledInput mask="money" name="default-money" placeholder="money" />
+			<StyledInput mask="telephone" name="default-telephone" placeholder="telephone" />
+			<StyledInput mask="time" name="default-time" placeholder="time" />
+			<StyledInput mask="uuid" name="default-uuid" placeholder="uuid" />
 			<button className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="submit">
 				Test masks
 			</button>
@@ -108,7 +108,7 @@ export default function App() {
 				<StyledInput value={state.time} onChange={onChange} mask="time" name="time" placeholder="time" />
 				<StyledInput value={state.uuid} onChange={onChange} mask="uuid" name="uuid" placeholder="uuid" />
 				<Input />
-				<button className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="submit">
+				<button id="submit" className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="submit">
 					Test pattern
 				</button>
 			</form>

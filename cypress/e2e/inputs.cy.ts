@@ -78,7 +78,7 @@ describe("Test all masked inputs", () => {
 	});
 
 	it("Should submit without errors", () => {
-		cy.get("button[type=submit]").click().wait(1000);
+		cy.get("button#submit").click().wait(1000);
 		cy.get("#test").should("exist");
 	});
 });
