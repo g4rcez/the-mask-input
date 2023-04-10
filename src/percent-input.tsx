@@ -1,18 +1,18 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
-
 import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "./libs";
-import { Locales, TheMaskInputProps } from "./types";
+import { Locales, MaskInputProps, Value } from "./types";
 
 const CHAR_BETWEEN_VALUE_AND_SYMBOL = 1;
 
-export declare type PercentInputProps = Omit<TheMaskInputProps, "value" | "mask"> &
+export type PercentInputMask = "percentage" | "percent" | "percentual";
+
+export const isPercentageInput = (mask: any): mask is PercentInputMask => mask === "percentage" || mask === "percent" || mask === "percentual";
+
+export type PercentInputProps = Omit<MaskInputProps, "value" | "mask"> &
 	Partial<{
 		locale: Locales;
-		name: string;
-		onChangeText: (value: string) => void;
-		onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-		value: string;
-		mask: "percentage";
+		mask: PercentInputMask;
+		value: Value;
 	}>;
 
 export const namedFormatPercent = (locale: Locales) =>
@@ -38,13 +38,13 @@ export const PercentageInput = forwardRef(
 		const [input, setInput] = useState<string>(() => html.value?.toString() ?? "");
 		useImperativeHandle(externalRef, () => ref.current!);
 
-		useEffect(
-			() => setInput(html.value || toPercent(Number.parseFloat(`${html.value ?? "0"}`).toFixed(info.fraction.length), info)),
-			[html.value]
-			);
+		useEffect(() => {
+			const number = Number.parseFloat(`${html.value ?? "0"}`).toFixed(info.fraction.length);
+			setInput(toPercent(number, info));
+		}, [html.value]);
 
-			const info = useMemo(() => {
-				const infos = namedFormatPercent(locale);
+		const info = useMemo(() => {
+			const infos = namedFormatPercent(locale);
 			infos.percentSign = replaceBlankSpace(`${infos.percentSign}`);
 			return infos;
 		}, [locale]);
@@ -63,12 +63,10 @@ export const PercentageInput = forwardRef(
 				const { selectionStart, selectionEnd } = target;
 				const isSelection = selectionStart !== selectionEnd;
 				const cursorIsOnSymbol = valueLength < selectionStart;
-
 				if (!isSelection && cursorIsOnSymbol) {
 					focusNumber();
 				}
 			}
-
 			onKeyUp?.(event);
 		};
 
@@ -79,7 +77,6 @@ export const PercentageInput = forwardRef(
 			e.target.value = `${realValue}`;
 			onChange?.(e);
 		};
-
 
 		useEffect(() => {
 			focusNumber();

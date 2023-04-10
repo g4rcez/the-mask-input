@@ -2,21 +2,18 @@ import React, { InputHTMLAttributes, DetailedHTMLProps } from "react";
 
 type NativeProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
-export type TheMaskInputProps = Omit<NativeProps, "value" | "type" | "defaultValue" | "inputMode" | "autoCapitalize"> &
+export type Value = string | number;
+
+export type MaskInputProps = Omit<NativeProps, "type" | "inputMode" | "autoCapitalize"> &
 	Partial<{
-		as: "input" | React.FC<Omit<TheMaskInputProps, "as">>;
-			currency: CurrencyCode;
-		currencyDisplay: CurrencyDisplay;
-		locale: Locales;
+		as: "input" | React.FC<Omit<MaskInputProps, "as">>;
 		autoCapitalize: AutoCapitalize;
-		defaultValue: string;
 		transform: (value: string) => string;
 		onChangeText: (text: string) => void;
 		inputMode: InputMode;
 		mask: TheMasks;
 		tokens: Tokens;
 		type: InputTypes;
-		value: string;
 	}>;
 
 export type Token = { regex: RegExp; parse?: (v: string) => string };
