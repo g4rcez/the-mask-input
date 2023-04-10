@@ -1,18 +1,17 @@
-import { TheMaskInput } from "./input";
-import { inputMaskedProps, MaskConfig } from "./masks";
+import { TheMaskInput, TheMaskPropsMerge } from "./input";
+import { inputMaskedProps, MaskConfig, Masks } from "./masks";
 import React, { useMemo } from "react";
-import { PercentInputProps } from "./percent-input";
-import { TheMaskInputProps } from "./types";
+import { has } from "./libs";
+import { CurrencyInputProps, CurrencyMaskTypes } from "./currency-input";
+import { PercentInputMask, PercentInputProps } from "./percent-input";
+import { MaskInputProps } from "./types";
 
 export { CurrencyInput, CurrencyInput as MoneyInput } from "./currency-input";
 export { masks, inputMaskedProps } from "./masks";
+export { PercentageInput } from "./percent-input";
 export type { TheMaskPropsMerge as TheMaskProps } from "./input";
-export type { CurrencyInputProps } from "./currency-input";
-import type { CurrencyInputProps } from "./currency-input";
 
 const Component = (mask: MaskConfig) => (props: TheMaskPropsMerge) => <TheMaskInput {...mask} {...(props as any)} />;
-
-const has = <T extends {}>(obj: T, key: keyof T | string): key is keyof T => Object.prototype.hasOwnProperty.call(obj, key);
 
 export const CellTelephone = Component(inputMaskedProps.cellTelephone);
 export const Cellphone = Component(inputMaskedProps.cellphone);
@@ -29,11 +28,21 @@ export const Telephone = Component(inputMaskedProps.telephone);
 export const Time = Component(inputMaskedProps.time);
 export const Uuid = Component(inputMaskedProps.uuid);
 
+<<<<<<< HEAD
 export type TheMaskPropsMerge =
 	| TheMaskInputProps
 	| (TheMaskInputProps & { mask?: TheMaskInputProps["mask"] })
 	| (CurrencyInputProps & { mask?: "money" | "currency" })
 	| (PercentInputProps & { mask?: "percent" });
+=======
+export type TheMaskInputProps = React.ComponentPropsWithRef<"input"> &
+	(
+		| ({ mask: PercentInputMask } & PercentInputProps)
+		| ({ mask: CurrencyMaskTypes } & CurrencyInputProps)
+		| ({ mask: Masks; } & MaskInputProps)
+		| ({ mask?: Masks; } & MaskInputProps)
+	);
+>>>>>>> 9b4e1ca (feat: better types for inputs with mask + allow number|string[] as values)
 
 export const Input = React.forwardRef<HTMLInputElement, TheMaskPropsMerge>(function InternalMaskInput(props, externalRef) {
 	const maskConfig = useMemo(

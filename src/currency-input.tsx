@@ -1,17 +1,18 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "./libs";
-import { CurrencyCode, CurrencyDisplay, Locales, TheMaskInputProps } from "./types";
+import { CurrencyCode, CurrencyDisplay, Locales, MaskInputProps, Value } from "./types";
 
-export declare type CurrencyInputProps = Omit<TheMaskInputProps, "value" | "mask"> &
+export type CurrencyMaskTypes = "money" | "currency";
+
+export const isCurrencyInput = (mask: any): mask is CurrencyMaskTypes => mask === "money" || mask === "currency";
+
+export type CurrencyInputProps = Omit<MaskInputProps, "value" | "mask"> &
 	Partial<{
 		currency: CurrencyCode;
 		currencyDisplay: CurrencyDisplay;
 		locale: Locales;
-		name: string;
-		onChangeText: (value: string) => void;
-		onChange: (e: React.ChangeEvent<HTMLInputElement>, unmasked?: string) => void;
-		value: string;
-		mask: "money" | "currency";
+		mask: CurrencyMaskTypes;
+		value: Value;
 	}>;
 
 export const namedFormatCurrency = (locale: Locales, currency: CurrencyCode, currencyDisplay: CurrencyDisplay) =>
@@ -32,15 +33,19 @@ export const toCurrency = (value: string, props: CurrencyInfo) => {
 };
 
 export const CurrencyInput = forwardRef(
-	({ locale = "pt-BR", currency = "BRL", currencyDisplay = "symbol", mask, onChange, ...html }: CurrencyInputProps, externalRef: React.Ref<HTMLInputElement>) => {
+	(
+		{ locale = "pt-BR", currency = "BRL", currencyDisplay = "symbol", mask, onChange, ...html }: CurrencyInputProps,
+		externalRef: React.Ref<HTMLInputElement>
+	) => {
 		const ref = useRef<HTMLInputElement>(null);
-		const [input, setInput] = useState<string>(() => html.value?.toString() ?? "");
+		const [input, setInput] = useState<Value>(() => html.value?.toString() ?? "");
 		useImperativeHandle(externalRef, () => ref.current!);
 
-		useEffect(
-			() => setInput(html.value === "" ? "" : toCurrency(Number.parseFloat(`${html.value ?? "0"}`).toFixed(info.fraction.length), info)),
-			[html.value]
-		);
+		useEffect(() => {
+			if (html.value === "") return void setInput("");
+			const number = Number.parseFloat(`${html.value ?? "0"}`).toFixed(info.fraction.length);
+			return void setInput(toCurrency(number, info));
+		}, [html.value]);
 
 		const info = useMemo(() => {
 			const infos = namedFormatCurrency(locale, currency, currencyDisplay);
