@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, DetailedHTMLProps } from "react";
+import type { InputHTMLAttributes, DetailedHTMLProps, FC } from "react";
 
 type NativeProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
@@ -6,7 +6,8 @@ export type Value = string | number;
 
 export type MaskInputProps = Omit<NativeProps, "type" | "inputMode" | "autoCapitalize"> &
 	Partial<{
-		as: "input" | React.FC<Omit<MaskInputProps, "as">>;
+		strict?: boolean;
+		as: "input" | FC<Omit<MaskInputProps, "as">>;
 		autoCapitalize: AutoCapitalize;
 		transform: (value: string) => string;
 		onChangeText: (text: string) => void;
@@ -16,7 +17,7 @@ export type MaskInputProps = Omit<NativeProps, "type" | "inputMode" | "autoCapit
 		type: InputTypes;
 	}>;
 
-export type Token = { regex: RegExp; parse?: (v: string) => string };
+export type Token = { regex: RegExp; parse?: (v: string) => string; escape?: boolean };
 
 export type AutoCapitalize = "off" | "none" | "on" | "sentences" | "words" | "characters";
 

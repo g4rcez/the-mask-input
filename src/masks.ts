@@ -1,12 +1,13 @@
 import { TheMasks, Tokens } from "./types";
+import { createPattern } from "./libs";
 
 export const originalTokens: Tokens = {
-	H: { regex: /[a-fA-F0-9]/ },
-	d: { regex: /\d/ },
-	X: { regex: /[0-9a-zA-Z]/ },
-	x: { regex: /[a-zA-Z]/ },
 	A: { regex: /[a-zA-Z]/, parse: (v: string) => v.toLocaleUpperCase() },
-	a: { regex: /[a-zA-Z]/, parse: (v: string) => v.toLocaleLowerCase() }
+	H: { regex: /[a-fA-F0-9]/ },
+	X: { regex: /[0-9a-zA-Z]/ },
+	a: { regex: /[a-zA-Z]/, parse: (v: string) => v.toLocaleLowerCase() },
+	d: { regex: /\d/, escape: true },
+	x: { regex: /[a-zA-Z]/ }
 };
 
 export type Masks =
@@ -63,11 +64,19 @@ export const masks: Record<Masks, TheMasks> = {
 	int: (s) => (digit.test(s.slice(-1)) ? "d".repeat(Math.max(s.length, 0)) : "d".repeat(Math.max(s.length - 1, 0)))
 };
 
-export type MaskConfig = { pattern?: string; inputMode: InputMode; mask: TheMasks; transform?: (s: string) => string };
+export type MaskConfig = {
+	pattern?: string;
+	inputMode: InputMode;
+	mask: TheMasks;
+	transform?: (s: string) => string;
+	strict: boolean;
+};
 
 const mask = (mask: TheMasks, inputMode: InputMode, props: Pick<MaskConfig, "transform" | "pattern"> = {}): MaskConfig => ({
 	mask,
 	inputMode,
+	strict: true,
+	pattern: props.pattern ?? typeof mask === "function" ? undefined : createPattern(mask, "", true),
 	...props
 });
 
@@ -76,7 +85,7 @@ export const inputMaskedProps: Record<Masks, MaskConfig> = {
 	cellphone: mask(masks.cellphone, "tel"),
 	cep: mask(masks.cep, "decimal"),
 	cnpj: mask(masks.cnpj, "decimal"),
-	color: mask(masks.color, "decimal", { pattern: "#[a-fA-F0-9]{3}([a-fA-F0-9]{3})" }),
+	color: mask(masks.color, "decimal", { pattern: "#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?" }),
 	cpf: mask(masks.cpf, "decimal"),
 	cpfCnpj: mask(masks.cpfCnpj, "decimal", { transform: numbers }),
 	creditCard: mask(masks.creditCard, "decimal"),
@@ -84,6 +93,6 @@ export const inputMaskedProps: Record<Masks, MaskConfig> = {
 	int: mask(masks.int, "decimal", { pattern: "[0-9]+" }),
 	isoDate: mask(masks.isoDate, "decimal"),
 	telephone: mask(masks.telephone, "tel"),
-	time: mask(masks.time, "decimal", { pattern: "[0-9][0-9]:[0-9][0-9]" }),
-	uuid: mask(masks.uuid, "decimal")
+	time: mask(masks.time, "decimal", { pattern: "[0-9]{2}:[0-9]{2}" }),
+	uuid: mask(masks.uuid, "decimal", { pattern: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" })
 };
