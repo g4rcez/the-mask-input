@@ -13,6 +13,10 @@ export type { TheMaskPropsMerge as TheMaskProps } from "./input";
 
 const Component = (mask: MaskConfig) => (props: TheMaskPropsMerge) => <TheMaskInput {...mask} {...(props as any)} />;
 
+type LooseString<T extends string> = T | Omit<string, T>;
+
+type AllMasks = LooseString<Masks> | string | Array<string | RegExp>;
+
 export const CellTelephone = Component(inputMaskedProps.cellTelephone);
 export const Cellphone = Component(inputMaskedProps.cellphone);
 export const Cep = Component(inputMaskedProps.cep);
@@ -31,8 +35,8 @@ export type TheMaskInputProps = React.ComponentPropsWithRef<"input"> &
 	(
 		| ({ mask: PercentInputMask } & PercentInputProps)
 		| ({ mask: CurrencyMaskTypes } & CurrencyInputProps)
-		| ({ mask: Masks } & MaskInputProps)
-		| ({ mask?: Masks } & MaskInputProps)
+		| ({ mask: AllMasks } & MaskInputProps)
+		| ({ mask?: AllMasks } & MaskInputProps)
 	);
 
 export const Input = React.forwardRef<HTMLInputElement, TheMaskInputProps>(function InternalMaskInput(props, externalRef) {
