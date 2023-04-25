@@ -6,7 +6,7 @@ const StyledInput = (props: TheMaskInputProps) =>
 	(
 		<fieldset className="flex flex-col gap-2">
 			<label className="text-slate-600 uppercase text-xs">{props.placeholder}</label>
-			<Input {...props} className="p-1 border border-slate-300 text-slate-600 antialiased rounded" />
+			<Input {...props} required className="p-1 border border-slate-300 text-slate-600 antialiased rounded" />
 		</fieldset>
 	) as any;
 
