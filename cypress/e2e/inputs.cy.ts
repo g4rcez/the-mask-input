@@ -1,5 +1,5 @@
 describe("Test all masked inputs", () => {
-	beforeEach(() => {
+	before(() => {
 		cy.visit("http://localhost:5173");
 	});
 
@@ -75,6 +75,11 @@ describe("Test all masked inputs", () => {
 
 	it("test cnpj", () => {
 		test("cnpj", "00000000000000", "00.000.000/0000-00");
+	});
+
+	it("test cpfCnpj", () => {
+		test("cpfCnpj", "11111111100", "111.111.111-00");
+		test("cpfCnpj", "00000000000000", "00.000.000/0000-00");
 	});
 
 	it("Should submit without errors", () => {
