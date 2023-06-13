@@ -81,6 +81,7 @@ const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 			event.target.value = masked;
 			onChange?.(event);
 		};
+
 		return <Component {...props} pattern={patternMemo} defaultValue={undefined} onChange={changeMask} value={stateValue} ref={internalRef} />;
 	}
 );

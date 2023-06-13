@@ -40,11 +40,14 @@ export type TheMaskInputProps = React.ComponentPropsWithRef<"input"> &
 	);
 
 export const Input = React.forwardRef<HTMLInputElement, TheMaskInputProps>(function InternalMaskInput(props, externalRef) {
-	const maskConfig = useMemo(
-		() => (typeof props.mask === "string" && has(inputMaskedProps, props.mask) ? inputMaskedProps[props.mask] : { mask: props.mask }),
-		[props.mask]
-	);
-	return <TheMaskInput {...props} ref={externalRef} {...maskConfig} />;
+	const maskConfig = useMemo(() => {
+		if (!props.mask) return undefined;
+		if (typeof props.mask === "string" && has(inputMaskedProps, props.mask)) {
+			return inputMaskedProps[props.mask];
+		}
+		return { mask: props.mask };
+	}, [props.mask]);
+	return <TheMaskInput {...props} {...maskConfig} ref={externalRef} />;
 });
 
 export default Input;
