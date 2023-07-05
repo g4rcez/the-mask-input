@@ -1,21 +1,26 @@
-import { TheMaskInput, TheMaskPropsMerge } from "./input";
+import { MaskInput, TheMaskInput, TheMaskPropsMerge } from "./input";
 import { inputMaskedProps, MaskConfig, Masks } from "./masks";
 import React, { useMemo } from "react";
 import { has } from "./libs";
-import { CurrencyInputProps, CurrencyMaskTypes } from "./currency-input";
-import { PercentInputMask, PercentInputProps } from "./percent-input";
-import { MaskInputProps } from "./types";
+import { CurrencyInput, CurrencyInputProps, CurrencyMaskTypes, isCurrencyInput } from "./currency-input";
+import { isPercentageInput, PercentageInput, PercentInputMask, PercentInputProps } from "./percent-input";
+import { HtmlInputProps, MaskInputProps } from "./types";
 
-export { CurrencyInput, CurrencyInput as MoneyInput } from "./currency-input";
-export { masks, inputMaskedProps } from "./masks";
-export { PercentageInput } from "./percent-input";
+export type { CurrencyInputProps, CurrencyMaskTypes } from "./currency-input";
+export type { PercentInputProps, PercentInputMask } from "./percent-input";
 export type { TheMaskPropsMerge as TheMaskProps } from "./input";
+export { CurrencyInput, CurrencyInput as MoneyInput } from "./currency-input";
+export { PercentageInput } from "./percent-input";
+export { masks, inputMaskedProps } from "./masks";
+export { HtmlInputProps, Locales, CurrencyCode, CurrencyDisplay, AutoCapitalize, InputMode, InputTypes } from "./types";
 
 const Component = (mask: MaskConfig) => (props: TheMaskPropsMerge) => <TheMaskInput {...mask} {...(props as any)} />;
 
 type LooseString<T extends string> = T | Omit<string, T>;
 
-type AllMasks = LooseString<Masks> | string | Array<string | RegExp>;
+export type AllMasks = LooseString<Masks>;
+
+type ArrayMask = Array<string | RegExp> | ((p: string) => Array<string | RegExp> | AllMasks);
 
 export const CellTelephone = Component(inputMaskedProps.cellTelephone);
 export const Cellphone = Component(inputMaskedProps.cellphone);
@@ -31,20 +36,35 @@ export const IsoDate = Component(inputMaskedProps.isoDate);
 export const Telephone = Component(inputMaskedProps.telephone);
 export const Time = Component(inputMaskedProps.time);
 export const Uuid = Component(inputMaskedProps.uuid);
-export type TheMaskInputProps = React.ComponentPropsWithRef<"input"> &
+
+export type TheMaskInputProps = HtmlInputProps &
 	(
 		| ({ mask: PercentInputMask } & PercentInputProps)
 		| ({ mask: CurrencyMaskTypes } & CurrencyInputProps)
-		| ({ mask: AllMasks } & MaskInputProps)
-		| ({ mask?: AllMasks } & MaskInputProps)
+		| ({ mask: AllMasks } & Omit<MaskInputProps, "mask">)
+		| ({ mask: ArrayMask } & Omit<MaskInputProps, "mask">)
+		| ({ mask?: AllMasks } & Omit<MaskInputProps, "mask">)
 	);
 
-export const Input = React.forwardRef<HTMLInputElement, TheMaskInputProps>(function InternalMaskInput(props, externalRef) {
-	const maskConfig = useMemo(
-		() => (typeof props.mask === "string" && has(inputMaskedProps, props.mask) ? inputMaskedProps[props.mask] : { mask: props.mask }),
-		[props.mask]
-	);
-	return <TheMaskInput {...props} ref={externalRef} {...maskConfig} />;
-});
+export const Input: (props: TheMaskInputProps) => JSX.Element = React.forwardRef<HTMLInputElement, TheMaskInputProps>(function InternalMaskInput(
+	props,
+	externalRef
+) {
+	const maskConfig = useMemo(() => {
+		if (!props.mask) return undefined;
+		if (typeof props.mask === "string" && has(inputMaskedProps, props.mask)) {
+			return inputMaskedProps[props.mask];
+		}
+		return { mask: props.mask };
+	}, [props.mask]);
+	const allProps = { ...props, ...maskConfig };
+	if (isCurrencyInput(props.mask)) {
+		return <CurrencyInput {...(allProps as CurrencyInputProps)} mask="currency" ref={externalRef} />;
+	}
+	if (isPercentageInput(props.mask)) {
+		return <PercentageInput {...(allProps as PercentInputProps)} mask="percentual" ref={externalRef} />;
+	}
+	return <MaskInput {...(allProps as MaskInputProps)} ref={externalRef} />;
+}) as never;
 
 export default Input;

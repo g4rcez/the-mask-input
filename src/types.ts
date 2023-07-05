@@ -4,17 +4,21 @@ type NativeProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTML
 
 export type Value = string | number;
 
-export type MaskInputProps = Omit<NativeProps, "type" | "inputMode" | "autoCapitalize"> &
+export type HtmlInputProps = Omit<NativeProps, "type" | "inputMode" | "autoCapitalize"> &
+	Partial<{
+		autoCapitalize: AutoCapitalize;
+		inputMode: InputMode;
+		type: InputTypes;
+	}>;
+
+export type MaskInputProps = HtmlInputProps &
 	Partial<{
 		strict?: boolean;
 		as: "input" | FC<Omit<MaskInputProps, "as">>;
-		autoCapitalize: AutoCapitalize;
 		transform: (value: string) => string;
 		onChangeText: (text: string) => void;
-		inputMode: InputMode;
 		mask: TheMasks;
 		tokens: Tokens;
-		type: InputTypes;
 	}>;
 
 export type Token = { regex: RegExp; parse?: (v: string) => string; escape?: boolean };

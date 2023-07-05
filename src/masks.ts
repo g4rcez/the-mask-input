@@ -1,5 +1,27 @@
-import { TheMasks, Tokens } from "./types";
-import { createPattern } from "./libs";
+import { Mask, TheMasks, Tokens } from "./types";
+
+const stringPattern = (result: string) => {
+	const len = result.length;
+	const mask = [];
+	for (let i = 0; i < len; i++) {
+		const char = result[i];
+		const token = originalTokens[char];
+		if (token === undefined) mask.push(char.replace(/\./g, "\\.").replace(/\(/g, "\\(").replace(/\)/g, "\\)"));
+		else mask.push(token.regex?.source);
+	}
+	return mask.join("").replace(/\\\\/g, "\\");
+};
+
+export const createPattern = (mask: TheMasks, value: string, strict: boolean) => {
+	const maskIsFunction = typeof mask === "function";
+	let result: string | Mask[] = maskIsFunction ? "" : mask;
+	if (maskIsFunction) {
+		result = mask(value);
+	}
+	if (typeof result !== "string") return "";
+	const pattern = stringPattern(result);
+	return strict ? `^${pattern}$` : pattern;
+};
 
 export const originalTokens: Tokens = {
 	A: { regex: /[a-zA-Z]/, parse: (v: string) => v.toLocaleUpperCase() },

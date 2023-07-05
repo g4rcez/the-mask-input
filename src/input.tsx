@@ -1,9 +1,8 @@
 import React, { ChangeEvent, forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { Mask, MaskInputProps, Token, Tokens } from "./types";
-import { originalTokens } from "./masks";
+import { createPattern, originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps, isCurrencyInput } from "./currency-input";
 import { isPercentageInput, PercentageInput, PercentInputProps } from "./percent-input";
-import { createPattern } from "./libs";
 
 function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string) => string, tokens: Tokens = originalTokens) {
 	const value = transform(v);
@@ -30,7 +29,7 @@ function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string
 
 const noop = (s: string) => s;
 
-const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
+export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 	({ onChange, strict = true, transform, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
 		const Component = as ?? "input";
 		const internalRef = useRef<HTMLInputElement>(null);
@@ -81,6 +80,7 @@ const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 			event.target.value = masked;
 			onChange?.(event);
 		};
+
 		return <Component {...props} pattern={patternMemo} defaultValue={undefined} onChange={changeMask} value={stateValue} ref={internalRef} />;
 	}
 );

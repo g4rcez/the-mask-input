@@ -1,5 +1,5 @@
-import { ChangeEvent, useState } from "react";
-import { Input, TheMaskInputProps } from "../../src";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { Input, TheMaskInputProps } from "the-mask-input";
 import { Value } from "../../src/types";
 
 const StyledInput = (props: TheMaskInputProps) =>
@@ -9,6 +9,8 @@ const StyledInput = (props: TheMaskInputProps) =>
 			<Input {...props} required className="p-1 border border-slate-300 text-slate-600 antialiased rounded" />
 		</fieldset>
 	) as any;
+
+const A = <Input mask=""  />
 
 export const Controlled = () => {
 	const [value, setValue] = useState("");
@@ -32,8 +34,24 @@ export const Controlled = () => {
 };
 
 export const InputsWithDefault = () => {
+	const ref = useRef<HTMLFormElement>(null);
+	useEffect(() => {
+		if (ref.current === null) return;
+		const observer = new MutationObserver(console.log);
+		observer.observe(ref.current, {
+			subtree: true,
+			childList: true,
+			attributeOldValue: true,
+			characterData: true,
+			attributes: true
+		});
+		console.log("observing");
+		return () => {
+			observer.disconnect();
+		};
+	}, []);
 	return (
-		<form className="flex gap-6 flex-wrap items-end" onSubmit={(e) => e.preventDefault()}>
+		<form ref={ref} className="flex gap-6 flex-wrap items-end" onSubmit={(e) => e.preventDefault()}>
 			<StyledInput mask="percent" locale="pt-BR" name="default-percent" placeholder="percent" />
 			<StyledInput mask="cellTelephone" name="default-cellTelephone" placeholder="cellTelephone" />
 			<StyledInput mask="cellphone" name="default-cellphone" placeholder="cellphone" />
