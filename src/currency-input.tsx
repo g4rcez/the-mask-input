@@ -1,12 +1,12 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "./libs";
-import { CurrencyCode, CurrencyDisplay, Locales, MaskInputProps, Value } from "./types";
+import { CurrencyCode, CurrencyDisplay, HtmlInputProps, Locales, Value } from "./types";
 
 export type CurrencyMaskTypes = "money" | "currency";
 
 export const isCurrencyInput = (mask: any): mask is CurrencyMaskTypes => mask === "money" || mask === "currency";
 
-export type CurrencyInputProps = Omit<MaskInputProps, "value" | "mask"> &
+export type CurrencyInputProps = Omit<HtmlInputProps, "value"> &
 	Partial<{
 		currency: CurrencyCode;
 		currencyDisplay: CurrencyDisplay;

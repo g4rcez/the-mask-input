@@ -30,7 +30,7 @@ function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string
 
 const noop = (s: string) => s;
 
-const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
+export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 	({ onChange, strict = true, transform, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
 		const Component = as ?? "input";
 		const internalRef = useRef<HTMLInputElement>(null);

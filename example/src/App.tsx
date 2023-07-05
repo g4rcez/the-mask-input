@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Input, TheMaskInputProps } from "../../src";
+import { Input, TheMaskInputProps } from "the-mask-input";
 import { Value } from "../../src/types";
 
 const StyledInput = (props: TheMaskInputProps) =>
@@ -9,6 +9,8 @@ const StyledInput = (props: TheMaskInputProps) =>
 			<Input {...props} required className="p-1 border border-slate-300 text-slate-600 antialiased rounded" />
 		</fieldset>
 	) as any;
+
+const A = <Input mask=""  />
 
 export const Controlled = () => {
 	const [value, setValue] = useState("");
