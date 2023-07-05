@@ -1,9 +1,8 @@
 import React, { ChangeEvent, forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { Mask, MaskInputProps, Token, Tokens } from "./types";
-import { originalTokens } from "./masks";
+import { createPattern, originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps, isCurrencyInput } from "./currency-input";
 import { isPercentageInput, PercentageInput, PercentInputProps } from "./percent-input";
-import { createPattern } from "./libs";
 
 function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string) => string, tokens: Tokens = originalTokens) {
 	const value = transform(v);
