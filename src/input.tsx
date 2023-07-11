@@ -54,7 +54,7 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 			if (mask === undefined) return undefined;
 			if (typeof stateValue === "string") return createPattern(mask, stateValue, strict);
 			return undefined;
-		}, [pattern, stateValue, strict]);
+		}, [pattern, stateValue, strict, mask]);
 
 		const changeMask = (event: ChangeEvent<HTMLInputElement>) => {
 			const value = event.target.value;
