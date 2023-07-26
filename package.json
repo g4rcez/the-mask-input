@@ -19,6 +19,7 @@
 		"build": "rollup -c --bundleConfigAsCjs",
 		"cypress": "cypress open",
 		"test": "cypress run",
+		"test:unit": "vitest run",
 		"dev": "rollup -c --watch --bundleConfigAsCjs",
 		"prepare": "pnpm build",
 		"format": "prettier --write \"{.,src/**}/*.{js,jsx,ts,tsx}\""

@@ -1,15 +1,24 @@
 import { Mask, TheMasks, Tokens } from "./types";
 
+const regex = {
+	dots: /\./g,
+	openParenthesis: /\(/g,
+	closeParenthesis: /\)/g,
+	leadingBars: /\\\\/g,
+	escape: /[.*+?^${}()|[\]\\]/g
+};
+
 const stringPattern = (result: string) => {
 	const len = result.length;
 	const mask = [];
 	for (let i = 0; i < len; i++) {
 		const char = result[i];
 		const token = originalTokens[char];
-		if (token === undefined) mask.push(char.replace(/\./g, "\\.").replace(/\(/g, "\\(").replace(/\)/g, "\\)"));
+		if (token === undefined)
+			mask.push(char.replace(regex.dots, "\\.").replace(regex.openParenthesis, "\\(").replace(regex.closeParenthesis, "\\)"));
 		else mask.push(token.regex?.source);
 	}
-	return mask.join("").replace(/\\\\/g, "\\");
+	return mask.join("").replace(regex.leadingBars, "\\");
 };
 
 export const createPattern = (mask: TheMasks, value: string, strict: boolean) => {
@@ -21,6 +30,13 @@ export const createPattern = (mask: TheMasks, value: string, strict: boolean) =>
 	if (typeof result !== "string") return "";
 	const pattern = stringPattern(result);
 	return strict ? `^${pattern}$` : pattern;
+};
+
+const escape = (string: string) => string.replace(regex.escape, "\\$&");
+
+export const createPatternRegexMask = (array: Array<string | RegExp>, strict: boolean) => {
+	const mask = array.map((x) => (typeof x === "string" ? escape(x) : x.source)).join("");
+	return new RegExp(strict ? `^${mask}$` : mask).source;
 };
 
 export const originalTokens: Tokens = {

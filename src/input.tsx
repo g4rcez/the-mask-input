@@ -1,6 +1,6 @@
 import React, { ChangeEvent, forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { Mask, MaskInputProps, Token, Tokens } from "./types";
-import { createPattern, originalTokens } from "./masks";
+import { createPattern, createPatternRegexMask, originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps, isCurrencyInput } from "./currency-input";
 import { isPercentageInput, PercentageInput, PercentInputProps } from "./percent-input";
 
@@ -52,7 +52,12 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 		const patternMemo = useMemo(() => {
 			if (pattern) return pattern;
 			if (mask === undefined) return undefined;
-			if (typeof stateValue === "string") return createPattern(mask, stateValue, strict);
+			if (typeof stateValue === "string") return;
+			if (Array.isArray(mask)) return createPatternRegexMask(mask, strict);
+			if (typeof mask === "function") {
+				const resultMask = mask(stateValue as unknown as string);
+				return Array.isArray(resultMask) ? createPatternRegexMask(resultMask, strict) : createPattern(mask, resultMask, strict);
+			}
 			return undefined;
 		}, [pattern, stateValue, strict, mask]);
 
