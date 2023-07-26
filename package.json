@@ -1,7 +1,7 @@
 {
 	"name": "the-mask-input",
 	"sideEffects": false,
-	"version": "3.1.8",
+	"version": "3.2.0",
 	"description": "A simple way to create inputs with masked values. Works like `<input />`, but apply mask for your values.",
 	"author": "g4rcez",
 	"readme": "./README.md",
