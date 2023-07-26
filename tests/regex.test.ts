@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { inputMaskedProps } from "../src/masks";
+import { inputMaskedProps } from "../src";
 
 describe("Should test regex", () => {
 	const t = <T extends keyof typeof inputMaskedProps>(key: T, title: string, value: string, result: boolean) => {
