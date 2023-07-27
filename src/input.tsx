@@ -52,7 +52,7 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 		const patternMemo = useMemo(() => {
 			if (pattern) return pattern;
 			if (mask === undefined) return undefined;
-			if (typeof stateValue === "string") return;
+			if (typeof stateValue === "string") return createPattern(mask, stateValue, strict);
 			if (Array.isArray(mask)) return createPatternRegexMask(mask, strict);
 			if (typeof mask === "function") {
 				const resultMask = mask(stateValue as unknown as string);
