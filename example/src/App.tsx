@@ -1,16 +1,14 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Input, TheMaskInputProps } from "the-mask-input";
-import { Value } from "../../src/types";
+import { Input, TheMaskInputProps } from "../../src";
 
-const StyledInput = (props: TheMaskInputProps) =>
-	(
-		<fieldset className="flex flex-col gap-2">
-			<label className="text-slate-600 uppercase text-xs">{props.placeholder}</label>
-			<Input {...props} required className="p-1 border border-slate-300 text-slate-600 antialiased rounded" />
-		</fieldset>
-	) as any;
+type Value = string | number;
 
-const A = <Input mask=""  />
+const StyledInput = (props: TheMaskInputProps) => (
+	<fieldset className="flex flex-col gap-2">
+		<label className="text-slate-600 uppercase text-xs">{props.placeholder}</label>
+		<Input {...props} required className="p-1 border border-slate-300 text-slate-600 antialiased rounded" />
+	</fieldset>
+);
 
 export const Controlled = () => {
 	const [value, setValue] = useState("");
@@ -68,6 +66,7 @@ export const InputsWithDefault = () => {
 			<StyledInput mask="telephone" name="default-telephone" placeholder="telephone" />
 			<StyledInput mask="time" name="default-time" placeholder="time" />
 			<StyledInput mask="uuid" name="default-uuid" placeholder="uuid" />
+			<StyledInput mask={[/\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]} name="default-expiresIn" placeholder="expiresIn" />
 			<button className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="submit">
 				Test masks
 			</button>
@@ -88,7 +87,13 @@ export default function App() {
 			<Controlled />
 			<InputsWithDefault />
 			{show && <span id="test">Success</span>}
-			<form className="flex gap-6 flex-wrap items-end" onSubmit={(e) => void (e.preventDefault(), setShow(true))}>
+			<form
+				className="flex gap-6 flex-wrap items-end"
+				onSubmit={(e) => {
+					e.preventDefault();
+					setShow(true);
+				}}
+			>
 				<StyledInput value={state.int} onChange={onChange} mask="int" name="int" type="number" placeholder="Integer" />
 				<StyledInput value={state.percent} onChange={onChange} mask="percent" name="percent" placeholder="percent" />
 				<StyledInput value={state.cellTelephone} onChange={onChange} mask="cellTelephone" name="cellTelephone" placeholder="cellTelephone" />
@@ -125,6 +130,13 @@ export default function App() {
 				<StyledInput value={state.telephone} onChange={onChange} mask="telephone" name="telephone" placeholder="telephone" />
 				<StyledInput value={state.time} onChange={onChange} mask="time" name="time" placeholder="time" />
 				<StyledInput value={state.uuid} onChange={onChange} mask="uuid" name="uuid" placeholder="uuid" />
+				<StyledInput
+					value={state.expiresIn}
+					onChange={onChange}
+					mask={[/\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]}
+					name="expiresIn"
+					placeholder="expiresIn"
+				/>
 				<Input />
 				<button id="submit" className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="submit">
 					Test pattern
