@@ -23,4 +23,10 @@ describe("Should create HTML pattern", () => {
 		const pattern = createPatternRegexMask(mask, false);
 		expect(pattern).toBe("\\d\\d\\d\\.\\d\\d\\d\\.\\d\\d\\d-\\d\\d");
 	});
+
+	test("Should create credit card ", () => {
+		const mask = [/\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/, " ", /\d/, /\d/, /\d/, /\d/];
+		const pattern = createPatternRegexMask(mask, false);
+		expect(pattern).toBe("\\d\\d\\d\\d \\d\\d\\d\\d \\d\\d\\d\\d \\d\\d\\d\\d");
+	});
 });

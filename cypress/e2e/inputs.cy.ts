@@ -82,6 +82,10 @@ describe("Test all masked inputs", () => {
 		test("cpfCnpj", "00000000000000", "00.000.000/0000-00");
 	});
 
+	it("test expiresIn", () => {
+		test("expiresIn", "122077", "12/2077");
+	});
+
 	it("Should submit without errors", () => {
 		cy.get("button#submit").click().wait(1000);
 		cy.get("#test").should("exist");

@@ -50,15 +50,13 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 		}, [props.value, mask, transform, props.defaultValue]);
 
 		const patternMemo = useMemo(() => {
-			if (pattern) return pattern;
-			if (mask === undefined) return undefined;
+			if (pattern || mask === undefined) return pattern;
 			if (typeof stateValue === "string") return createPattern(mask, stateValue, strict);
-			if (Array.isArray(mask)) return createPatternRegexMask(mask, strict);
 			if (typeof mask === "function") {
 				const resultMask = mask(stateValue as unknown as string);
 				return Array.isArray(resultMask) ? createPatternRegexMask(resultMask, strict) : createPattern(mask, resultMask, strict);
 			}
-			return undefined;
+			return Array.isArray(mask) ? createPatternRegexMask(mask, strict) : undefined;
 		}, [pattern, stateValue, strict, mask]);
 
 		const changeMask = (event: ChangeEvent<HTMLInputElement>) => {

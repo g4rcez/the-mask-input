@@ -27,7 +27,7 @@ export const createPattern = (mask: TheMasks, value: string, strict: boolean) =>
 	if (maskIsFunction) {
 		result = mask(value);
 	}
-	if (typeof result !== "string") return "";
+	if (Array.isArray(result)) return createPatternRegexMask(result, strict);
 	const pattern = stringPattern(result);
 	return strict ? `^${pattern}$` : pattern;
 };
