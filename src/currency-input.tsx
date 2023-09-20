@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import React, { forwardRef, useImperativeHandle, useMemo, useRef } from "react";
 import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "./libs";
 import { CurrencyCode, CurrencyDisplay, HtmlInputProps, Locales, Value } from "./types";
 
@@ -34,18 +34,11 @@ export const toCurrency = (value: string, props: CurrencyInfo) => {
 
 export const CurrencyInput = forwardRef(
 	(
-		{ locale = "pt-BR", currency = "BRL", currencyDisplay = "symbol", mask, onChange, ...html }: CurrencyInputProps,
+		{ locale = "pt-BR", currency = "BRL", currencyDisplay = "symbol", mask, onChange, ...props }: CurrencyInputProps,
 		externalRef: React.Ref<HTMLInputElement>
 	) => {
 		const ref = useRef<HTMLInputElement>(null);
-		const [input, setInput] = useState<Value>(() => html.value?.toString() ?? "");
 		useImperativeHandle(externalRef, () => ref.current!);
-
-		useEffect(() => {
-			if (html.value === "") return void setInput("");
-			const number = Number.parseFloat(`${html.value ?? "0"}`).toFixed(info.fraction.length);
-			return void setInput(toCurrency(number, info));
-		}, [html.value]);
 
 		const info = useMemo(() => {
 			const infos = namedFormatCurrency(locale, currency, currencyDisplay);
@@ -57,15 +50,13 @@ export const CurrencyInput = forwardRef(
 		const change = (e: React.ChangeEvent<HTMLInputElement>) => {
 			const money = toCurrency(e.target.value, info);
 			const realValue = valueToFloat(money);
-			const cursor = e.target.selectionStart ?? 0;
-			setInput(money);
-			e.target.value = `${realValue}`;
+			e.target.value = money;
+			e.target.setAttribute("data-number", realValue.toString());
 			onChange?.(e);
-			if (realValue !== 0) {
-				ref.current!.selectionEnd = cursor + 1;
-			}
+			if (realValue !== 0) ref.current!.selectionEnd = money.length;
 		};
 
-		return <input {...html} value={input} type="text" ref={ref} onChange={change} inputMode="decimal" />;
+		const defaultValue = props.defaultValue ? toCurrency(props.defaultValue as string, info) : undefined;
+		return <input {...props} defaultValue={defaultValue} type="text" ref={ref} onChange={change} inputMode="decimal" />;
 	}
 );

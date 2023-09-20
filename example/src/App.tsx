@@ -60,13 +60,16 @@ export const InputsWithDefault = () => {
 			<StyledInput defaultValue="02134567892" mask="cpf" name="default-cpf" placeholder="cpf" />
 			<StyledInput mask="creditCard" name="default-creditCard" placeholder="creditCard" />
 			<StyledInput mask="date" name="default-date" placeholder="date" />
-			<StyledInput mask="int" name="default-int" placeholder="int" />
+			<StyledInput autoFocus mask="int" name="default-int" placeholder="int" />
 			<StyledInput mask="isoDate" name="default-isoDate" placeholder="isoDate" />
-			<StyledInput mask="money" name="default-money" placeholder="money" />
+			<StyledInput defaultValue="5000" mask="money" name="default-money" placeholder="money" />
 			<StyledInput mask="telephone" name="default-telephone" placeholder="telephone" />
 			<StyledInput mask="time" name="default-time" placeholder="time" />
 			<StyledInput mask="uuid" name="default-uuid" placeholder="uuid" />
 			<StyledInput mask={[/\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]} name="default-expiresIn" placeholder="expiresIn" />
+			<button className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="reset">
+				Reset
+			</button>
 			<button className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="submit">
 				Test masks
 			</button>
@@ -137,7 +140,10 @@ export default function App() {
 					name="expiresIn"
 					placeholder="expiresIn"
 				/>
-				<Input />
+				<Input  />
+				<button id="submit" className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="reset">
+					Reset
+				</button>
 				<button id="submit" className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="submit">
 					Test pattern
 				</button>

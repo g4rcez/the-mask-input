@@ -46,7 +46,7 @@ export type TheMaskInputProps = HtmlInputProps &
 		| ({ mask?: AllMasks } & Omit<MaskInputProps, "mask">)
 	);
 
-export const Input: (props: TheMaskInputProps) => JSX.Element = React.forwardRef<HTMLInputElement, TheMaskInputProps>(function InternalMaskInput(
+export const Input: (props: TheMaskInputProps) => React.ReactElement = React.forwardRef<HTMLInputElement, TheMaskInputProps>(function InternalMaskInput(
 	props,
 	externalRef
 ) {

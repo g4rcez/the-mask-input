@@ -33,15 +33,15 @@ export const toPercent = (value: string, props: PercentageInfo) => {
 };
 
 export const PercentageInput = forwardRef(
-	({ locale = "pt-BR", mask, onChange, onKeyUp, ...html }: PercentInputProps, externalRef: React.Ref<HTMLInputElement>) => {
+	({ locale = "pt-BR", mask, onChange, onKeyUp, ...props }: PercentInputProps, externalRef: React.Ref<HTMLInputElement>) => {
 		const ref = useRef<HTMLInputElement>(null);
-		const [input, setInput] = useState<string>(() => html.value?.toString() ?? "");
+		const [input, setInput] = useState<string>(() => props.value?.toString() ?? "");
 		useImperativeHandle(externalRef, () => ref.current!);
 
 		useEffect(() => {
-			const number = Number.parseFloat(`${html.value ?? "0"}`).toFixed(info.fraction.length);
+			const number = Number.parseFloat(`${props.value ?? "0"}`).toFixed(info.fraction.length);
 			setInput(toPercent(number, info));
-		}, [html.value]);
+		}, [props.value]);
 
 		const info = useMemo(() => {
 			const infos = namedFormatPercent(locale);
@@ -51,10 +51,11 @@ export const PercentageInput = forwardRef(
 
 		const valueLength = input.length - info.percentSign.length - CHAR_BETWEEN_VALUE_AND_SYMBOL;
 
-		const focusNumber = () => {
+		const focusNumber = (e?: React.FocusEvent<HTMLInputElement>) => {
 			const inputElement = ref.current;
 			if (!inputElement) return;
 			inputElement.setSelectionRange(valueLength, valueLength);
+			if (e) props.onFocus?.(e);
 		};
 
 		const keyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -74,14 +75,26 @@ export const PercentageInput = forwardRef(
 			const percent = toPercent(e.target.value, info);
 			const realValue = valueToFloat(percent);
 			setInput(percent);
-			e.target.value = `${realValue}`;
+			e.target.value = percent;
+			e.target.setAttribute("data-number", realValue.toString());
 			onChange?.(e);
 		};
 
-		useEffect(() => {
-			focusNumber();
-		}, [input]);
+		useEffect(() => focusNumber(), [input]);
 
-		return <input {...html} value={input} type="text" ref={ref} onChange={change} onFocus={focusNumber} onKeyUp={keyUp} inputMode="decimal" />;
+		const defaultValue = props.defaultValue ? toPercent(props.defaultValue as string, info) : undefined;
+
+		return (
+			<input
+				{...props}
+				defaultValue={defaultValue}
+				inputMode="decimal"
+				onChange={change}
+				onFocus={focusNumber}
+				onKeyUp={keyUp}
+				ref={ref}
+				type="text"
+			/>
+		);
 	}
 );
