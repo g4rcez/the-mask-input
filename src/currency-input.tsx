@@ -55,7 +55,6 @@ export const CurrencyInput = forwardRef(
 			onChange?.(e);
 			if (realValue !== 0) ref.current!.selectionEnd = money.length;
 		};
-
 		const defaultValue = props.defaultValue ? toCurrency(props.defaultValue as string, info) : undefined;
 		return <input {...props} defaultValue={defaultValue} type="text" ref={ref} onChange={change} inputMode="decimal" />;
 	}
