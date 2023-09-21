@@ -13,7 +13,7 @@ export type HtmlInputProps = Omit<NativeProps, "type" | "inputMode" | "autoCapit
 
 export type MaskInputProps = HtmlInputProps &
 	Partial<{
-		infinity: boolean
+		infinity: boolean;
 		strict: boolean;
 		as: "input" | FC<Omit<MaskInputProps, "as">>;
 		transform: (value: string) => string;

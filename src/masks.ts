@@ -1,4 +1,4 @@
-import {Mask, TheMasks, Tokens} from "./types";
+import { Mask, TheMasks, Tokens } from "./types";
 
 const regex = {
 	dots: /\./g,
@@ -40,12 +40,12 @@ export const createPatternRegexMask = (array: Array<string | RegExp>, strict: bo
 };
 
 export const originalTokens: Tokens = {
-	A: {regex: /[a-zA-Z]/, parse: (v: string) => v.toLocaleUpperCase()},
-	H: {regex: /[a-fA-F0-9]/},
-	X: {regex: /[0-9a-zA-Z]/},
-	a: {regex: /[a-zA-Z]/, parse: (v: string) => v.toLocaleLowerCase()},
-	d: {regex: /\d/, escape: true},
-	x: {regex: /[a-zA-Z]/}
+	A: { regex: /[a-zA-Z]/, parse: (v: string) => v.toLocaleUpperCase() },
+	H: { regex: /[a-fA-F0-9]/ },
+	X: { regex: /[0-9a-zA-Z]/ },
+	a: { regex: /[a-zA-Z]/, parse: (v: string) => v.toLocaleLowerCase() },
+	d: { regex: /\d/, escape: true },
+	x: { regex: /[a-zA-Z]/ }
 };
 
 export type Masks =
@@ -102,7 +102,7 @@ export const masks: Record<Masks, TheMasks> = {
 		const n = numbers(s);
 		const first = n[0];
 		return first === "2" ? hourStartsWithTwo : hour;
-	},
+	}
 };
 
 export type MaskConfig = {
@@ -128,14 +128,14 @@ export const inputMaskedProps: Record<Masks, MaskConfig> = {
 	cellphone: mask(masks.cellphone, "tel"),
 	cep: mask(masks.cep, "decimal"),
 	cnpj: mask(masks.cnpj, "decimal"),
-	color: mask(masks.color, "decimal", {pattern: "#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?"}),
+	color: mask(masks.color, "decimal", { pattern: "#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?" }),
 	cpf: mask(masks.cpf, "decimal"),
-	cpfCnpj: mask(masks.cpfCnpj, "decimal", {transform: numbers}),
+	cpfCnpj: mask(masks.cpfCnpj, "decimal", { transform: numbers }),
 	creditCard: mask(masks.creditCard, "decimal"),
 	date: mask(masks.date, "decimal"),
-	int: mask(masks.int, "decimal", {pattern: "[0-9]+"}),
+	int: mask(masks.int, "decimal", { pattern: "[0-9]+" }),
 	isoDate: mask(masks.isoDate, "decimal"),
 	telephone: mask(masks.telephone, "tel"),
-	time: mask(masks.time, "decimal", {pattern: "[0-9]{2}:[0-9]{2}"}),
-	uuid: mask(masks.uuid, "decimal", {pattern: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"})
+	time: mask(masks.time, "decimal", { pattern: "[0-9]{2}:[0-9]{2}" }),
+	uuid: mask(masks.uuid, "decimal", { pattern: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" })
 };

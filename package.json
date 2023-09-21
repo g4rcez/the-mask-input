@@ -22,7 +22,7 @@
 		"test:unit": "vitest run",
 		"dev": "rollup -c --watch --bundleConfigAsCjs",
 		"prepare": "pnpm build",
-		"format": "prettier --write \"{.,src/**}/*.{js,jsx,ts,tsx}\""
+		"format": "prettier --write \"{example,src,tests}/**/*.{js,jsx,ts,tsx}\""
 	},
 	"peerDependencies": {
 		"react": ">= 16.8.3",
