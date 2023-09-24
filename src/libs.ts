@@ -28,4 +28,3 @@ export const valueToFloat = (value: string) =>
 	);
 
 export const has = <T extends {}>(obj: T, key: keyof T | string): key is keyof T => Object.prototype.hasOwnProperty.call(obj, key);
-

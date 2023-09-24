@@ -5,8 +5,8 @@ type Value = string | number;
 
 const StyledInput = (props: TheMaskInputProps) => (
 	<fieldset className="flex flex-col gap-2">
-		<label className="text-slate-600 uppercase text-xs">{props.placeholder}</label>
-		<Input {...props} required className="p-1 border border-slate-300 text-slate-600 antialiased rounded" />
+		<label className="text-white uppercase text-xs">{props.placeholder}</label>
+		<Input {...props} required className="p-1 border border-slate-300 text-white antialiased rounded" />
 	</fieldset>
 );
 
@@ -43,10 +43,7 @@ export const InputsWithDefault = () => {
 			characterData: true,
 			attributes: true
 		});
-		console.log("observing");
-		return () => {
-			observer.disconnect();
-		};
+		return () => observer.disconnect();
 	}, []);
 	return (
 		<form ref={ref} className="flex gap-6 flex-wrap items-end" onSubmit={(e) => e.preventDefault()}>
@@ -60,13 +57,17 @@ export const InputsWithDefault = () => {
 			<StyledInput defaultValue="02134567892" mask="cpf" name="default-cpf" placeholder="cpf" />
 			<StyledInput mask="creditCard" name="default-creditCard" placeholder="creditCard" />
 			<StyledInput mask="date" name="default-date" placeholder="date" />
-			<StyledInput mask="int" name="default-int" placeholder="int" />
+			<StyledInput autoFocus mask="int" name="default-int" placeholder="int" />
 			<StyledInput mask="isoDate" name="default-isoDate" placeholder="isoDate" />
-			<StyledInput mask="money" name="default-money" placeholder="money" />
+			<StyledInput defaultValue="5000" mask="money" name="default-money" placeholder="money" />
 			<StyledInput mask="telephone" name="default-telephone" placeholder="telephone" />
 			<StyledInput mask="time" name="default-time" placeholder="time" />
 			<StyledInput mask="uuid" name="default-uuid" placeholder="uuid" />
+			<StyledInput mask="dd_AA" name="default-custom" placeholder="custom" />
 			<StyledInput mask={[/\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]} name="default-expiresIn" placeholder="expiresIn" />
+			<button className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="reset">
+				Reset
+			</button>
 			<button className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="submit">
 				Test masks
 			</button>
@@ -108,7 +109,7 @@ export default function App() {
 				<StyledInput value={state.isoDate} onChange={onChange} mask="isoDate" name="isoDate" placeholder="isoDate" />
 				<StyledInput value={state.money} onChange={onChange} mask="money" name="money" placeholder="Money - asNumber" />
 				<StyledInput
-					value={state.CurrencySymbol}
+					value={state.Currency}
 					onChange={onChange}
 					name="Currency"
 					placeholder="Currency - Symbol"
@@ -117,9 +118,9 @@ export default function App() {
 					locale="en-US"
 				/>
 				<StyledInput
-					value={state.CurrencyCode}
+					value={state.CurrencyCodeUsd}
 					onChange={onChange}
-					name="CurrencyCode"
+					name="CurrencyCodeUsd"
 					placeholder="Currency - Code"
 					mask="currency"
 					currency="USD"
@@ -138,6 +139,9 @@ export default function App() {
 					placeholder="expiresIn"
 				/>
 				<Input />
+				<button id="submit" className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="reset">
+					Reset
+				</button>
 				<button id="submit" className="px-4 py-1 bg-blue-500 text-white rounded-lg h-fit" type="submit">
 					Test pattern
 				</button>

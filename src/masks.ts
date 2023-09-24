@@ -82,11 +82,6 @@ const hourStartsWithTwo = ["2", /[0-3]/, ":", /[0-5]/, /\d/];
 const hour = [/[012]/, /\d/, ":", /[0-5]/, /[0-9]/];
 
 export const masks: Record<Masks, TheMasks> = {
-	time: (s) => {
-		const n = numbers(s);
-		const first = n[0];
-		return first === "2" ? hourStartsWithTwo : hour;
-	},
 	cep: "ddddd-ddd",
 	date: "dd/dd/dddd",
 	cpf: cpfMask,
@@ -94,12 +89,20 @@ export const masks: Record<Masks, TheMasks> = {
 	cnpj: cnpjMask,
 	telephone: telephoneMask,
 	cellphone: cellphoneMask,
-	cellTelephone: (s) => (numbers(s).length < 11 ? telephoneMask : cellphoneMask),
 	creditCard: "dddd dddd dddd dddd",
 	uuid: "HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH",
 	color: (v) => (v.length > 4 ? "#HHHHHH" : "#HHH"),
 	cpfCnpj: (s) => (numbers(s).length <= 11 ? cpfMask : cnpjMask) as string,
-	int: (s) => (digit.test(s.slice(-1)) ? "d".repeat(Math.max(s.length, 0)) : "d".repeat(Math.max(s.length - 1, 0)))
+	int: (s) => (digit.test(s.slice(-1)) ? "d".repeat(Math.max(s.length, 0)) : "d".repeat(Math.max(s.length - 1, 0))),
+	cellTelephone: (s) => {
+		const n = numbers(s);
+		return n.length < 11 ? telephoneMask : cellphoneMask;
+	},
+	time: (s) => {
+		const n = numbers(s);
+		const first = n[0];
+		return first === "2" ? hourStartsWithTwo : hour;
+	}
 };
 
 export type MaskConfig = {
@@ -108,13 +111,15 @@ export type MaskConfig = {
 	mask: TheMasks;
 	transform?: (s: string) => string;
 	strict: boolean;
+	infinity?: boolean;
 };
 
-const mask = (mask: TheMasks, inputMode: InputMode, props: Pick<MaskConfig, "transform" | "pattern"> = {}): MaskConfig => ({
+const mask = (mask: TheMasks, inputMode: InputMode, props: Pick<MaskConfig, "transform" | "pattern" | "infinity"> = {}): MaskConfig => ({
 	mask,
 	inputMode,
 	strict: true,
 	pattern: props.pattern ?? typeof mask === "function" ? undefined : createPattern(mask, "", true),
+	infinity: props.infinity,
 	...props
 });
 

@@ -46,25 +46,24 @@ export type TheMaskInputProps = HtmlInputProps &
 		| ({ mask?: AllMasks } & Omit<MaskInputProps, "mask">)
 	);
 
-export const Input: (props: TheMaskInputProps) => JSX.Element = React.forwardRef<HTMLInputElement, TheMaskInputProps>(function InternalMaskInput(
-	props,
-	externalRef
-) {
-	const maskConfig = useMemo(() => {
-		if (!props.mask) return undefined;
-		if (typeof props.mask === "string" && has(inputMaskedProps, props.mask)) {
-			return inputMaskedProps[props.mask];
+export const Input: (props: TheMaskInputProps) => React.ReactElement = React.forwardRef<HTMLInputElement, TheMaskInputProps>(
+	function InternalMaskInput(props, externalRef) {
+		const maskConfig = useMemo(() => {
+			if (!props.mask) return undefined;
+			if (typeof props.mask === "string" && has(inputMaskedProps, props.mask)) {
+				return inputMaskedProps[props.mask];
+			}
+			return { mask: props.mask };
+		}, [props.mask]);
+		const allProps = { ...props, ...maskConfig };
+		if (isCurrencyInput(props.mask)) {
+			return <CurrencyInput {...(allProps as CurrencyInputProps)} mask="currency" ref={externalRef} />;
 		}
-		return { mask: props.mask };
-	}, [props.mask]);
-	const allProps = { ...props, ...maskConfig };
-	if (isCurrencyInput(props.mask)) {
-		return <CurrencyInput {...(allProps as CurrencyInputProps)} mask="currency" ref={externalRef} />;
+		if (isPercentageInput(props.mask)) {
+			return <PercentageInput {...(allProps as PercentInputProps)} mask="percentual" ref={externalRef} />;
+		}
+		return <MaskInput {...(allProps as MaskInputProps)} ref={externalRef} />;
 	}
-	if (isPercentageInput(props.mask)) {
-		return <PercentageInput {...(allProps as PercentInputProps)} mask="percentual" ref={externalRef} />;
-	}
-	return <MaskInput {...(allProps as MaskInputProps)} ref={externalRef} />;
-}) as never;
+) as never;
 
 export default Input;

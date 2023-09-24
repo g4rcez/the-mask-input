@@ -1,8 +1,8 @@
 import React, { ChangeEvent, forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { Mask, MaskInputProps, Token, Tokens } from "./types";
-import { createPattern, createPatternRegexMask, originalTokens } from "./masks";
 import { CurrencyInput, CurrencyInputProps, isCurrencyInput } from "./currency-input";
+import { createPattern, createPatternRegexMask, originalTokens } from "./masks";
 import { isPercentageInput, PercentageInput, PercentInputProps } from "./percent-input";
+import { Mask, MaskInputProps, Token, Tokens } from "./types";
 
 function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string) => string, tokens: Tokens = originalTokens) {
 	const value = transform(v);
@@ -18,11 +18,9 @@ function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string
 			continue;
 		}
 		const token: Token = masker instanceof RegExp ? { regex: masker } : masker;
-		if (token.regex.test(char)) {
-			output += token.parse?.(char) ?? char;
-		}
-		countMask += 1;
+		if (token.regex.test(char)) output += token.parse?.(char) ?? char;
 		i += 1;
+		countMask += 1;
 	}
 	return output;
 }
@@ -30,33 +28,39 @@ function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string
 const noop = (s: string) => s;
 
 export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
-	({ onChange, strict = true, transform, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
+	({ onChange, infinity = false, strict = true, transform, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
 		const Component = as ?? "input";
 		const internalRef = useRef<HTMLInputElement>(null);
+		const wasMatch = useRef(false);
 		useImperativeHandle(ref, () => internalRef.current!);
 
-		const formatMaskedValue = useCallback(() => {
-			const v = props.value ?? props.defaultValue ?? "";
-			if (mask === undefined) return v;
-			const value = v?.toString() ?? "";
-			return formatRegexMask(value, typeof mask === "function" ? mask(value) : mask, transform ?? noop, tokens ?? originalTokens);
-		}, [props.value, props.defaultValue, transform, mask, tokens]);
+		const formatMaskedValue = useCallback(
+			(value?: string, defaultValue?: string) => {
+				const v = value ?? defaultValue ?? "";
+				if (mask === undefined) return v;
+				const finalValue = v?.toString() ?? "";
+				return formatRegexMask(finalValue, typeof mask === "function" ? mask(finalValue) : mask, transform ?? noop, tokens ?? originalTokens);
+			},
+			[transform, mask, tokens]
+		);
 
-		const [stateValue, setStateValue] = useState(formatMaskedValue);
+		const [stateValue, setStateValue] = useState(() => formatMaskedValue(props.value as string, props.defaultValue as string));
+		const formattedDefaultValue = useMemo(() => formatMaskedValue(undefined, props.defaultValue as string), [props.defaultValue]);
 
 		useEffect(() => {
 			if (props.value === undefined) return;
-			setStateValue(formatMaskedValue);
+			const newValue = formatMaskedValue(props.value as string, props.defaultValue as string);
+			setStateValue(newValue);
+			if (internalRef.current !== null) internalRef.current.value = newValue as string;
 		}, [props.value, mask, transform, props.defaultValue]);
 
 		const patternMemo = useMemo(() => {
 			if (pattern || mask === undefined) return pattern;
-			if (typeof stateValue === "string") return createPattern(mask, stateValue, strict);
 			if (typeof mask === "function") {
-				const resultMask = mask(stateValue as unknown as string);
-				return Array.isArray(resultMask) ? createPatternRegexMask(resultMask, strict) : createPattern(mask, resultMask, strict);
+				const resultMask = mask(stateValue);
+				return Array.isArray(resultMask) ? createPatternRegexMask(resultMask, strict) : createPattern(mask, stateValue, strict);
 			}
-			return Array.isArray(mask) ? createPatternRegexMask(mask, strict) : undefined;
+			return typeof mask === "string" ? createPattern(mask, stateValue, strict) : createPatternRegexMask(mask, strict);
 		}, [pattern, stateValue, strict, mask]);
 
 		const changeMask = (event: ChangeEvent<HTMLInputElement>) => {
@@ -66,25 +70,36 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 				onChangeText?.(value);
 				return onChange?.(event);
 			}
-			const refInput = event.target;
-			let caret = refInput.selectionEnd ?? 0;
-			const digit = value[caret - 1];
+			const regex = new RegExp(createPattern(mask, value, strict));
+			const target = event.target;
+			const cursor = target.selectionEnd ?? 0;
+			if (infinity) {
+				if (wasMatch.current && value.length >= stateValue.length) {
+					event.target.value = stateValue;
+					return target.setSelectionRange(cursor - 1, cursor - 1);
+				}
+			}
+			let erasing = false;
+			if (value.length < stateValue.length) {
+				wasMatch.current = false;
+				erasing = true;
+			}
+			if (regex.test(value)) wasMatch.current = true;
+			let movement = cursor;
+			const digit = value[movement - 1];
 			const masked = formatRegexMask(value, typeof mask === "function" ? mask(value) : mask, transform ?? noop, tokens ?? originalTokens);
-			refInput.value = masked;
+			target.value = masked;
 			if (masked === stateValue) return;
 			setStateValue(masked);
 			onChangeText?.(masked);
-			while (caret < masked.length && masked.charAt(caret - 1) !== digit) {
-				caret += 1;
-			}
-			if (refInput !== document.activeElement) {
-				refInput.setSelectionRange(caret, caret);
-			}
+			while (movement < masked.length && masked.charAt(movement - 1) !== digit) movement += 1;
+			if (erasing) target.setSelectionRange(cursor, cursor);
+			else target.setSelectionRange(movement, movement);
 			event.target.value = masked;
 			onChange?.(event);
 		};
 
-		return <Component {...props} pattern={patternMemo} defaultValue={undefined} onChange={changeMask} value={stateValue} ref={internalRef} />;
+		return <Component {...props} defaultValue={formattedDefaultValue} pattern={patternMemo} onChange={changeMask} ref={internalRef} />;
 	}
 );
 

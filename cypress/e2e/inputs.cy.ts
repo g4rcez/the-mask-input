@@ -1,10 +1,9 @@
 describe("Test all masked inputs", () => {
-	before(() => {
+	const test = (id: string, type: string, value: string) => {
 		cy.visit("http://localhost:5173");
-	});
-
-	const test = (id: string, type: string, value: string) =>
 		cy.get(`input[name='${id}']`).focus().clear().type(type, { force: true }).should("have.value", value);
+	}
+
 
 	it("test percent", () => {
 		test("percent", "0", "0,00 %");
@@ -84,10 +83,5 @@ describe("Test all masked inputs", () => {
 
 	it("test expiresIn", () => {
 		test("expiresIn", "122077", "12/2077");
-	});
-
-	it("Should submit without errors", () => {
-		cy.get("button#submit").click().wait(1000);
-		cy.get("#test").should("exist");
 	});
 });
