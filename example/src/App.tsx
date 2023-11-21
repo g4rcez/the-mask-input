@@ -6,7 +6,12 @@ type Value = string | number;
 const StyledInput = (props: TheMaskInputProps) => (
 	<fieldset className="flex flex-col gap-2">
 		<label className="text-white uppercase text-xs">{props.placeholder}</label>
-		<Input {...props} required className="p-1 border border-slate-300 text-white antialiased rounded" />
+		<Input
+			{...props}
+			name={props.name ?? (props.mask as string)}
+			required
+			className="p-1 border border-slate-300 text-white antialiased rounded"
+		/>
 	</fieldset>
 );
 
@@ -15,7 +20,15 @@ export const Controlled = () => {
 	return (
 		<fieldset className="p-4 border border-slate-400">
 			{value}
-			<StyledInput mask="cpf" value={value} onChangeText={(e) => setValue(e)} />
+			<StyledInput
+				mask="cpf"
+				value={value}
+				onChangeText={setValue}
+				// onChange={(e) => {
+				// 	console.log("currentTarget", e.currentTarget)
+				// 	setValue(e.currentTarget.value);
+				// }}
+			/>
 			<button
 				onClick={() =>
 					setValue(
@@ -80,6 +93,7 @@ export default function App() {
 	const [show, setShow] = useState(false);
 	const onChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
+		console.log({ name, value });
 		setState((prev) => ({ ...prev, [name]: value }));
 	};
 
