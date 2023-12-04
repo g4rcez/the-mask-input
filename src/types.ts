@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, DetailedHTMLProps, FC } from "react";
+import type { DetailedHTMLProps, FC, InputHTMLAttributes } from "react";
 
 type NativeProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
@@ -24,7 +24,61 @@ export type MaskInputProps = HtmlInputProps &
 
 export type Token = { regex: RegExp; parse?: (v: string) => string; escape?: boolean };
 
-export type AutoCapitalize = "off" | "none" | "on" | "sentences" | "words" | "characters";
+export type AutoCapitalize =
+	| "additional-name"
+	| "address-line1"
+	| "address-line2"
+	| "address-line3"
+	| "bday"
+	| "bday-day"
+	| "bday-month"
+	| "bday-year"
+	| "billing"
+	| "cc-additional-name"
+	| "cc-csc"
+	| "cc-exp"
+	| "cc-exp-month"
+	| "cc-exp-year"
+	| "cc-family-name"
+	| "cc-given-name"
+	| "cc-name"
+	| "cc-number"
+	| "cc-type"
+	| "characters"
+	| "country"
+	| "country-name"
+	| "current-password"
+	| "family-name"
+	| "given-name"
+	| "honorific-prefix"
+	| "honorific-suffix"
+	| "impp"
+	| "language"
+	| "name"
+	| "new-password"
+	| "nickname"
+	| "off"
+	| "on"
+	| "one-time-code"
+	| "organization"
+	| "organization-title"
+	| "photo"
+	| "postal-code"
+	| "sentences"
+	| "sex"
+	| "shipping"
+	| "street-address"
+	| "tel"
+	| "tel-area-code"
+	| "tel-country-code"
+	| "tel-extension"
+	| "tel-local"
+	| "tel-national"
+	| "transaction-amount"
+	| "transaction-currency"
+	| "url"
+	| "webauthn"
+	| "words";
 
 export type Tokens = Record<string, Token>;
 

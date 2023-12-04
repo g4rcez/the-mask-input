@@ -38,9 +38,9 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 	({ infinity = false, strict = true, transform, onChange, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
 		const onChangeRef = useStableRef(onChange);
 		const onChangeTextRef = useStableRef(onChangeText);
+		const maskRef = useStableRef(mask);
 		const internalRef = useRef<HTMLInputElement>(null);
 		const wasMatch = useRef(valueWasMatch(mask, strict, (props.value || props.defaultValue) as string));
-
 		const Component = as ?? "input";
 		useImperativeHandle(ref, () => internalRef.current!);
 
@@ -118,8 +118,11 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 				onChangeRef.current?.(event);
 			};
 			const inputHtml = internalRef.current;
-			inputHtml.addEventListener("input", changeMask);
-			return () => inputHtml.removeEventListener("input", changeMask);
+			if (maskRef.current) {
+				inputHtml.addEventListener("input", changeMask);
+				return () => inputHtml.removeEventListener("input", changeMask);
+			}
+			return undefined;
 		}, []);
 
 		return (
