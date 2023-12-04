@@ -55,6 +55,7 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 		);
 
 		const [stateValue, setStateValue] = useState(() => formatMaskedValue(props.value as string, props.defaultValue as string));
+		const formattedValue = useMemo(() => [props.value]);
 		const formattedDefaultValue = useMemo(
 			() => formatMaskedValue(props.defaultValue as string, props.defaultValue as string),
 			[props.defaultValue]
@@ -125,13 +126,16 @@ export const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
 			return undefined;
 		}, []);
 
+		console.log("->", props.value);
+
 		return (
 			<Component
 				{...props}
+				ref={internalRef}
+				pattern={patternMemo}
 				onChange={onChange || onChangeText ? noop : undefined}
 				defaultValue={props.value || props.value === "" ? undefined : formattedDefaultValue}
-				pattern={patternMemo}
-				ref={internalRef}
+				value={typeof props.value === "string" ? formatMaskedValue(props.value as string, props.value as string) : props.value}
 			/>
 		);
 	}
