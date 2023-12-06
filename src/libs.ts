@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 export const replaceBlankSpace = (str: string) => str.replace(new RegExp(String.fromCharCode(160), "g"), " ");
 
 export const padding = (digits: string, minLength: number) => {
@@ -28,3 +30,11 @@ export const valueToFloat = (value: string) =>
 	);
 
 export const has = <T extends {}>(obj: T, key: keyof T | string): key is keyof T => Object.prototype.hasOwnProperty.call(obj, key);
+
+export const useStableRef = <T>(value: T) => {
+	const ref = useRef<T>(value);
+	useEffect(() => {
+		ref.current = value;
+	}, [value]);
+	return ref;
+};

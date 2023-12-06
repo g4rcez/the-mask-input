@@ -1,14 +1,15 @@
 import React, { useMemo } from "react";
-import { CurrencyInput, CurrencyInputProps, CurrencyMaskTypes, isCurrencyInput } from "./currency-input";
-import { MaskInput, TheMaskInput, TheMaskPropsMerge } from "./input";
+import { CurrencyInputProps, CurrencyMaskTypes } from "./currency-input";
+import { TheMaskInput, TheMaskPropsMerge } from "./input";
 import { has } from "./libs";
 import { inputMaskedProps, MaskConfig, Masks } from "./masks";
-import { isPercentageInput, PercentageInput, PercentInputMask, PercentInputProps } from "./percent-input";
+import { PercentInputMask, PercentInputProps } from "./percent-input";
 import { HtmlInputProps, MaskInputProps } from "./types";
 
 export type { CurrencyInputProps, CurrencyMaskTypes } from "./currency-input";
 export type { PercentInputProps, PercentInputMask } from "./percent-input";
 export type { TheMaskPropsMerge as TheMaskProps } from "./input";
+export type { TheMask, TheMask as MaskInput } from "./components/the-mask";
 export type { HtmlInputProps, Locales, CurrencyCode, CurrencyDisplay, AutoCapitalize, InputMode, InputTypes } from "./types";
 export { CurrencyInput, CurrencyInput as MoneyInput } from "./currency-input";
 export { PercentageInput } from "./percent-input";
@@ -56,13 +57,7 @@ export const Input: (props: TheMaskInputProps) => React.ReactElement = React.for
 			return { mask: props.mask };
 		}, [props.mask]);
 		const allProps = { ...props, ...maskConfig };
-		if (isCurrencyInput(props.mask)) {
-			return <CurrencyInput {...(allProps as CurrencyInputProps)} mask="currency" ref={externalRef} />;
-		}
-		if (isPercentageInput(props.mask)) {
-			return <PercentageInput {...(allProps as PercentInputProps)} mask="percentual" ref={externalRef} />;
-		}
-		return <MaskInput {...(allProps as MaskInputProps)} ref={externalRef} />;
+		return <TheMaskInput {...(allProps as MaskInputProps)} ref={externalRef} />;
 	}
 ) as never;
 

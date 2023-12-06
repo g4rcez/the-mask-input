@@ -1,27 +1,47 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, forwardRef, useEffect, useRef, useState } from "react";
 import { Input, TheMaskInputProps } from "../../src";
 
 type Value = string | number;
 
-const StyledInput = (props: TheMaskInputProps) => (
+const StyledInput = forwardRef((props: TheMaskInputProps, ref: any) => (
 	<fieldset className="flex flex-col gap-2">
 		<label className="text-white uppercase text-xs">{props.placeholder}</label>
-		<Input {...props} required className="p-1 border border-slate-300 text-white antialiased rounded" />
+		<Input
+			{...props}
+			ref={ref}
+			name={props.name ?? (props.mask as string)}
+			required
+			className="p-1 border border-slate-300 text-white antialiased rounded"
+		/>
 	</fieldset>
-);
+));
 
 export const Controlled = () => {
-	const [value, setValue] = useState("");
+	const ref = useRef<HTMLInputElement>(null);
+	const [value, setValue] = useState("11122233344");
+	useEffect(() => {
+		if (ref.current) {
+			ref.current.focus();
+		}
+	}, []);
 	return (
 		<fieldset className="p-4 border border-slate-400">
 			{value}
-			<StyledInput mask="cpf" value={value} onChangeText={(e) => setValue(e)} />
+			<StyledInput
+				mask="cpf"
+				value={value}
+				ref={ref}
+				name="random"
+				onChange={(e) => {
+					setValue(e.target.value);
+				}}
+			/>
 			<button
 				onClick={() =>
 					setValue(
 						Math.ceil(Math.random() * 9)
 							.toString()
-							.repeat(11)
+							.repeat(7)
 					)
 				}
 			>
@@ -80,6 +100,7 @@ export default function App() {
 	const [show, setShow] = useState(false);
 	const onChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
+		console.log({ name, value });
 		setState((prev) => ({ ...prev, [name]: value }));
 	};
 

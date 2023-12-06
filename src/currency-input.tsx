@@ -49,13 +49,23 @@ export const CurrencyInput = forwardRef(
 
 		const change = (e: React.ChangeEvent<HTMLInputElement>) => {
 			const money = toCurrency(e.target.value, info);
-			const realValue = valueToFloat(money);
+			const number = valueToFloat(money);
 			e.target.value = money;
-			e.target.setAttribute("data-number", realValue.toString());
+			e.target.setAttribute("data-number", number.toString());
 			onChange?.(e);
-			if (realValue !== 0) ref.current!.selectionEnd = money.length;
+			if (number !== 0) ref.current!.selectionEnd = money.length;
 		};
 		const defaultValue = props.defaultValue ? toCurrency(props.defaultValue as string, info) : undefined;
-		return <input {...props} defaultValue={defaultValue} type="text" ref={ref} onChange={change} inputMode="decimal" />;
+		return (
+			<input
+				{...props}
+				value={typeof props.value === "string" ? toCurrency(props.value, info) : props.value}
+				defaultValue={defaultValue}
+				type="text"
+				ref={ref}
+				onChange={change}
+				inputMode="decimal"
+			/>
+		);
 	}
 );

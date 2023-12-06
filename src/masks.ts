@@ -93,7 +93,7 @@ export const masks: Record<Masks, TheMasks> = {
 	uuid: "HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH",
 	color: (v) => (v.length > 4 ? "#HHHHHH" : "#HHH"),
 	cpfCnpj: (s) => (numbers(s).length <= 11 ? cpfMask : cnpjMask) as string,
-	int: (s) => (digit.test(s.slice(-1)) ? "d".repeat(Math.max(s.length, 0)) : "d".repeat(Math.max(s.length - 1, 0))),
+	int: (s = "") => (digit.test(s.toString().slice(-1)) ? "d".repeat(Math.max(s.length, 0)) : "d".repeat(Math.max(s.length - 1, 0))),
 	cellTelephone: (s) => {
 		const n = numbers(s);
 		return n.length < 11 ? telephoneMask : cellphoneMask;
