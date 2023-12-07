@@ -34,13 +34,13 @@ const valueWasMatch = (mask: TheMasks | undefined, strict: boolean, value: strin
 
 export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 	({ infinity = false, strict = true, transform, onChange, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
+		const internalRef = useRef<HTMLInputElement>(null);
+		useImperativeHandle(ref, () => internalRef.current!);
 		const onChangeRef = useStableRef(onChange);
 		const onChangeTextRef = useStableRef(onChangeText);
 		const maskRef = useStableRef(mask);
-		const internalRef = useRef<HTMLInputElement>(null);
 		const wasMatch = useRef(valueWasMatch(mask, strict, (props.value || props.defaultValue) as string));
 		const Component = as ?? "input";
-		useImperativeHandle(ref, () => internalRef.current!);
 
 		const formatMaskedValue = useCallback(
 			(value?: string, defaultValue?: string) => {
@@ -58,13 +58,6 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 			[props.defaultValue]
 		);
 
-		useEffect(() => {
-			if (props.value === undefined) return;
-			const newValue = formatMaskedValue(props.value as string, props.defaultValue as string);
-			setStateValue(newValue);
-			if (internalRef.current !== null) internalRef.current.value = newValue as string;
-		}, [props.value, mask, transform, props.defaultValue]);
-
 		const patternMemo = useMemo(() => {
 			if (pattern || mask === undefined) return pattern;
 			if (typeof mask === "function") {
@@ -75,10 +68,18 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 		}, [pattern, stateValue, strict, mask]);
 
 		useEffect(() => {
+			if (props.value === undefined) return;
+			const newValue = formatMaskedValue(props.value as string, props.defaultValue as string);
+			setStateValue(newValue);
+			if (internalRef.current !== null) internalRef.current.value = newValue as string;
+		}, [props.value, mask, transform, props.defaultValue]);
+
+		useEffect(() => {
 			if (internalRef.current === null) return;
 			const inputHtml = internalRef.current;
 			if (maskRef.current) {
 				const target = internalRef.current;
+				let previous = target.value || "";
 				const changeMask = (event: any) => {
 					const value = event.target.value;
 					if (mask === undefined) {
@@ -99,6 +100,11 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 							return moveCursor(target, cursor - 1, cursor - 1);
 						}
 					}
+					let erasing = false;
+					if (value.length < previous.length) {
+						wasMatch.current = false;
+						erasing = true;
+					}
 					if (regex.test(value)) wasMatch.current = true;
 					let movement = cursor;
 					const digit = value[movement - 1];
@@ -111,9 +117,10 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 					target.value = masked;
 					setStateValue(masked);
 					while (movement < masked.length && masked.charAt(movement - 1) !== digit) movement += 1;
-					const move = masked.length + 1;
-					moveCursor(target, move, move);
-					target.value = masked;
+					if (erasing) moveCursor(target, cursor, cursor);
+					else moveCursor(target, movement, movement);
+					event.target.value = masked;
+					previous = masked;
 					onChangeTextRef.current?.(masked);
 					onChangeRef.current?.(event);
 				};
