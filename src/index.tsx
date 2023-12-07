@@ -1,18 +1,18 @@
 import React, { useMemo } from "react";
-import { CurrencyInputProps, CurrencyMaskTypes } from "./currency-input";
+import { CurrencyInputProps, CurrencyMaskTypes } from "./components/currency-input";
 import { TheMaskInput, TheMaskPropsMerge } from "./input";
 import { has } from "./libs";
 import { inputMaskedProps, MaskConfig, Masks } from "./masks";
-import { PercentInputMask, PercentInputProps } from "./percent-input";
+import { PercentInputMask, PercentInputProps } from "./components/percent-input";
 import { HtmlInputProps, MaskInputProps } from "./types";
 
-export type { CurrencyInputProps, CurrencyMaskTypes } from "./currency-input";
-export type { PercentInputProps, PercentInputMask } from "./percent-input";
+export type { CurrencyInputProps, CurrencyMaskTypes } from "./components/currency-input";
+export type { PercentInputProps, PercentInputMask } from "./components/percent-input";
 export type { TheMaskPropsMerge as TheMaskProps } from "./input";
 export type { TheMask, TheMask as MaskInput } from "./components/the-mask";
 export type { HtmlInputProps, Locales, CurrencyCode, CurrencyDisplay, AutoCapitalize, InputMode, InputTypes } from "./types";
-export { CurrencyInput, CurrencyInput as MoneyInput } from "./currency-input";
-export { PercentageInput } from "./percent-input";
+export { CurrencyInput, CurrencyInput as MoneyInput } from "./components/currency-input";
+export { PercentageInput } from "./components/percent-input";
 export { masks, inputMaskedProps } from "./masks";
 
 const Component = (mask: MaskConfig) => (props: TheMaskPropsMerge) => <TheMaskInput {...mask} {...(props as any)} />;
