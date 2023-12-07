@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "./libs";
-import { Locales, MaskInputProps, Value } from "./types";
+import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "../libs";
+import { Locales, MaskInputProps, Value } from "../types";
 
 const CHAR_BETWEEN_VALUE_AND_SYMBOL = 1;
 

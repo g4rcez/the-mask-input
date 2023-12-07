@@ -1,7 +1,7 @@
-import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from "react";
-import {useStableRef} from "../libs";
-import {createPattern, createPatternRegexMask, originalTokens} from "../masks";
-import {Mask, MaskInputProps, TheMasks, Token, Tokens} from "../types";
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { useStableRef } from "../libs";
+import { createPattern, createPatternRegexMask, originalTokens } from "../masks";
+import { Mask, MaskInputProps, TheMasks, Token, Tokens } from "../types";
 
 function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string) => string, tokens: Tokens = originalTokens) {
 	const value = transform(v);
@@ -76,47 +76,47 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 
 		useEffect(() => {
 			if (internalRef.current === null) return;
-			const changeMask = (event: any) => {
-				const value = event.target.value;
-				if (mask === undefined) {
-					setStateValue(value);
-					onChangeTextRef.current?.(value);
-					onChangeRef.current?.(event);
-					return onChangeText?.(value);
-				}
-				const regex = new RegExp(createPattern(mask, value, strict));
-				const target = event.target;
-				const cursor = target.selectionEnd ?? 0;
-				const moveCursor = (input: HTMLInputElement, from: number, to: number) => {
-					if (input.type === "number") return;
-					return target.setSelectionRange(from, to);
-				};
-				if (infinity) {
-					if (wasMatch.current && value.length >= stateValue.length) {
-						event.target.value = stateValue;
-						return moveCursor(target, cursor - 1, cursor - 1);
-					}
-				}
-				let erasing = false;
-				if (value.length < stateValue.length) {
-					wasMatch.current = false;
-					erasing = true;
-				}
-				if (regex.test(value)) wasMatch.current = true;
-				let movement = cursor;
-				const digit = value[movement - 1];
-				const masked = formatRegexMask(value, typeof mask === "function" ? mask(value) : mask, transform ?? noop, tokens ?? originalTokens);
-				target.value = masked;
-				setStateValue(masked);
-				while (movement < masked.length && masked.charAt(movement - 1) !== digit) movement += 1;
-				if (erasing) moveCursor(target, cursor, cursor);
-				else moveCursor(target, movement, movement);
-				event.target.value = masked;
-				onChangeTextRef.current?.(masked);
-				onChangeRef.current?.(event);
-			};
 			const inputHtml = internalRef.current;
 			if (maskRef.current) {
+				const target = internalRef.current;
+				const changeMask = (event: any) => {
+					const value = event.target.value;
+					if (mask === undefined) {
+						setStateValue(value);
+						onChangeTextRef.current?.(value);
+						onChangeRef.current?.(event);
+						return onChangeText?.(value);
+					}
+					const regex = new RegExp(createPattern(mask, value, strict));
+					const cursor = target.selectionEnd ?? 0;
+					const moveCursor = (input: HTMLInputElement, from: number, to: number) => {
+						if (input.type === "number") return;
+						return input.setSelectionRange(from, to);
+					};
+					if (infinity) {
+						if (wasMatch.current && value.length >= stateValue.length) {
+							target.value = stateValue;
+							return moveCursor(target, cursor - 1, cursor - 1);
+						}
+					}
+					if (regex.test(value)) wasMatch.current = true;
+					let movement = cursor;
+					const digit = value[movement - 1];
+					const masked = formatRegexMask(
+						value,
+						typeof mask === "function" ? mask(value) : mask,
+						transform ?? noop,
+						tokens ?? originalTokens
+					);
+					target.value = masked;
+					setStateValue(masked);
+					while (movement < masked.length && masked.charAt(movement - 1) !== digit) movement += 1;
+					const move = masked.length + 1;
+					moveCursor(target, move, move);
+					target.value = masked;
+					onChangeTextRef.current?.(masked);
+					onChangeRef.current?.(event);
+				};
 				inputHtml.addEventListener("input", changeMask);
 				return () => inputHtml.removeEventListener("input", changeMask);
 			}

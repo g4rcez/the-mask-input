@@ -1,6 +1,6 @@
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from "react";
-import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "./libs";
-import { CurrencyCode, CurrencyDisplay, HtmlInputProps, Locales, Value } from "./types";
+import React, {forwardRef, useImperativeHandle, useMemo, useRef} from "react";
+import {addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat} from "../libs";
+import {CurrencyCode, CurrencyDisplay, HtmlInputProps, Locales, Value} from "../types";
 
 export type CurrencyMaskTypes = "money" | "currency";
 
