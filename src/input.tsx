@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
+import { CurrencyInput, CurrencyInputProps, isCurrencyInput } from "./components/currency-input";
+import { isPercentageInput, PercentageInput, PercentInputProps } from "./components/percent-input";
 import { TheMask } from "./components/the-mask";
-import { CurrencyInput, CurrencyInputProps, isCurrencyInput } from "./currency-input";
-import { isPercentageInput, PercentageInput, PercentInputProps } from "./percent-input";
 import { MaskInputProps } from "./types";
 
 export type TheMaskPropsMerge = MaskInputProps | CurrencyInputProps | PercentInputProps;
