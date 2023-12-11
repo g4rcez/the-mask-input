@@ -131,7 +131,7 @@ export const inputMaskedProps: Record<Masks, MaskConfig> = {
 	color: mask(masks.color, "decimal", { pattern: "#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?" }),
 	cpf: mask(masks.cpf, "decimal"),
 	cpfCnpj: mask(masks.cpfCnpj, "decimal", { transform: numbers }),
-	creditCard: mask(masks.creditCard, "decimal"),
+	creditCard: mask(masks.creditCard, "decimal", { pattern: "[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{3,4}" }),
 	date: mask(masks.date, "decimal"),
 	int: mask(masks.int, "decimal", { pattern: "[0-9]+" }),
 	isoDate: mask(masks.isoDate, "decimal"),

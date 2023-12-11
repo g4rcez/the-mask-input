@@ -53,10 +53,7 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 		);
 
 		const [stateValue, setStateValue] = useState(() => formatMaskedValue(props.value as string, props.defaultValue as string));
-		const formattedDefaultValue = useMemo(
-			() => formatMaskedValue(props.defaultValue as string, props.defaultValue as string),
-			[props.defaultValue]
-		);
+		const formattedDefaultValue = formatMaskedValue(props.defaultValue as string, props.defaultValue as string);
 
 		const patternMemo = useMemo(() => {
 			if (pattern || mask === undefined) return pattern;
@@ -136,7 +133,7 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 				ref={internalRef}
 				pattern={patternMemo}
 				onChange={onChange || onChangeText ? noop : undefined}
-				defaultValue={assertString(props.defaultValue) ? undefined : formattedDefaultValue}
+				defaultValue={assertString(props.defaultValue) ? formattedDefaultValue : undefined}
 				value={assertString(props.value) ? formatMaskedValue(props.value as string, props.value as string) : props.value}
 			/>
 		);

@@ -18,36 +18,47 @@ const StyledInput = forwardRef((props: TheMaskInputProps, ref: any) => (
 
 export const Controlled = () => {
 	const ref = useRef<HTMLInputElement>(null);
-	const [value, setValue] = useState("11122233344");
+	const [value, setValue] = useState("400000000000000");
 	useEffect(() => {
 		if (ref.current) {
 			ref.current.focus();
 		}
 	}, []);
 	return (
-		<fieldset className="p-4 border border-slate-400">
-			{value}
-			<StyledInput
-				mask="cpf"
-				value={value}
-				ref={ref}
-				name="random"
-				onChange={(e) => {
-					setValue(e.target.value);
-				}}
-			/>
-			<button
-				onClick={() =>
-					setValue(
-						Math.ceil(Math.random() * 9)
-							.toString()
-							.repeat(7)
-					)
-				}
-			>
-				Change
-			</button>
-		</fieldset>
+		<form
+			onInvalid={(e) => console.log("bad")}
+			onSubmit={(e) => {
+				e.preventDefault();
+				console.log("ok");
+			}}
+		>
+			<fieldset className="p-4 border border-slate-400">
+				{value}
+				<StyledInput
+					mask="creditCard"
+					value={value}
+					ref={ref}
+					name="random"
+					onChange={(e) => {
+						setValue(e.target.value);
+					}}
+				/>
+				<div className="flex gap-4">
+					<button type="submit">Submit</button>
+					<button
+						onClick={() =>
+							setValue(
+								Math.ceil(Math.random() * 9)
+									.toString()
+									.repeat(7)
+							)
+						}
+					>
+						Change
+					</button>
+				</div>
+			</fieldset>
+		</form>
 	);
 };
 
