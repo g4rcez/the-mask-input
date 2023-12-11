@@ -82,13 +82,13 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 				let previous = target.value || "";
 				const changeMask = (event: any) => {
 					const value = event.target.value;
-					if (mask === undefined) {
+					if (maskRef.current === undefined) {
 						setStateValue(value);
 						onChangeTextRef.current?.(value);
 						onChangeRef.current?.(event);
 						return onChangeText?.(value);
 					}
-					const regex = new RegExp(createPattern(mask, value, strict));
+					const regex = new RegExp(createPattern(maskRef.current, value, strict));
 					const cursor = target.selectionEnd ?? 0;
 					const moveCursor = (input: HTMLInputElement, from: number, to: number) => {
 						if (input.type === "number") return;
@@ -110,7 +110,7 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 					const digit = value[movement - 1];
 					const masked = formatRegexMask(
 						value,
-						typeof mask === "function" ? mask(value) : mask,
+						typeof maskRef.current === "function" ? maskRef.current(value) : maskRef.current,
 						transform ?? noop,
 						tokens ?? originalTokens
 					);
@@ -136,9 +136,11 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 				ref={internalRef}
 				pattern={patternMemo}
 				onChange={onChange || onChangeText ? noop : undefined}
-				defaultValue={props.value || props.value === "" ? undefined : formattedDefaultValue}
-				value={typeof props.value === "string" ? formatMaskedValue(props.value as string, props.value as string) : props.value}
+				defaultValue={assertString(props.defaultValue) ? undefined : formattedDefaultValue}
+				value={assertString(props.value) ? formatMaskedValue(props.value as string, props.value as string) : props.value}
 			/>
 		);
 	}
 );
+
+const assertString = (a: any): a is string => typeof a === "string";
