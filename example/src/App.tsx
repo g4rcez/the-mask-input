@@ -127,21 +127,27 @@ export default function App() {
 					setShow(true);
 				}}
 			>
-				<StyledInput value={state.int} onChange={onChange} mask="int" name="int" type="number" placeholder="Integer" />
-				<StyledInput value={state.percent} onChange={onChange} mask="percent" name="percent" placeholder="percent" />
-				<StyledInput value={state.cellTelephone} onChange={onChange} mask="cellTelephone" name="cellTelephone" placeholder="cellTelephone" />
-				<StyledInput value={state.cellphone} onChange={onChange} mask="cellphone" name="cellphone" placeholder="cellphone" />
-				<StyledInput value={state.cep} onChange={onChange} mask="cep" name="cep" placeholder="cep" />
-				<StyledInput value={state.cnpj} onChange={onChange} mask="cnpj" name="cnpj" placeholder="cnpj" />
-				<StyledInput value={state.cpfCnpj} onChange={onChange} mask="cpfCnpj" name="cpfCnpj" placeholder="cpfCnpj" />
-				<StyledInput value={state.color} onChange={onChange} mask="color" name="color" placeholder="color" />
-				<StyledInput value={state.cpf} onChange={onChange} mask="cpf" name="cpf" placeholder="cpf" />
-				<StyledInput value={state.creditCard} onChange={onChange} mask="creditCard" name="creditCard" placeholder="creditCard" />
-				<StyledInput value={state.date} onChange={onChange} mask="date" name="date" placeholder="date" />
-				<StyledInput value={state.isoDate} onChange={onChange} mask="isoDate" name="isoDate" placeholder="isoDate" />
-				<StyledInput value={state.money} onChange={onChange} mask="money" name="money" placeholder="Money - asNumber" />
+				<StyledInput value={state.int || ""} onChange={onChange} mask="int" name="int" type="number" placeholder="Integer" />
+				<StyledInput value={state.percent || ""} onChange={onChange} mask="percent" name="percent" placeholder="percent" />
 				<StyledInput
-					value={state.Currency}
+					value={state.cellTelephone || ""}
+					onChange={onChange}
+					mask="cellTelephone"
+					name="cellTelephone"
+					placeholder="cellTelephone"
+				/>
+				<StyledInput value={state.cellphone || ""} onChange={onChange} mask="cellphone" name="cellphone" placeholder="cellphone" />
+				<StyledInput value={state.cep || ""} onChange={onChange} mask="cep" name="cep" placeholder="cep" />
+				<StyledInput value={state.cnpj || ""} onChange={onChange} mask="cnpj" name="cnpj" placeholder="cnpj" />
+				<StyledInput value={state.cpfCnpj || ""} onChange={onChange} mask="cpfCnpj" name="cpfCnpj" placeholder="cpfCnpj" />
+				<StyledInput value={state.color || ""} onChange={onChange} mask="color" name="color" placeholder="color" />
+				<StyledInput value={state.cpf || ""} onChange={onChange} mask="cpf" name="cpf" placeholder="cpf" />
+				<StyledInput value={state.creditCard || ""} onChange={onChange} mask="creditCard" name="creditCard" placeholder="creditCard" />
+				<StyledInput value={state.date || ""} onChange={onChange} mask="date" name="date" placeholder="date" />
+				<StyledInput value={state.isoDate || ""} onChange={onChange} mask="isoDate" name="isoDate" placeholder="isoDate" />
+				<StyledInput value={state.money || ""} onChange={onChange} mask="money" name="money" placeholder="Money - asNumber" />
+				<StyledInput
+					value={state.Currency || ""}
 					onChange={onChange}
 					name="Currency"
 					placeholder="Currency - Symbol"
@@ -150,7 +156,7 @@ export default function App() {
 					locale="en-US"
 				/>
 				<StyledInput
-					value={state.CurrencyCodeUsd}
+					value={state.CurrencyCodeUsd || ""}
 					onChange={onChange}
 					name="CurrencyCodeUsd"
 					placeholder="Currency - Code"
@@ -159,12 +165,12 @@ export default function App() {
 					currencyDisplay="code"
 					locale="en-US"
 				/>
-				<StyledInput value={state.CurrencyCode} onChange={onChange} name="CurrencyCode" placeholder="Currency - Code" mask="currency" />
-				<StyledInput value={state.telephone} onChange={onChange} mask="telephone" name="telephone" placeholder="telephone" />
-				<StyledInput value={state.time} onChange={onChange} mask="time" name="time" placeholder="time" />
-				<StyledInput value={state.uuid} onChange={onChange} mask="uuid" name="uuid" placeholder="uuid" />
+				<StyledInput value={state.CurrencyCode || ""} onChange={onChange} name="CurrencyCode" placeholder="Currency - Code" mask="currency" />
+				<StyledInput value={state.telephone || ""} onChange={onChange} mask="telephone" name="telephone" placeholder="telephone" />
+				<StyledInput value={state.time || ""} onChange={onChange} mask="time" name="time" placeholder="time" />
+				<StyledInput value={state.uuid || ""} onChange={onChange} mask="uuid" name="uuid" placeholder="uuid" />
 				<StyledInput
-					value={state.expiresIn}
+					value={state.expiresIn || ""}
 					onChange={onChange}
 					mask={[/\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]}
 					name="expiresIn"

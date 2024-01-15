@@ -132,7 +132,7 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 				{...props}
 				ref={internalRef}
 				pattern={patternMemo}
-				onChange={onChange || onChangeText ? noop : undefined}
+				onChange={props.value === undefined ? undefined : noop}
 				defaultValue={assertString(props.defaultValue) ? formattedDefaultValue : undefined}
 				value={assertString(props.value) ? formatMaskedValue(props.value as string, props.value as string) : props.value}
 			/>
