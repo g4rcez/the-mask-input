@@ -32,6 +32,14 @@ const valueWasMatch = (mask: TheMasks | undefined, strict: boolean, value: strin
 	return regex.test(value);
 };
 
+function usePrevious<T>(value: T): T {
+  const ref = useRef<T>(value);
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
+
 export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 	({ infinity = false, strict = true, transform, onChange, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
 		const internalRef = useRef<HTMLInputElement>(null);
@@ -41,6 +49,8 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 		const maskRef = useStableRef(mask);
 		const wasMatch = useRef(valueWasMatch(mask, strict, (props.value || props.defaultValue) as string));
 		const Component = as ?? "input";
+		const [input, setInput] = useState("");
+		const previous = usePrevious(input);
 
 		const formatMaskedValue = useCallback(
 			(value?: string, defaultValue?: string) => {
@@ -71,68 +81,58 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 			if (internalRef.current !== null) internalRef.current.value = newValue as string;
 		}, [props.value, mask, transform, props.defaultValue]);
 
-		useEffect(() => {
-			if (internalRef.current === null) return;
-			const inputHtml = internalRef.current;
-			if (maskRef.current) {
-				const target = internalRef.current;
-				let previous = target.value || "";
-				const changeMask = (event: any) => {
-					const value = event.target.value;
-					if (maskRef.current === undefined) {
-						setStateValue(value);
-						onChangeTextRef.current?.(value);
-						onChangeRef.current?.(event);
-						return onChangeText?.(value);
-					}
-					const regex = new RegExp(createPattern(maskRef.current, value, strict));
-					const cursor = target.selectionEnd ?? 0;
-					const moveCursor = (input: HTMLInputElement, from: number, to: number) => {
-						if (input.type === "number") return;
-						return input.setSelectionRange(from, to);
-					};
-					if (infinity) {
-						if (wasMatch.current && value.length >= stateValue.length) {
-							target.value = stateValue;
-							return moveCursor(target, cursor - 1, cursor - 1);
-						}
-					}
-					let erasing = false;
-					if (value.length < previous.length) {
-						wasMatch.current = false;
-						erasing = true;
-					}
-					if (regex.test(value)) wasMatch.current = true;
-					let movement = cursor;
-					const digit = value[movement - 1];
-					const masked = formatRegexMask(
-						value,
-						typeof maskRef.current === "function" ? maskRef.current(value) : maskRef.current,
-						transform ?? noop,
-						tokens ?? originalTokens
-					);
-					target.value = masked;
-					setStateValue(masked);
-					while (movement < masked.length && masked.charAt(movement - 1) !== digit) movement += 1;
-					if (erasing) moveCursor(target, cursor, cursor);
-					else moveCursor(target, movement, movement);
-					event.target.value = masked;
-					previous = masked;
-					onChangeTextRef.current?.(masked);
-					onChangeRef.current?.(event);
-				};
-				inputHtml.addEventListener("input", changeMask);
-				return () => inputHtml.removeEventListener("input", changeMask);
+		const changeMask = (event: React.ChangeEvent<HTMLInputElement>) => {
+			const target = event.currentTarget;
+			const value = event.target.value;
+			if (maskRef.current === undefined) {
+				setStateValue(value);
+				onChangeTextRef.current?.(value);
+				onChangeRef.current?.(event);
+				return onChangeText?.(value);
 			}
-			return undefined;
-		}, []);
+			const regex = new RegExp(createPattern(maskRef.current, value, strict));
+			const cursor = target.selectionEnd ?? 0;
+			const moveCursor = (input: HTMLInputElement, from: number, to: number) => {
+				if (input.type === "number") return;
+				return input.setSelectionRange(from, to);
+			};
+			if (infinity) {
+				if (wasMatch.current && value.length >= stateValue.length) {
+					target.value = stateValue;
+					return moveCursor(target, cursor - 1, cursor - 1);
+				}
+			}
+			let erasing = false;
+			if (value.length < previous.length) {
+				wasMatch.current = false;
+				erasing = true;
+			}
+			if (regex.test(value)) wasMatch.current = true;
+			let movement = cursor;
+			const digit = value[movement - 1];
+			const masked = formatRegexMask(
+				value,
+				typeof maskRef.current === "function" ? maskRef.current(value) : maskRef.current,
+				transform ?? noop,
+				tokens ?? originalTokens
+			);
+			target.value = masked;
+			setStateValue(masked);
+			while (movement < masked.length && masked.charAt(movement - 1) !== digit) movement += 1;
+			if (erasing) moveCursor(target, cursor, cursor);
+			else moveCursor(target, movement, movement);
+			event.target.value = masked;
+			setInput(masked);
+			onChangeTextRef.current?.(masked);
+			onChangeRef.current?.(event);
+		};
 
 		return (
 			<Component
 				{...props}
 				ref={internalRef}
 				pattern={patternMemo}
-				onChange={props.value === undefined ? undefined : noop}
+				onChange={changeMask}
 				defaultValue={assertString(props.defaultValue) ? formattedDefaultValue : undefined}
 				value={assertString(props.value) ? formatMaskedValue(props.value as string, props.value as string) : props.value}
 			/>
