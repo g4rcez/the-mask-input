@@ -1,6 +1,6 @@
-import React, {forwardRef, useImperativeHandle, useMemo, useRef} from "react";
-import {addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat} from "../libs";
-import {CurrencyCode, CurrencyDisplay, HtmlInputProps, Locales, Value} from "../types";
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "../libs";
+import type { CurrencyCode, CurrencyDisplay, HtmlInputProps, Locales, Value } from "../types";
 
 export type CurrencyMaskTypes = "money" | "currency";
 
@@ -55,7 +55,22 @@ export const CurrencyInput = forwardRef(
 			onChange?.(e);
 			if (number !== 0) ref.current!.selectionEnd = money.length;
 		};
+
+		useEffect(() => {
+			if (ref.current === null) return;
+			const value = ref.current.value;
+			if (value === "") return;
+			const money = toCurrency(value, info);
+			const number = valueToFloat(money);
+			ref.current.value = money;
+			ref.current.setAttribute("data-number", number.toString());
+			const event = new InputEvent("change", {});
+			onChange?.({ ...event, target: ref.current, currentTarget: ref.current } as any);
+			if (number !== 0) ref.current!.selectionEnd = money.length;
+		}, [info]);
+
 		const defaultValue = props.defaultValue ? toCurrency(props.defaultValue as string, info) : undefined;
+
 		return (
 			<input
 				{...props}

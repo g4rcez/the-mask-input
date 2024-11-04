@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { addDecimals, fromValue, padding, replaceBlankSpace, valueToFloat } from "../libs";
-import { Locales, MaskInputProps, Value } from "../types";
+import type { Locales, MaskInputProps, Value } from "../types";
 
 const CHAR_BETWEEN_VALUE_AND_SYMBOL = 1;
 
@@ -79,6 +79,19 @@ export const PercentageInput = forwardRef(
 			e.target.setAttribute("data-number", realValue.toString());
 			onChange?.(e);
 		};
+
+		useEffect(() => {
+			if (ref.current === null) return;
+			const value = ref.current.value;
+			if (value === "") return;
+			const percent = toPercent(value, info);
+			const realValue = valueToFloat(percent);
+			setInput(percent);
+			ref.current.value = percent;
+			ref.current.setAttribute("data-number", realValue.toString());
+			const event = new InputEvent("change", {});
+			onChange?.({ ...event, target: ref.current, currentTarget: ref.current } as any);
+		}, []);
 
 		useEffect(() => focusNumber(), [input]);
 

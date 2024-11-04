@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
-import { CurrencyInputProps, CurrencyMaskTypes } from "./components/currency-input";
-import { TheMaskInput, TheMaskPropsMerge } from "./input";
+import type { CurrencyInputProps, CurrencyMaskTypes } from "./components/currency-input";
+import type { PercentInputMask, PercentInputProps } from "./components/percent-input";
+import { TheMaskInput, type TheMaskPropsMerge } from "./input";
 import { has } from "./libs";
-import { inputMaskedProps, MaskConfig, Masks } from "./masks";
-import { PercentInputMask, PercentInputProps } from "./components/percent-input";
-import { HtmlInputProps, MaskInputProps } from "./types";
+import { inputMaskedProps, type MaskConfig, type Masks } from "./masks";
+import type { HtmlInputProps, MaskInputProps } from "./types";
 
 export type { CurrencyInputProps, CurrencyMaskTypes } from "./components/currency-input";
 export type { PercentInputProps, PercentInputMask } from "./components/percent-input";

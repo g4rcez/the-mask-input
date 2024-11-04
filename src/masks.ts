@@ -1,4 +1,4 @@
-import { Mask, TheMasks, Tokens } from "./types";
+import type { Mask, TheMasks, Tokens } from "./types";
 
 const regex = {
 	dots: /\./g,
@@ -79,6 +79,7 @@ const cnpjMask = "dd.ddd.ddd/dddd-dd";
 const numbers = (s: string) => s.replace(/\D/g, "");
 
 const hourStartsWithTwo = ["2", /[0-3]/, ":", /[0-5]/, /\d/];
+
 const hour = [/[012]/, /\d/, ":", /[0-5]/, /[0-9]/];
 
 export const masks: Record<Masks, TheMasks> = {
