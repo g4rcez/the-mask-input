@@ -4,12 +4,16 @@ type NativeProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTML
 
 export type Value = string | number;
 
-export type HtmlInputProps = Omit<NativeProps, "type" | "inputMode" | "autoCapitalize"> &
+export type Override<Source, New> = Omit<Source, keyof New> & New;
+
+export type HtmlInputProps = Override<
+	NativeProps,
 	Partial<{
 		autoCapitalize: AutoCapitalize;
 		inputMode: InputMode;
 		type: InputTypes;
-	}>;
+	}>
+>;
 
 export type MaskInputProps = HtmlInputProps &
 	Partial<{

@@ -1,9 +1,8 @@
 const commonjs = require("@rollup/plugin-commonjs");
-const resolve = require("@rollup/plugin-node-resolve").default
+const resolve = require("@rollup/plugin-node-resolve").default;
 const strip = require("@rollup/plugin-strip");
 const url = require("@rollup/plugin-url");
 const external = require("rollup-plugin-peer-deps-external");
-const { terser } = require("rollup-plugin-terser");
 const fs = require("fs");
 const typescript = require("rollup-plugin-typescript2");
 
@@ -15,7 +14,7 @@ export default {
 		{
 			file: pkg.main,
 			format: "cjs",
-			plugins: [terser()],
+			plugins: [],
 			exports: "named",
 			sourcemap: false
 		},
@@ -37,8 +36,8 @@ export default {
 		strip(),
 		external(),
 		url(),
-		resolve({ browser: true, preferBuiltins: false }),
 		typescript({ clean: true }),
+		resolve({ browser: true, preferBuiltins: false }),
 		commonjs({ sourceMap: false, ignoreGlobal: false })
 	]
 };

@@ -1,5 +1,5 @@
 import { ChangeEvent, forwardRef, useEffect, useRef, useState } from "react";
-import { Input, TheMaskInputProps } from "../../src";
+import { CurrencyCode, Input, Locales, TheMaskInputProps } from "../../src";
 
 type Value = string | number;
 
@@ -106,6 +106,38 @@ export const InputsWithDefault = () => {
 	);
 };
 
+export const DynamicMask = () => {
+	const [state, setState] = useState({ locale: "pt-BR" as Locales, currency: "BRL" as CurrencyCode });
+	const onChange = () => {
+		setState((prev) =>
+			prev.locale === "pt-BR"
+				? { locale: "en-US", currency: "USD" }
+				: {
+						locale: "pt-BR",
+						currency: "BRL"
+					}
+		);
+	};
+	return (
+		<div>
+			<button type="button" onClick={onChange}>
+				BRL
+			</button>
+			<button type="button" onClick={onChange}>
+				USD
+			</button>
+			<StyledInput
+				onChange={(e) => console.log("ON CHANGE", e.target.value)}
+				placeholder=""
+				name="dynamic"
+				mask="currency"
+				currency={state.currency}
+				locale={state.locale}
+			/>
+		</div>
+	);
+};
+
 export default function App() {
 	const [state, setState] = useState({ int: 1000, CurrencySymbol: 500 } as Record<string, Value>);
 	const [show, setShow] = useState(false);
@@ -184,6 +216,7 @@ export default function App() {
 					Test pattern
 				</button>
 			</form>
+			<DynamicMask />
 		</div>
 	);
 }

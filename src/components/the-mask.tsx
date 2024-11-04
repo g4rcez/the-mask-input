@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { useStableRef } from "../libs";
 import { createPattern, createPatternRegexMask, originalTokens } from "../masks";
-import { Mask, MaskInputProps, TheMasks, Token, Tokens } from "../types";
+import type { Mask, MaskInputProps, TheMasks, Token, Tokens } from "../types";
 
 function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string) => string, tokens: Tokens = originalTokens) {
 	const value = transform(v);
