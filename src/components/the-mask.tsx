@@ -32,14 +32,6 @@ const valueWasMatch = (mask: TheMasks | undefined, strict: boolean, value: strin
 	return regex.test(value);
 };
 
-function usePrevious<T>(value: T): T {
-  const ref = useRef<T>(value);
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
-
 export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 	({ infinity = false, strict = true, transform, onChange, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
 		const internalRef = useRef<HTMLInputElement>(null);
@@ -49,8 +41,6 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 		const maskRef = useStableRef(mask);
 		const wasMatch = useRef(valueWasMatch(mask, strict, (props.value || props.defaultValue) as string));
 		const Component = as ?? "input";
-		const [input, setInput] = useState("");
-		const previous = usePrevious(input);
 
 		const formatMaskedValue = useCallback(
 			(value?: string, defaultValue?: string) => {
@@ -103,7 +93,7 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 				}
 			}
 			let erasing = false;
-			if (value.length < previous.length) {
+			if (value.length < stateValue.length) {
 				wasMatch.current = false;
 				erasing = true;
 			}
@@ -122,7 +112,6 @@ export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 			if (erasing) moveCursor(target, cursor, cursor);
 			else moveCursor(target, movement, movement);
 			event.target.value = masked;
-			setInput(masked);
 			onChangeTextRef.current?.(masked);
 			onChangeRef.current?.(event);
 		};
