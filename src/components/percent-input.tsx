@@ -78,6 +78,10 @@ export const PercentageInput = forwardRef(
 			e.target.value = percent;
 			e.target.setAttribute("data-number", realValue.toString());
 			onChange?.(e);
+			if (ref.current) {
+				const pos = percent.length - info.percentSign.length - CHAR_BETWEEN_VALUE_AND_SYMBOL;
+				ref.current.setSelectionRange(pos, pos);
+			}
 		};
 
 		useEffect(() => {
@@ -92,8 +96,6 @@ export const PercentageInput = forwardRef(
 			const event = new InputEvent("change", {});
 			onChange?.({ ...event, target: ref.current, currentTarget: ref.current } as any);
 		}, []);
-
-		useEffect(() => focusNumber(), [input]);
 
 		const defaultValue = props.defaultValue ? toPercent(props.defaultValue as string, info) : undefined;
 
