@@ -1,21 +1,26 @@
 import React, { useMemo } from "react";
 import type { CurrencyInputProps, CurrencyMaskTypes } from "./components/currency-input";
+import { CurrencyInput, isCurrencyInput } from "./components/currency-input";
 import type { PercentInputMask, PercentInputProps } from "./components/percent-input";
-import { TheMaskInput, type TheMaskPropsMerge } from "./input";
+import { isPercentageInput, PercentageInput } from "./components/percent-input";
+import { TheMask } from "./components/the-mask";
 import { has } from "./libs";
 import { inputMaskedProps, type MaskConfig, type Masks } from "./masks";
 import type { HtmlInputProps, MaskInputProps } from "./types";
 
 export type { CurrencyInputProps, CurrencyMaskTypes } from "./components/currency-input";
 export type { PercentInputProps, PercentInputMask } from "./components/percent-input";
-export type { TheMaskPropsMerge as TheMaskProps } from "./input";
 export type { TheMask, TheMask as MaskInput } from "./components/the-mask";
 export type { HtmlInputProps, Locales, CurrencyCode, CurrencyDisplay, AutoCapitalize, InputMode, InputTypes } from "./types";
 export { CurrencyInput, CurrencyInput as MoneyInput } from "./components/currency-input";
 export { PercentageInput } from "./components/percent-input";
 export { masks, inputMaskedProps } from "./masks";
 
-const Component = (mask: MaskConfig) => (props: TheMaskPropsMerge) => <TheMaskInput {...mask} {...(props as any)} />;
+type TheMaskPropsMerge = MaskInputProps | CurrencyInputProps | PercentInputProps;
+
+export type TheMaskProps = TheMaskPropsMerge;
+
+const Component = (mask: MaskConfig) => (props: TheMaskPropsMerge) => <TheMask {...mask} {...(props as any)} />;
 
 type LooseString<T extends string> = T | Omit<string, T>;
 
@@ -57,7 +62,13 @@ export const Input: (props: TheMaskInputProps) => React.ReactElement = React.for
 			return { mask: props.mask };
 		}, [props.mask]);
 		const allProps = { ...props, ...maskConfig };
-		return <TheMaskInput {...(allProps as MaskInputProps)} ref={externalRef} />;
+		if (isCurrencyInput(allProps.mask)) {
+			return <CurrencyInput {...(allProps as CurrencyInputProps)} mask={undefined} ref={externalRef} />;
+		}
+		if (isPercentageInput(allProps.mask)) {
+			return <PercentageInput {...(allProps as PercentInputProps)} mask={undefined} ref={externalRef} />;
+		}
+		return <TheMask {...(allProps as MaskInputProps)} ref={externalRef} />;
 	}
 ) as never;
 
