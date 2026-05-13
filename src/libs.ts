@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
-export const replaceBlankSpace = (str: string) => str.replace(new RegExp(String.fromCharCode(160), "g"), " ");
+const NBSP_RE = / /g;
+export const replaceBlankSpace = (str: string) => str.replace(NBSP_RE, " ");
 
 export const padding = (digits: string, minLength: number) => {
 	const currentLength = digits.length;
