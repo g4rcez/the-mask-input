@@ -1,12 +1,11 @@
 import type { Mask, TheMasks, Tokens } from "./types";
 
 const regex = {
-	dots: /\./g,
-	openParenthesis: /\(/g,
-	closeParenthesis: /\)/g,
 	leadingBars: /\\\\/g,
 	escape: /[.*+?^${}()|[\]\\]/g
 };
+
+const PATTERN_ESCAPE: Record<string, string> = { ".": "\\.", "(": "\\(", ")": "\\)" };
 
 const stringPattern = (result: string) => {
 	const len = result.length;
@@ -14,9 +13,7 @@ const stringPattern = (result: string) => {
 	for (let i = 0; i < len; i++) {
 		const char = result[i];
 		const token = originalTokens[char];
-		if (token === undefined)
-			mask.push(char.replace(regex.dots, "\\.").replace(regex.openParenthesis, "\\(").replace(regex.closeParenthesis, "\\)"));
-		else mask.push(token.regex?.source);
+		mask.push(token === undefined ? (PATTERN_ESCAPE[char] ?? char) : token.regex?.source);
 	}
 	return mask.join("").replace(regex.leadingBars, "\\");
 };
@@ -119,7 +116,7 @@ const mask = (mask: TheMasks, inputMode: InputMode, props: Pick<MaskConfig, "tra
 	mask,
 	inputMode,
 	strict: true,
-	pattern: props.pattern ?? typeof mask === "function" ? undefined : createPattern(mask, "", true),
+	pattern: (props.pattern ?? typeof mask === "function") ? undefined : createPattern(mask, "", true),
 	infinity: props.infinity,
 	...props
 });
