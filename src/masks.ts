@@ -5,7 +5,9 @@ const regex = {
 	escape: /[.*+?^${}()|[\]\\]/g
 };
 
-const PATTERN_ESCAPE: Record<string, string> = { ".": "\\.", "(": "\\(", ")": "\\)" };
+// Only . ( ) appear as regex-special literals in the predefined string masks.
+// User-defined string masks with other regex-special chars (*, +, [, etc.) are not supported.
+const PATTERN_ESCAPE: Readonly<Record<string, string>> = { ".": "\\.", "(": "\\(", ")": "\\)" };
 
 const stringPattern = (result: string) => {
 	const len = result.length;
