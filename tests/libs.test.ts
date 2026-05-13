@@ -3,10 +3,10 @@ import { replaceBlankSpace } from "../src/libs";
 
 describe("replaceBlankSpace", () => {
 	test("replaces a non-breaking space with a regular space", () => {
-		expect(replaceBlankSpace("R 1.234,56")).toBe("R 1.234,56");
+		expect(replaceBlankSpace("R\u00a01.234,56")).toBe("R 1.234,56");
 	});
 	test("replaces multiple non-breaking spaces", () => {
-		expect(replaceBlankSpace("  ")).toBe("  ");
+		expect(replaceBlankSpace("\u00a0\u00a0")).toBe("  ");
 	});
 	test("leaves regular spaces unchanged", () => {
 		expect(replaceBlankSpace("hello world")).toBe("hello world");
