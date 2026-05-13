@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { useStableRef } from "../libs";
 import { createPattern, createPatternRegexMask, originalTokens } from "../masks";
-import type { Mask, MaskInputProps, TheMasks, Token, Tokens } from "../types";
+import type { Mask, MaskInputProps, TheMasks, Tokens } from "../types";
 
 function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string) => string, tokens: Tokens = originalTokens) {
 	const value = transform(v);
@@ -16,8 +16,11 @@ function formatRegexMask(v: string, mask: string | Mask[], transform: (x: string
 			countMask += 1;
 			continue;
 		}
-		const token: Token = masker instanceof RegExp ? { regex: masker } : masker;
-		if (token.regex.test(char)) output += token.parse?.(char) ?? char;
+		if (masker instanceof RegExp) {
+			if (masker.test(char)) output += char;
+		} else {
+			if (masker.regex.test(char)) output += masker.parse?.(char) ?? char;
+		}
 		i += 1;
 		countMask += 1;
 	}
