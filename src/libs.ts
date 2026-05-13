@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-const NBSP_RE = / /g;
+const NBSP_RE = /\u00a0/g;
 export const replaceBlankSpace = (str: string) => str.replace(NBSP_RE, " ");
 
 export const padding = (digits: string, minLength: number) => {
