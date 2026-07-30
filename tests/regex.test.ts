@@ -1,5 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { inputMaskedProps } from "../src";
+import { inputMaskedProps, masks } from "../src";
+
+const cpfCnpj = masks.cpfCnpj;
+if (typeof cpfCnpj !== "function") throw new Error("Expected cpfCnpj to be a mask function");
 
 describe("Should test regex", () => {
 	const t = <T extends keyof typeof inputMaskedProps>(key: T, title: string, value: string, result: boolean) => {
@@ -14,7 +17,17 @@ describe("Should test regex", () => {
 
 	const fail = <T extends keyof typeof inputMaskedProps>(key: T, title: string, value: string) => t(key, `🛑 ${title}`, value, false);
 
-	success("cnpj", "Should test CNPJ", "11.123.456/0001-89");
+	success("cnpj", "Should test numeric CNPJ", "11.123.456/0001-89");
+	success("cnpj", "Should test alphanumeric CNPJ", "12.ABC.345/DE67-fG");
+
+	test("✅ Should use the CNPJ mask for alphanumeric CPF/CNPJ values", () => {
+		expect(cpfCnpj("12.ABC.345/DE67-fG")).toBe("XX.XXX.XXX/XXXX-XX");
+		expect(inputMaskedProps.cpfCnpj.transform?.("12.ABC.345/DE67-fG")).toBe("12ABC345DE67fG");
+	});
+
+	test("✅ Should keep CPF/CNPJ numeric-only values as CPF", () => {
+		expect(cpfCnpj("111.222.333-44")).toBe("ddd.ddd.ddd-dd");
+	});
 	success("cpf", "Should test CPF", "111.222.333-44");
 	success("cep", "Should test CEP", "12345-000");
 	success("telephone", "Should test Telephone (8 digits)", "(00) 2345-6780");

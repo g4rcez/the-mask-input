@@ -73,9 +73,11 @@ const telephoneMask = "(dd) dddd-dddd";
 
 const cpfMask = "ddd.ddd.ddd-dd";
 
-const cnpjMask = "dd.ddd.ddd/dddd-dd";
+const cnpjMask = "XX.XXX.XXX/XXXX-XX";
 
 const numbers = (s: string) => s.replace(/\D/g, "");
+
+const alphanumeric = (s: string) => s.replace(/[^0-9a-z]/gi, "");
 
 const hourStartsWithTwo = ["2", /[0-3]/, ":", /[0-5]/, /\d/];
 
@@ -92,7 +94,7 @@ export const masks: Record<Masks, TheMasks> = {
 	creditCard: "dddd dddd dddd dddd",
 	uuid: "HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH",
 	color: (v) => (v.length > 4 ? "#HHHHHH" : "#HHH"),
-	cpfCnpj: (s) => (numbers(s).length <= 11 ? cpfMask : cnpjMask) as string,
+	cpfCnpj: (s) => (!/[a-z]/i.test(s) && numbers(s).length <= 11 ? cpfMask : cnpjMask) as string,
 	int: (s = "") => (digit.test(s.toString().slice(-1)) ? "d".repeat(Math.max(s.length, 0)) : "d".repeat(Math.max(s.length - 1, 0))),
 	cellTelephone: (s) => {
 		const n = numbers(s);
@@ -127,10 +129,10 @@ export const inputMaskedProps: Record<Masks, MaskConfig> = {
 	cellTelephone: mask(masks.cellTelephone, "tel"),
 	cellphone: mask(masks.cellphone, "tel"),
 	cep: mask(masks.cep, "decimal"),
-	cnpj: mask(masks.cnpj, "decimal"),
+	cnpj: mask(masks.cnpj, "text"),
 	color: mask(masks.color, "decimal", { pattern: "#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?" }),
 	cpf: mask(masks.cpf, "decimal"),
-	cpfCnpj: mask(masks.cpfCnpj, "decimal", { transform: numbers }),
+	cpfCnpj: mask(masks.cpfCnpj, "text", { transform: alphanumeric }),
 	creditCard: mask(masks.creditCard, "decimal", { pattern: "[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{3,4}" }),
 	date: mask(masks.date, "decimal"),
 	int: mask(masks.int, "decimal", { pattern: "[0-9]+" }),

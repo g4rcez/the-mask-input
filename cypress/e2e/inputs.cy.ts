@@ -2,8 +2,7 @@ describe("Test all masked inputs", () => {
 	const test = (id: string, type: string, value: string) => {
 		cy.visit("http://localhost:5173");
 		cy.get(`input[name='${id}']`).focus().clear().type(type, { force: true }).should("have.value", value);
-	}
-
+	};
 
 	it("test percent", () => {
 		test("percent", "0", "0,00 %");
@@ -74,11 +73,13 @@ describe("Test all masked inputs", () => {
 
 	it("test cnpj", () => {
 		test("cnpj", "00000000000000", "00.000.000/0000-00");
+		test("cnpj", "12ABC345DE67fG", "12.ABC.345/DE67-fG");
 	});
 
 	it("test cpfCnpj", () => {
 		test("cpfCnpj", "11111111100", "111.111.111-00");
 		test("cpfCnpj", "00000000000000", "00.000.000/0000-00");
+		test("cpfCnpj", "12ABC345DE67fG", "12.ABC.345/DE67-fG");
 	});
 
 	it("test expiresIn", () => {
