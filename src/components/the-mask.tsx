@@ -35,6 +35,11 @@ const valueWasMatch = (mask: TheMasks | undefined, strict: boolean, value: strin
 	return regex.test(value);
 };
 
+/**
+ * A native-input-compatible component that applies a built-in or custom mask.
+ * Prefer `Input` from the package entry point to select built-in, currency, and percentage masks.
+ * Avoid `maxLength` with `mask`; the browser counts formatting characters toward the limit.
+ */
 export const TheMask = forwardRef<HTMLInputElement, MaskInputProps>(
 	({ infinity = false, strict = true, transform, onChange, pattern, tokens, mask, onChangeText, as, ...props }, ref) => {
 		const internalRef = useRef<HTMLInputElement>(null);

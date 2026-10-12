@@ -8,10 +8,14 @@ export type PercentInputMask = "percentage" | "percent" | "percentual";
 
 export const isPercentageInput = (mask: any): mask is PercentInputMask => mask === "percentage" || mask === "percent" || mask === "percentual";
 
+/** Props for a locale-aware percentage input. */
 export type PercentInputProps = Omit<MaskInputProps, "value" | "mask"> &
 	Partial<{
+		/** BCP 47 locale used for number formatting. Defaults to `pt-BR`. */
 		locale: Locales;
+		/** Accepted for use through `Input`; selects the percentage formatter. */
 		mask: PercentInputMask;
+		/** Numeric or string value to format. */
 		value: Value;
 	}>;
 
@@ -32,6 +36,10 @@ export const toPercent = (value: string, props: PercentageInfo) => {
 	return replaceBlankSpace(result);
 };
 
+/**
+ * Format a numeric value as a localized percentage while keeping the input editable.
+ * Read the parsed numeric value from the change event's `data-number` attribute.
+ */
 export const PercentageInput = forwardRef(
 	({ locale = "pt-BR", mask, onChange, onKeyUp, ...props }: PercentInputProps, externalRef: React.Ref<HTMLInputElement>) => {
 		const ref = useRef<HTMLInputElement>(null);

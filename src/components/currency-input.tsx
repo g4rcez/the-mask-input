@@ -6,12 +6,18 @@ export type CurrencyMaskTypes = "money" | "currency";
 
 export const isCurrencyInput = (mask: any): mask is CurrencyMaskTypes => mask === "money" || mask === "currency";
 
+/** Props for a locale-aware currency input. */
 export type CurrencyInputProps = Omit<HtmlInputProps, "value"> &
 	Partial<{
+		/** ISO 4217 currency code. Defaults to `BRL`. */
 		currency: CurrencyCode;
+		/** How to display the currency unit. Defaults to `symbol`. */
 		currencyDisplay: CurrencyDisplay;
+		/** BCP 47 locale used for number formatting. Defaults to `pt-BR`. */
 		locale: Locales;
+		/** Accepted for use through `Input`; selects the currency formatter. */
 		mask: CurrencyMaskTypes;
+		/** Numeric or string value to format. */
 		value: Value;
 	}>;
 
@@ -32,6 +38,10 @@ export const toCurrency = (value: string, props: CurrencyInfo) => {
 	return replaceBlankSpace(result);
 };
 
+/**
+ * Format a numeric value as currency while keeping the input editable.
+ * Read the parsed numeric value from the change event's `data-number` attribute.
+ */
 export const CurrencyInput = forwardRef(
 	(
 		{ locale = "pt-BR", currency = "BRL", currencyDisplay = "symbol", mask, onChange, ...props }: CurrencyInputProps,

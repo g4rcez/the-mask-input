@@ -36,7 +36,8 @@ export const Color = Component(inputMaskedProps.color);
 export const Cpf = Component(inputMaskedProps.cpf);
 export const CpfCnpj = Component(inputMaskedProps.cpfCnpj);
 export const CreditCard = Component(inputMaskedProps.creditCard);
-export const Date = Component(inputMaskedProps.date);
+const DateInput = Component(inputMaskedProps.date);
+export { DateInput as Date };
 export const Int = Component(inputMaskedProps.int);
 export const IsoDate = Component(inputMaskedProps.isoDate);
 export const Telephone = Component(inputMaskedProps.telephone);
@@ -52,6 +53,17 @@ export type TheMaskInputProps = HtmlInputProps &
 		| ({ mask?: AllMasks } & Omit<MaskInputProps, "mask">)
 	);
 
+/**
+ * Main input component. Use `mask` to select a built-in format (for example, `"cpf"`,
+ * `"currency"`, or `"percent"`) or provide a custom mask. Avoid `maxLength` with `mask`;
+ * the mask's formatting characters count toward the browser limit.
+ *
+ * @example
+ * ```tsx
+ * <Input name="cpf" mask="cpf" />
+ * <Input name="amount" mask="currency" currency="USD" locale="en-US" />
+ * ```
+ */
 export const Input: (props: TheMaskInputProps) => React.ReactElement = React.forwardRef<HTMLInputElement, TheMaskInputProps>(
 	function InternalMaskInput(props, externalRef) {
 		const maskConfig = useMemo(() => {

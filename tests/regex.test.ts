@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { inputMaskedProps, masks } from "../src";
+import { createPattern } from "../src/masks";
 
 const cpfCnpj = masks.cpfCnpj;
 if (typeof cpfCnpj !== "function") throw new Error("Expected cpfCnpj to be a mask function");
@@ -18,11 +19,15 @@ describe("Should test regex", () => {
 	const fail = <T extends keyof typeof inputMaskedProps>(key: T, title: string, value: string) => t(key, `🛑 ${title}`, value, false);
 
 	success("cnpj", "Should test numeric CNPJ", "11.123.456/0001-89");
-	success("cnpj", "Should test alphanumeric CNPJ", "12.ABC.345/DE67-fG");
+	success("cnpj", "Should test alphanumeric CNPJ with numeric check digits", "12.ABC.345/DE67-89");
+	fail("cnpj", "Should reject letters in CNPJ check digits", "12.ABC.345/DE67-fG");
 
 	test("✅ Should use the CNPJ mask for alphanumeric CPF/CNPJ values", () => {
-		expect(cpfCnpj("12.ABC.345/DE67-fG")).toBe("XX.XXX.XXX/XXXX-XX");
-		expect(inputMaskedProps.cpfCnpj.transform?.("12.ABC.345/DE67-fG")).toBe("12ABC345DE67fG");
+		const value = "12.ABC.345/DE67-89";
+		expect(cpfCnpj(value)).toBe("XX.XXX.XXX/XXXX-dd");
+		expect(inputMaskedProps.cpfCnpj.transform?.(value)).toBe("12ABC345DE6789");
+		expect(new RegExp(createPattern(cpfCnpj, value, true)).test(value)).toBe(true);
+		expect(new RegExp(createPattern(cpfCnpj, "12.ABC.345/DE67-fG", true)).test("12.ABC.345/DE67-fG")).toBe(false);
 	});
 
 	test("✅ Should keep CPF/CNPJ numeric-only values as CPF", () => {

@@ -5,8 +5,6 @@ const regex = {
 	escape: /[.*+?^${}()|[\]\\]/g
 };
 
-// Only . ( ) appear as regex-special literals in the predefined string masks.
-// User-defined string masks with other regex-special chars (*, +, [, etc.) are not supported.
 const PATTERN_ESCAPE: Readonly<Record<string, string>> = { ".": "\\.", "(": "\\(", ")": "\\)" };
 
 const stringPattern = (result: string) => {
@@ -31,10 +29,10 @@ export const createPattern = (mask: TheMasks, value: string, strict: boolean) =>
 	return strict ? `^${pattern}$` : pattern;
 };
 
-const escape = (string: string) => string.replace(regex.escape, "\\$&");
+const escapePattern = (string: string) => string.replace(regex.escape, "\\$&");
 
 export const createPatternRegexMask = (array: Array<string | RegExp>, strict: boolean) => {
-	const mask = array.map((x) => (typeof x === "string" ? escape(x) : x.source)).join("");
+	const mask = array.map((x) => (typeof x === "string" ? escapePattern(x) : x.source)).join("");
 	return new RegExp(strict ? `^${mask}$` : mask).source;
 };
 
@@ -73,7 +71,7 @@ const telephoneMask = "(dd) dddd-dddd";
 
 const cpfMask = "ddd.ddd.ddd-dd";
 
-const cnpjMask = "XX.XXX.XXX/XXXX-XX";
+const cnpjMask = "XX.XXX.XXX/XXXX-dd";
 
 const numbers = (s: string) => s.replace(/\D/g, "");
 
@@ -108,12 +106,12 @@ export const masks: Record<Masks, TheMasks> = {
 };
 
 export type MaskConfig = {
-	pattern?: string;
-	inputMode: InputMode;
 	mask: TheMasks;
-	transform?: (s: string) => string;
 	strict: boolean;
+	pattern?: string;
 	infinity?: boolean;
+	inputMode: InputMode;
+	transform?: (s: string) => string;
 };
 
 const mask = (mask: TheMasks, inputMode: InputMode, props: Pick<MaskConfig, "transform" | "pattern" | "infinity"> = {}): MaskConfig => ({

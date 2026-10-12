@@ -15,14 +15,25 @@ export type HtmlInputProps = Override<
 	}>
 >;
 
+/** Props for an input that formats its value with a mask. */
 export type MaskInputProps = HtmlInputProps &
 	Partial<{
+		/** Prevents additional input after the current value matches the mask. */
 		infinity: boolean;
+		/** Require the value to match the full mask when validating its pattern. Defaults to `true`. */
 		strict: boolean;
+		/** Render a custom input component. */
 		as: "input" | FC<Omit<MaskInputProps, "as">>;
+		/** Transform the entered value before applying the mask. */
 		transform: (value: string) => string;
+		/** Called with the formatted text after the user changes the input. */
 		onChangeText: (text: string) => void;
+		/**
+		 * Format the input with a built-in or custom mask. Avoid `maxLength` when using a mask:
+		 * the browser counts mask characters toward the limit and may stop input too early.
+		 */
 		mask: TheMasks;
+		/** Custom mask tokens. */
 		tokens: Tokens;
 	}>;
 
